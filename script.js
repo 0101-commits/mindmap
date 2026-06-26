@@ -107,6 +107,20 @@ function shade(hex, pct) {
 var DPR = window.devicePixelRatio || 1;
 function fontSize(base) { return Math.round(base * (DPR >= 2 ? 1.15 : 1)); }
 
+/* P2-2: 배경색 명도 기반 글자색 자동 대비(WCAG) */
+function idealText(hex) {
+  try {
+    var f = parseInt(String(hex).slice(1), 16);
+    var r = (f >> 16) & 255, g = (f >> 8) & 255, b = f & 255;
+    var L = (0.299 * r + 0.587 * g + 0.114 * b) / 255;   // sRGB 휘도 근사
+    return L > 0.6 ? "#111827" : "#ffffff";
+  } catch (e) { return "#ffffff"; }
+}
+
+/* P2-2: 모션 축소 환경이면 카메라 애니메이션 비활성 */
+var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+function animOpt(d) { return REDUCE_MOTION ? false : { duration: d, easingFunction: "easeInOutQuad" }; }
+
 function makeVisNode(n) {
   var grp = GROUPS[n.group] || { color: "#64748b" };
   var c = grp.color;
@@ -142,13 +156,34 @@ function makeVisNode(n) {
 function edgeBaseColor(e) {
   return e.dashes ? { color: "#94a3b8", opacity: 0.7 } : { color: "#cbd5e1", opacity: 1 };
 }
+
+/* P2-1: 관계 유형(rel)별 색/라벨 — 미지정 시 기존 회색 동작 유지 */
+var REL_STYLE = {
+  contribute: { color: "#16a34a", label: "기여" },
+  cascade:    { color: "#356CB5", label: "캐스케이딩" },
+  measure:    { color: "#0891b2", label: "측정" },
+  align:      { color: "#d97706", label: "정렬" }
+};
+function edgeColor(e) {
+  var rel = e.rel && REL_STYLE[e.rel];
+  if (rel) return { color: rel.color, opacity: e.dashes ? 0.7 : 1 };
+  return edgeBaseColor(e);
+}
 function makeVisEdge(e) {
-  return {
+  var rel = e.rel && REL_STYLE[e.rel];
+  var o = {
     id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
     width: e.dashes ? 1 : 2,
-    color: edgeBaseColor(e),
+    color: edgeColor(e),
     smooth: { enabled: true, type: "cubicBezier", roundness: 0.55 }
   };
+  if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.55 } };  // rel 지정 시 방향 표시
+  var lbl = e.label || (rel ? rel.label : "");
+  if (lbl) {
+    o.label = lbl;
+    o.font = { size: 11, color: "#475569", strokeWidth: 3, strokeColor: "#ffffff", face: "Pretendard, sans-serif", align: "middle" };
+  }
+  return o;
 }
 
 /* ============================================================
@@ -247,7 +282,7 @@ function highlightEdge(edgeId) {
 function clearDim() {
   if (!dimmed) return;
   visNodes.update(rawNodes.map(function (n) { return { id: n.id, opacity: 1 }; }));
-  visEdges.update(rawEdges.map(function (e) { return { id: e.id, color: edgeBaseColor(e) }; }));
+  visEdges.update(rawEdges.map(function (e) { return { id: e.id, color: edgeColor(e) }; }));
   dimmed = false;
 }
 
@@ -282,10 +317,16 @@ function openPanel(id) {
   var tag = document.getElementById("panelTag");
   tag.textContent = g.label;
   tag.style.background = g.color;
+  tag.style.color = idealText(g.color);   // P2-2: 배경 명도 기반 자동 대비
 
   document.getElementById("panelTitle").textContent = n.label.replace(/\n/g, " ");
   document.getElementById("panelSummary").textContent = n.summary || "";
   document.getElementById("panelActions").style.display = "flex";
+
+  // P2-1: 출처(src) 배지
+  var srcEl = document.getElementById("panelSrc");
+  if (n.src) { srcEl.textContent = "📄 출처 · " + n.src; srcEl.style.display = "block"; }
+  else { srcEl.style.display = "none"; }
 
   var ul = document.getElementById("panelDetail");
   ul.innerHTML = "";
@@ -328,7 +369,7 @@ function closePanel() {
 function focusNode(id) {
   if (!nodeMap[id]) return;
   network.selectNodes([id]);
-  network.focus(id, { scale: 1.05, animation: { duration: 500, easingFunction: "easeInOutQuad" } });
+  network.focus(id, { scale: 1.05, animation: animOpt(500) });
   if (!isolateSet) highlightNode(id);
   openPanel(id);
 }
@@ -494,7 +535,7 @@ function isolateBy(pred, msg) {
   if (isolateSet.size === 0) { isolateSet = null; toast("해당 조건의 노드 없음"); return; }
   applyVisibility();
   btnIsolateOff.style.display = "inline-block";
-  network.fit({ animation: { duration: 500 } });
+  network.fit({ animation: animOpt(500) });
   toast("🎯 " + (msg || "단독 보기") + " (" + isolateSet.size + "개)");
 }
 
@@ -513,7 +554,7 @@ function exitIsolate(silent) {
   if (!silent) toast("단독 보기 해제");
 }
 
-btnIsolateOff.onclick = function () { exitIsolate(false); network.fit({ animation: { duration: 500 } }); };
+btnIsolateOff.onclick = function () { exitIsolate(false); network.fit({ animation: animOpt(500) }); };
 document.getElementById("btnIsolateNode").onclick = function () { if (currentId) isolateNode(currentId); };
 
 /* ============================================================
@@ -576,7 +617,7 @@ function setActiveLayout(id) {
   });
 }
 
-function fitAll() { clearDim(); network.fit({ animation: { duration: 600 } }); }
+function fitAll() { clearDim(); network.fit({ animation: animOpt(600) }); }
 
 // 자유 배치(물리 재안정화)
 function layoutFree() {
@@ -975,7 +1016,7 @@ function reloadNetwork() {
   network.stabilize(200);
   network.once("stabilizationIterationsDone", function () {
     network.setOptions({ physics: false });
-    network.fit({ animation: { duration: 600 } });
+    network.fit({ animation: animOpt(600) });
   });
   saveWork();
 }
@@ -1158,5 +1199,5 @@ applyUrlState();   // P1-2: URL 상태 복원
 setTab("info");
 setActiveLayout("btnFree");
 window.addEventListener("load", function () {
-  setTimeout(function () { network.fit({ animation: { duration: 700 } }); }, 400);
+  setTimeout(function () { network.fit({ animation: animOpt(700) }); }, 400);
 });
