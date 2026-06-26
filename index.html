@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>개인 E2E 성과관리 마인드맵</title>
+  <!-- vis-network (CDN) -->
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== 상단 헤더 / 필터 ===== -->
+  <header id="topbar">
+    <div class="brand">
+      <h1>개인 E2E 성과관리 <span>마인드맵</span></h1>
+      <p class="subtitle">목표수립 · 체크인 · 평가 · 피드백 &nbsp;|&nbsp; CSF → KPI 매칭 흐름</p>
+    </div>
+
+    <div class="filters">
+      <div class="filter-label">그룹 필터</div>
+      <div id="filterChips" class="chips"><!-- JS가 그룹 칩 생성 --></div>
+      <div class="filter-actions">
+        <input type="text" id="searchBox" placeholder="🔍 노드 검색…" />
+        <button id="btnAll" class="btn">전체</button>
+        <button id="btnReset" class="btn ghost">초기화</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== 본문: 마인드맵 + 사이드패널 ===== -->
+  <main id="stage">
+    <div id="network"></div>
+
+    <aside id="sidepanel" class="closed">
+      <button id="panelClose" aria-label="닫기">×</button>
+      <div class="panel-tag" id="panelTag">그룹</div>
+      <h2 id="panelTitle">노드를 클릭하세요</h2>
+      <p id="panelSummary" class="panel-summary">
+        마인드맵의 노드를 클릭하면 이곳에 상세 설명이 표시됩니다.
+      </p>
+      <ul id="panelDetail" class="panel-detail"></ul>
+      <div class="panel-related" id="panelRelatedWrap" style="display:none">
+        <div class="related-label">연결된 노드</div>
+        <div id="panelRelated" class="related-list"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer id="legendbar">
+    <span class="hint">💡 노드 클릭 → 상세 / 휠 → 확대 / 드래그 → 이동 &nbsp;·&nbsp; 점선 = 보조 연결</span>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
