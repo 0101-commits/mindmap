@@ -5,23 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>개인 E2E 성과관리 · HR 아키텍처 마인드맵</title>
 
-  <!-- SEO / 공유 메타 (P0-5) -->
   <meta name="description" content="개인 단위 End-to-End 성과관리(목표수립·체크인·평가·피드백)와 CSF→KPI, HR AI 4-Layer 아키텍처를 4개 프로세스 템플릿(E2E·OKR·MBO·역량)으로 탐색하는 인터랙티브 HR 마인드맵." />
   <meta name="theme-color" content="#356CB5" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="개인 E2E 성과관리 · HR 아키텍처 마인드맵" />
   <meta property="og:description" content="목표수립→체크인→평가→피드백 + CSF/KPI + HR AI 4-Layer를 한 화면에서 필터·탐색하는 HR 컨설팅 데모 마인드맵." />
   <meta property="og:url" content="https://0101-commits.github.io/mindmap/" />
-  <!-- 인라인 SVG favicon (data-URI, 외부 의존 없음) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMiAzMic+PHJlY3Qgd2lkdGg9JzMyJyBoZWlnaHQ9JzMyJyByeD0nNycgZmlsbD0nIzM1NkNCNScvPjxjaXJjbGUgY3g9JzE2JyBjeT0nOScgcj0nMy40JyBmaWxsPScjZmZmJy8+PGNpcmNsZSBjeD0nOScgY3k9JzIzJyByPSczLjQnIGZpbGw9JyNmZmYnLz48Y2lyY2xlIGN4PScyMycgY3k9JzIzJyByPSczLjQnIGZpbGw9JyNmZmYnLz48cGF0aCBkPSdNMTYgOSBMOSAyMyBNMTYgOSBMMjMgMjMgTTkgMjMgTDIzIDIzJyBzdHJva2U9JyNmZmYnIHN0cm9rZS13aWR0aD0nMS43JyBmaWxsPSdub25lJy8+PC9zdmc+" />
 
-  <!-- Pretendard 폰트 (P0-2) — dynamic-subset, 고정버전 + SRI -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" as="style" crossorigin
         href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         integrity="sha384-/uC/GIvKJ/9RN6i1izHoBY9ubYo60OAsQRNQ3NRFiNsN+N/MVQJHD5OYcZz6wvwn" />
 
-  <!-- vis-network (P0-1) — jsDelivr 고정버전 10.1.0 + SRI -->
   <script src="https://cdn.jsdelivr.net/npm/vis-network@10.1.0/standalone/umd/vis-network.min.js"
           integrity="sha384-Kp7cMaDnHOrgpE8FT6l7tUuGIo7kBcBVcttockpXN/whrsQBcy9ZcpKmr/1a/nMo"
           crossorigin="anonymous"></script>
@@ -29,22 +25,22 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- ===== 상단 헤더 / 필터 ===== -->
   <header id="topbar">
-    <div class="brand">
-      <h1>E2E 성과관리 · HR 아키텍처 <span>마인드맵</span></h1>
-      <p class="subtitle">목표수립 · 체크인 · 평가 · 피드백 &nbsp;|&nbsp; CSF→KPI &nbsp;|&nbsp; HR AI 4-Layer</p>
+    <div class="topbar-header">
+      <div class="brand">
+        <h1>E2E 성과관리 · HR 아키텍처 <span>마인드맵</span></h1>
+        <p class="subtitle">목표수립 · 체크인 · 평가 · 피드백 &nbsp;|&nbsp; CSF→KPI &nbsp;|&nbsp; HR AI 4-Layer</p>
 
-      <!-- 요구사항 8: 프로세스 종류 선택 -->
-      <div class="tpl-row">
-        <label for="tplSelect">프로세스 종류</label>
-        <select id="tplSelect"></select>
-        <span id="tplDesc" class="tpl-desc"></span>
+        <div class="tpl-row">
+          <label for="tplSelect">프로세스 종류</label>
+          <select id="tplSelect"></select>
+          <span id="tplDesc" class="tpl-desc"></span>
+        </div>
       </div>
+      <button id="btnToggleTopbar" class="btn ghost small" aria-label="메뉴 확장/축소">접기 ▲</button>
     </div>
 
-    <div class="filters">
-      <!-- 요구사항 6: 그룹(기능) 필터 + Layer 필터 = AND -->
+    <div class="filters collapsible-menu">
       <div class="filter-block">
         <div class="filter-label">그룹(기능) 필터 — 클릭=표시/숨김 · 더블클릭=단독</div>
         <div id="filterChips" class="chips"></div>
@@ -64,9 +60,7 @@
     </div>
   </header>
 
-  <!-- ===== 본문: 마인드맵 + 사이드패널 ===== -->
   <main id="stage">
-    <!-- 상단 좌측: 편집/저장 툴바 -->
     <div class="floating-toolbar">
       <button id="btnAdd"        class="tool primary">＋ 노드 추가</button>
       <button id="btnSave"       class="tool">💾 저장</button>
@@ -82,10 +76,10 @@
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
 
-    <!-- 요구사항 4: 레이아웃 정렬 컨트롤러 (상단 우측) -->
     <div class="layout-toolbar">
       <span class="lt-label">정렬</span>
-      <button id="btnFree"    class="tool active">⟳ 자유</button>
+      <button id="btnProcessHier" class="tool active">🏢 프로세스 중심</button>
+      <button id="btnFree"    class="tool">⟳ 자유</button>
       <button id="btnVert"    class="tool">⌗ 수직계층</button>
       <button id="btnHorz"    class="tool">⌗ 수평계층</button>
       <button id="btnLayer"   class="tool">▥ Layer그룹</button>
@@ -98,14 +92,12 @@
     <aside id="sidepanel" class="closed">
       <button id="panelClose" aria-label="닫기">×</button>
 
-      <!-- 패널 탭: 정보 / History / 색상 -->
       <div class="panel-tabs">
         <button id="tab-info"    class="ptab active">정보</button>
         <button id="tab-history" class="ptab">History</button>
         <button id="tab-color"   class="ptab">색상</button>
       </div>
 
-      <!-- 탭1: 정보 -->
       <section id="pane-info">
         <div class="panel-tag" id="panelTag">그룹</div>
         <h2 id="panelTitle">노드를 클릭하세요</h2>
@@ -127,14 +119,12 @@
         </div>
       </section>
 
-      <!-- 탭2: History (요구사항 2) -->
       <section id="pane-history" style="display:none">
         <h2 class="pane-h">저장 내역 (History)</h2>
         <p class="pane-sub">항목을 클릭하면 해당 시점으로 맵을 복원합니다.</p>
         <div id="historyList" class="history-list"></div>
       </section>
 
-      <!-- 탭3: 색상 (요구사항 5) -->
       <section id="pane-color" style="display:none">
         <h2 class="pane-h">색상 커스터마이징</h2>
         <p class="pane-sub">그룹별 색상을 바꾸면 노드와 상단 필터 버튼에 즉시 반영됩니다.</p>
@@ -148,7 +138,6 @@
     <span class="hint">💡 노드 클릭 → 강조+상세 · 더블클릭 → 수정 · 선 더블클릭 → 실선/점선 · 칩 더블클릭 → 단독 보기 · 휠 확대 / 드래그 이동</span>
   </footer>
 
-  <!-- ===== CRUD 모달 ===== -->
   <div id="modal" class="modal-overlay hidden">
     <div class="modal">
       <button id="modalClose" aria-label="닫기">×</button>
@@ -169,7 +158,6 @@
       <div id="connectRow">
         <label for="fConnect">연결할 노드 (선택)</label>
         <select id="fConnect"></select>
-        <!-- 요구사항 3: 연결선 스타일 -->
         <label for="fEdgeStyle" style="margin-top:10px">연결선 스타일</label>
         <select id="fEdgeStyle">
           <option value="solid">─ 실선 (Solid)</option>
@@ -187,7 +175,6 @@
     </div>
   </div>
 
-  <!-- ===== 토스트 ===== -->
   <div id="toast" class="toast hidden"></div>
 
   <script src="data.js"></script>
