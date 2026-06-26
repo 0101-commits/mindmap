@@ -1,45 +1,88 @@
 /* ===================================================
-   E2E 성과관리 · HR 아키텍처 마인드맵 — 로직
+   E2E 성과관리 · HR 아키텍처 마인드맵 — 로직 (v3)
    라이브러리: vis-network (CDN)
-   의존: data.js (GROUPS, NODES, EDGES)
+   의존: data.js (GROUPS, PROCESS_TEMPLATES, DEFAULT_TEMPLATE, NODES, EDGES)
 
    기능:
-     1) CRUD(노드 추가/수정/삭제) + 그룹 필터 고도화
-     2) 화면 정리(물리 재안정화) / 계층형 레이아웃
-     3) Focus/Highlight (이웃만 선명, 나머지 반투명)
-     4) Layer 1~4 HR 아키텍처 데이터 표시
-   편집 내용은 localStorage에 저장되며 'data.js 내보내기'로 파일화 가능.
+     1) 렌더링 최적화 — devicePixelRatio 적용 + 폰트 선명화
+     2) Save / History — localStorage 스냅샷 저장·복원
+     3) 연결선 스타일 — 실선/점선 선택·수정(dashes)
+     4) 다각적 레이아웃 — 수직계층 / 수평계층 / Layer그룹화 / 기능군집
+     5) 색상 커스터마이징 — 노드·필터 색상 Color Picker
+     6) 다중 필터(AND) — 그룹 필터 ∩ Layer 필터
+     7) 단독 보기(Isolate) — 조건 외 요소를 숨김(hidden)
+     8) 프로세스 템플릿 — 종류 선택 드롭다운으로 트리 교체
    =================================================== */
 
-var LS_KEY = "mm_data_v2";
+/* ============================================================
+   0. 저장소 키 / 유틸
+   ============================================================ */
+var LS_STATE   = "mm_v3_state";        // { tid }
+var LS_WORK    = "mm_v3_work_";        // + tid → { nodes, edges, colors }
+var LS_HISTORY = "mm_v3_history";      // [ { ts, tid, name, nodes, edges, colors } ]
+var HISTORY_MAX = 30;
 
-// ---------- 0. 작업 데이터 로드 (localStorage 우선) ----------
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
-function loadLS() {
-  try {
-    var raw = localStorage.getItem(LS_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) { return null; }
-}
-function saveLS() {
-  try {
-    localStorage.setItem(LS_KEY, JSON.stringify({ nodes: rawNodes, edges: rawEdges }));
-  } catch (e) { /* 용량 초과 등 무시 */ }
-}
-
-var saved = loadLS();
-var rawNodes = saved && saved.nodes ? saved.nodes : clone(NODES);
-var rawEdges = saved && saved.edges ? saved.edges : clone(EDGES);
-
-// 엣지 id 보장
-var edgeSeq = 0;
-rawEdges.forEach(function (e) { if (!e.id) e.id = "e" + (edgeSeq++); });
+function lsGet(k) { try { var r = localStorage.getItem(k); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
 function newEdgeId() { return "ed" + Date.now().toString(36) + Math.floor(Math.random() * 1e4); }
 function newNodeId() { return "u" + Date.now().toString(36) + Math.floor(Math.random() * 1e4); }
 
-// ---------- 1. 색상 헬퍼 ----------
+/* ============================================================
+   1. 상태 (현재 템플릿 / 작업 데이터)
+   ============================================================ */
+var tid = (lsGet(LS_STATE) || {}).tid;
+if (!tid || !PROCESS_TEMPLATES[tid]) tid = DEFAULT_TEMPLATE;
+
+var TPL = PROCESS_TEMPLATES[tid];
+var rawNodes, rawEdges;
+
+/* group → 기본 색상 백업(복원용) */
+var GROUP_BASE_COLOR = {};
+Object.keys(GROUPS).forEach(function (k) { GROUP_BASE_COLOR[k] = GROUPS[k].color; });
+
+function applyColors(colors) {
+  // 먼저 기본색으로 리셋 후 저장된 커스텀 색 적용
+  Object.keys(GROUPS).forEach(function (k) { GROUPS[k].color = GROUP_BASE_COLOR[k]; });
+  if (colors) Object.keys(colors).forEach(function (k) { if (GROUPS[k]) GROUPS[k].color = colors[k]; });
+}
+
+function loadTemplateData(id) {
+  var t = PROCESS_TEMPLATES[id];
+  var work = lsGet(LS_WORK + id);
+  if (work && work.nodes && work.edges) {
+    rawNodes = clone(work.nodes);
+    rawEdges = clone(work.edges);
+    applyColors(work.colors);
+  } else {
+    rawNodes = clone(t.nodes);
+    rawEdges = clone(t.edges);
+    applyColors(null);
+  }
+  // 엣지 id 보장
+  var seq = 0;
+  rawEdges.forEach(function (e) { if (!e.id) e.id = "e" + (seq++); });
+}
+
+loadTemplateData(tid);
+
+/* 현재 색상 맵(커스텀 포함) */
+function currentColors() {
+  var c = {};
+  Object.keys(GROUPS).forEach(function (k) { c[k] = GROUPS[k].color; });
+  return c;
+}
+
+function saveWork() {
+  lsSet(LS_WORK + tid, { nodes: rawNodes, edges: rawEdges, colors: currentColors() });
+  lsSet(LS_STATE, { tid: tid });
+}
+
+/* ============================================================
+   2. 색상 헬퍼 / vis 객체 변환
+   ============================================================ */
 function shade(hex, pct) {
   var f = parseInt(hex.slice(1), 16),
       t = pct < 0 ? 0 : 255, p = Math.abs(pct) / 100,
@@ -50,7 +93,10 @@ function shade(hex, pct) {
     (Math.round((t - B) * p) + B)).toString(16).slice(1);
 }
 
-// ---------- 2. vis 객체 변환 ----------
+// 요구사항 1: 디바이스 픽셀 비율 — 폰트를 DPR 배수로 키워 렌더 후 축소 → 선명
+var DPR = window.devicePixelRatio || 1;
+function fontSize(base) { return Math.round(base * (DPR >= 2 ? 1.15 : 1)); }
+
 function makeVisNode(n) {
   var grp = GROUPS[n.group] || { color: "#64748b" };
   var c = grp.color;
@@ -61,6 +107,7 @@ function makeVisNode(n) {
     group: n.group,
     shape: isRoot ? "circle" : "box",
     opacity: 1,
+    hidden: false,
     color: {
       background: c,
       border: shade(c, -18),
@@ -69,8 +116,10 @@ function makeVisNode(n) {
     },
     font: {
       color: "#ffffff",
-      size: isRoot ? 20 : 14,
-      face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif"
+      size: isRoot ? fontSize(20) : fontSize(14),
+      face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif",
+      strokeWidth: 0,
+      multi: false
     },
     borderWidth: 2,
     margin: isRoot ? 14 : 10,
@@ -84,14 +133,16 @@ function edgeBaseColor(e) {
 }
 function makeVisEdge(e) {
   return {
-    id: e.id, from: e.from, to: e.to, dashes: !!e.dashes,
+    id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
     width: e.dashes ? 1 : 2,
     color: edgeBaseColor(e),
     smooth: { enabled: true, type: "cubicBezier", roundness: 0.55 }
   };
 }
 
-// ---------- 3. 네트워크 생성 ----------
+/* ============================================================
+   3. 네트워크 생성
+   ============================================================ */
 var visNodes = new vis.DataSet(rawNodes.map(makeVisNode));
 var visEdges = new vis.DataSet(rawEdges.map(makeVisEdge));
 var container = document.getElementById("network");
@@ -106,7 +157,7 @@ var freePhysics = {
 
 var options = {
   layout: { improvedLayout: true, hierarchical: { enabled: false } },
-  interaction: { hover: true, tooltipDelay: 150, navigationButtons: false, keyboard: false },
+  interaction: { hover: true, tooltipDelay: 150, navigationButtons: false, keyboard: false, hideEdgesOnZoom: false },
   physics: freePhysics,
   nodes: { shadow: { enabled: true, size: 8, x: 0, y: 3, color: "rgba(15,23,42,.18)" } },
   edges: { arrows: { to: { enabled: false } } }
@@ -118,12 +169,40 @@ network.once("stabilizationIterationsDone", function () {
   network.setOptions({ physics: false });
 });
 
-// ---------- 4. nodeMap ----------
+/* ---- 요구사항 1: 렌더링 최적화 (DPR + 선명도 보정) ----
+   vis-network는 캔버스 backing store에 window.devicePixelRatio를 적용한다.
+   줌/리사이즈 시 캔버스를 강제 redraw 하여 라벨이 흐려지지 않게 보정한다. */
+function refreshDprAndRedraw() {
+  DPR = window.devicePixelRatio || 1;
+  if (network && network.redraw) network.redraw();
+}
+var zoomTimer = null;
+network.on("zoom", function () {
+  clearTimeout(zoomTimer);
+  zoomTimer = setTimeout(refreshDprAndRedraw, 40);
+});
+var resizeTimer = null;
+window.addEventListener("resize", function () {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function () {
+    refreshDprAndRedraw();
+  }, 120);
+});
+
+/* ============================================================
+   4. nodeMap / 레이어 헬퍼
+   ============================================================ */
 var nodeMap = {};
 function rebuildMap() { nodeMap = {}; rawNodes.forEach(function (n) { nodeMap[n.id] = n; }); }
 rebuildMap();
 
-// ---------- 5. Focus / Highlight (요구사항 3) ----------
+function nodeLayer(n) {
+  return n.layer || (TPL.groupLayer && TPL.groupLayer[n.group]) || "_";
+}
+
+/* ============================================================
+   5. Focus / Highlight (이웃 강조)
+   ============================================================ */
 var dimmed = false;
 
 function applyDim(keepNodes, keepEdges) {
@@ -140,7 +219,6 @@ function applyDim(keepNodes, keepEdges) {
 }
 
 function highlightNode(id) {
-  var keep = {}; keep[id] = 1;
   var keepSet = new Set([id]);
   network.getConnectedNodes(id).forEach(function (n) { keepSet.add(n); });
   var keepE = new Set(network.getConnectedEdges(id));
@@ -162,9 +240,27 @@ function clearDim() {
   dimmed = false;
 }
 
-// ---------- 6. 사이드 패널 ----------
+/* ============================================================
+   6. 사이드 패널 (탭: 정보 / History / 색상)
+   ============================================================ */
 var panel = document.getElementById("sidepanel");
 var currentId = null;
+
+function setTab(name) {
+  ["info", "history", "color"].forEach(function (t) {
+    var btn = document.getElementById("tab-" + t);
+    var sec = document.getElementById("pane-" + t);
+    if (btn) btn.classList.toggle("active", t === name);
+    if (sec) sec.style.display = (t === name) ? "block" : "none";
+  });
+}
+
+function openPanelTab(name) {
+  panel.classList.remove("closed");
+  setTab(name);
+  if (name === "history") renderHistory();
+  if (name === "color") renderColorPicker();
+}
 
 function openPanel(id) {
   var n = nodeMap[id];
@@ -207,6 +303,7 @@ function openPanel(id) {
   } else { wrap.style.display = "none"; }
 
   panel.classList.remove("closed");
+  setTab("info");
 }
 
 function closePanel() {
@@ -219,7 +316,7 @@ function focusNode(id) {
   if (!nodeMap[id]) return;
   network.selectNodes([id]);
   network.focus(id, { scale: 1.05, animation: { duration: 500, easingFunction: "easeInOutQuad" } });
-  highlightNode(id);
+  if (!isolateSet) highlightNode(id);
   openPanel(id);
 }
 
@@ -230,121 +327,310 @@ document.getElementById("panelClose").onclick = function () {
 network.on("click", function (params) {
   if (params.nodes.length) {
     var id = params.nodes[0];
-    highlightNode(id);
+    if (!isolateSet) highlightNode(id);
     openPanel(id);
   } else if (params.edges.length) {
-    highlightEdge(params.edges[0]);
+    if (!isolateSet) highlightEdge(params.edges[0]);
   } else {
     clearDim(); closePanel();
   }
 });
 
-// ---------- 7. 그룹 필터 (요구사항 1) ----------
-var activeGroups = {};
-Object.keys(GROUPS).forEach(function (k) { activeGroups[k] = true; });
+// 더블클릭: 노드 → 수정 / 엣지 → 선 스타일(실선·점선) 토글 (요구사항 3)
+network.on("doubleClick", function (params) {
+  if (params.nodes.length) {
+    openModalEdit(params.nodes[0]);
+  } else if (params.edges.length) {
+    toggleEdgeDash(params.edges[0]);
+  }
+});
+
+/* ============================================================
+   7. 필터 — 그룹(기능) 축 + Layer 축 (요구사항 6: AND/교집합)
+   ============================================================ */
+var activeGroups = {};   // groupKey → bool
+var activeLayers = {};   // layerKey → bool
+
+function groupsInTemplate() {
+  var seen = {}; var order = [];
+  rawNodes.forEach(function (n) { if (!seen[n.group]) { seen[n.group] = 1; order.push(n.group); } });
+  // GROUPS 정의 순서를 우선
+  return Object.keys(GROUPS).filter(function (k) { return seen[k]; });
+}
+function layersInTemplate() {
+  return Object.keys(TPL.layers || {});
+}
+
+function initFilters() {
+  activeGroups = {}; activeLayers = {};
+  groupsInTemplate().forEach(function (k) { activeGroups[k] = true; });
+  layersInTemplate().forEach(function (k) { activeLayers[k] = true; });
+}
 
 var chipWrap = document.getElementById("filterChips");
+var layerWrap = document.getElementById("layerChips");
 
 function buildChips() {
+  // 그룹(기능) 칩
   chipWrap.innerHTML = "";
-  var counts = {};
-  rawNodes.forEach(function (n) { counts[n.group] = (counts[n.group] || 0) + 1; });
-  Object.keys(GROUPS).forEach(function (k) {
+  var gCounts = {};
+  rawNodes.forEach(function (n) { gCounts[n.group] = (gCounts[n.group] || 0) + 1; });
+  groupsInTemplate().forEach(function (k) {
     var g = GROUPS[k];
     var chip = document.createElement("span");
     chip.className = "chip" + (activeGroups[k] ? "" : " off");
     chip.innerHTML = '<span class="dot" style="background:' + g.color + '"></span>' +
-                     g.label + '<span class="cnt">' + (counts[k] || 0) + '</span>';
+                     g.label + '<span class="cnt">' + (gCounts[k] || 0) + '</span>';
+    chip.title = "클릭=표시/숨김 · 더블클릭=단독 보기";
     chip.onclick = function () {
+      if (isolateSet) exitIsolate(true);
       activeGroups[k] = !activeGroups[k];
       chip.classList.toggle("off", !activeGroups[k]);
-      applyFilter();
+      applyVisibility();
+    };
+    chip.ondblclick = function (e) {
+      e.preventDefault();
+      isolateBy(function (n) { return n.group === k; }, "그룹 단독: " + g.label);
     };
     chipWrap.appendChild(chip);
   });
+
+  // Layer 칩
+  layerWrap.innerHTML = "";
+  var lays = layersInTemplate();
+  var lCounts = {};
+  rawNodes.forEach(function (n) { var L = nodeLayer(n); lCounts[L] = (lCounts[L] || 0) + 1; });
+  lays.forEach(function (k) {
+    var L = TPL.layers[k];
+    var chip = document.createElement("span");
+    chip.className = "chip layer-chip" + (activeLayers[k] ? "" : " off");
+    chip.innerHTML = L.label + '<span class="cnt">' + (lCounts[k] || 0) + '</span>';
+    chip.title = "클릭=표시/숨김 · 더블클릭=단독 보기";
+    chip.onclick = function () {
+      if (isolateSet) exitIsolate(true);
+      activeLayers[k] = !activeLayers[k];
+      chip.classList.toggle("off", !activeLayers[k]);
+      applyVisibility();
+    };
+    chip.ondblclick = function (e) {
+      e.preventDefault();
+      isolateBy(function (n) { return nodeLayer(n) === k; }, "Layer 단독: " + L.label);
+    };
+    layerWrap.appendChild(chip);
+  });
 }
 
-function applyFilter() {
+/* 단일 가시성 계산: 필터(AND) + 단독보기 */
+function isVisibleNode(n) {
+  if (isolateSet) return isolateSet.has(n.id);
+  var gOn = activeGroups[n.group] !== false;
+  var lOn = activeLayers[nodeLayer(n)] !== false;
+  return gOn && lOn;   // 요구사항 6: 그룹 ∩ Layer
+}
+
+function applyVisibility() {
   clearDim();
-  var visible = {};
+  var vis = {};
   visNodes.update(rawNodes.map(function (n) {
-    var show = !!activeGroups[n.group];
-    visible[n.id] = show;
-    return { id: n.id, hidden: !show };
+    var s = isVisibleNode(n); vis[n.id] = s;
+    return { id: n.id, hidden: !s };
   }));
   visEdges.update(rawEdges.map(function (e) {
-    return { id: e.id, hidden: !(visible[e.from] && visible[e.to]) };
+    return { id: e.id, hidden: !(vis[e.from] && vis[e.to]) };
   }));
 }
 
 document.getElementById("btnAll").onclick = function () {
-  Object.keys(GROUPS).forEach(function (k) { activeGroups[k] = true; });
-  buildChips(); applyFilter();
+  if (isolateSet) exitIsolate(true);
+  groupsInTemplate().forEach(function (k) { activeGroups[k] = true; });
+  layersInTemplate().forEach(function (k) { activeLayers[k] = true; });
+  buildChips(); applyVisibility();
 };
 document.getElementById("btnNone").onclick = function () {
-  Object.keys(GROUPS).forEach(function (k) { activeGroups[k] = false; });
-  buildChips(); applyFilter();
+  if (isolateSet) exitIsolate(true);
+  groupsInTemplate().forEach(function (k) { activeGroups[k] = false; });
+  buildChips(); applyVisibility();
 };
 
-// ---------- 8. 검색 ----------
+/* ============================================================
+   8. 단독 보기 (요구사항 7) — 조건 외 요소 숨김
+   ============================================================ */
+var isolateSet = null;  // null=비활성 / Set(nodeId)=활성
+
+var btnIsolateOff = document.getElementById("btnIsolateOff");
+
+function isolateBy(pred, msg) {
+  clearDim();
+  isolateSet = new Set();
+  rawNodes.forEach(function (n) { if (pred(n)) isolateSet.add(n.id); });
+  if (isolateSet.size === 0) { isolateSet = null; toast("해당 조건의 노드 없음"); return; }
+  applyVisibility();
+  btnIsolateOff.style.display = "inline-block";
+  network.fit({ animation: { duration: 500 } });
+  toast("🎯 " + (msg || "단독 보기") + " (" + isolateSet.size + "개)");
+}
+
+function isolateNode(id) {
+  if (!nodeMap[id]) return;
+  var set = new Set([id]);
+  network.getConnectedNodes(id).forEach(function (x) { set.add(x); });
+  isolateBy(function (n) { return set.has(n.id); }, "노드 단독: " + nodeMap[id].label.replace(/\n/g, " "));
+}
+
+function exitIsolate(silent) {
+  if (!isolateSet) return;
+  isolateSet = null;
+  btnIsolateOff.style.display = "none";
+  applyVisibility();
+  if (!silent) toast("단독 보기 해제");
+}
+
+btnIsolateOff.onclick = function () { exitIsolate(false); network.fit({ animation: { duration: 500 } }); };
+document.getElementById("btnIsolateNode").onclick = function () { if (currentId) isolateNode(currentId); };
+
+/* ============================================================
+   9. 검색
+   ============================================================ */
 document.getElementById("searchBox").addEventListener("keyup", function (ev) {
   var q = this.value.trim().toLowerCase();
   if (ev.key === "Enter" && q) {
     var hit = rawNodes.find(function (n) {
-      return ((n.label || "") + " " + (n.summary || "")).toLowerCase().indexOf(q) >= 0 && activeGroups[n.group];
+      return ((n.label || "") + " " + (n.summary || "")).toLowerCase().indexOf(q) >= 0 && isVisibleNode(n);
     });
     if (hit) focusNode(hit.id);
-    else toast("검색 결과 없음 (필터 켜짐 여부 확인)");
+    else toast("검색 결과 없음 (필터/단독보기 확인)");
   }
 });
 
-// ---------- 9. 레이아웃 (요구사항 2) ----------
-var hierOn = false;
-var btnHier = document.getElementById("btnHier");
+/* ============================================================
+   10. 레이아웃 (요구사항 4) — 4가지 + 자유배치
+   ============================================================ */
+var layoutBtns = ["btnFree", "btnVert", "btnHorz", "btnLayer", "btnCluster"];
+function setActiveLayout(id) {
+  layoutBtns.forEach(function (b) {
+    var el = document.getElementById(b);
+    if (el) el.classList.toggle("active", b === id);
+  });
+}
 
-function tidy() {
-  hierOn = false;
-  btnHier.classList.remove("active");
+function fitAll() { clearDim(); network.fit({ animation: { duration: 600 } }); }
+
+// 자유 배치(물리 재안정화)
+function layoutFree() {
+  setActiveLayout("btnFree");
   network.setOptions({ layout: { hierarchical: { enabled: false } }, physics: freePhysics });
   network.stabilize(220);
   network.once("stabilizationIterationsDone", function () {
     network.setOptions({ physics: false });
-    network.fit({ animation: { duration: 600 } });
+    fitAll();
   });
-  toast("화면 정리 완료");
+  toast("자유 배치 (물리)");
 }
 
-function toggleHier() {
-  hierOn = !hierOn;
-  if (hierOn) {
-    network.setOptions({
-      physics: false,
-      layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed",
-                                levelSeparation: 130, nodeSpacing: 150, treeSpacing: 200, blockShifting: true, edgeMinimization: true } }
+// ① 계층형 — 수직(Top-Down)
+function layoutVertical() {
+  setActiveLayout("btnVert");
+  network.setOptions({
+    physics: false,
+    layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed",
+      levelSeparation: 130, nodeSpacing: 150, treeSpacing: 210, blockShifting: true, edgeMinimization: true, parentCentralization: true } }
+  });
+  setTimeout(fitAll, 80);
+  toast("계층형 · 수직 (Top-Down)");
+}
+
+// ② 계층형 — 수평(Left-Right)
+function layoutHorizontal() {
+  setActiveLayout("btnHorz");
+  network.setOptions({
+    physics: false,
+    layout: { hierarchical: { enabled: true, direction: "LR", sortMethod: "directed",
+      levelSeparation: 170, nodeSpacing: 110, treeSpacing: 200, blockShifting: true, edgeMinimization: true, parentCentralization: true } }
+  });
+  setTimeout(fitAll, 80);
+  toast("계층형 · 수평 (Left-Right)");
+}
+
+// ③ Layer별 그룹화 — Layer 축으로 열(column) 정렬
+function layoutByLayer() {
+  setActiveLayout("btnLayer");
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: false } } });
+  var lays = layersInTemplate();
+  if (lays.length === 0) lays = ["_"];
+  var colGap = 360, rowGap = 90;
+  var buckets = {};
+  lays.forEach(function (k) { buckets[k] = []; });
+  buckets["_"] = buckets["_"] || [];
+  rawNodes.forEach(function (n) {
+    var L = nodeLayer(n);
+    if (!buckets[L]) buckets[L] = [];
+    buckets[L].push(n.id);
+  });
+  Object.keys(buckets).forEach(function (L, ci) {
+    var idx = lays.indexOf(L); if (idx < 0) idx = lays.length + ci;
+    var x = idx * colGap - ((lays.length - 1) * colGap) / 2;
+    var arr = buckets[L];
+    var startY = -((arr.length - 1) * rowGap) / 2;
+    arr.forEach(function (id, ri) {
+      try { network.moveNode(id, x, startY + ri * rowGap); } catch (e) {}
     });
-    btnHier.classList.add("active");
-    network.fit({ animation: { duration: 600 } });
-    toast("계층형 레이아웃");
-  } else {
-    network.setOptions({ layout: { hierarchical: { enabled: false } } });
-    btnHier.classList.remove("active");
-    tidy();
-  }
+  });
+  setTimeout(fitAll, 60);
+  toast("Layer별 그룹화");
 }
 
-document.getElementById("btnTidy").onclick = tidy;
-btnHier.onclick = toggleHier;
-document.getElementById("btnFit").onclick = function () {
-  clearDim(); network.fit({ animation: { duration: 600 } });
-};
+// ④ 기능별 군집화(Clustering) — 그룹을 방사형 클러스터로 배치
+function layoutCluster() {
+  setActiveLayout("btnCluster");
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: false } } });
+  var groups = groupsInTemplate();
+  var R = Math.max(380, groups.length * 95);
+  var byGroup = {};
+  rawNodes.forEach(function (n) { (byGroup[n.group] = byGroup[n.group] || []).push(n.id); });
+  groups.forEach(function (g, gi) {
+    var ang = (gi / Math.max(1, groups.length)) * Math.PI * 2;
+    var cx = Math.cos(ang) * R, cy = Math.sin(ang) * R;
+    var arr = byGroup[g] || [];
+    var r = Math.max(60, arr.length * 16);
+    arr.forEach(function (id, ni) {
+      if (arr.length === 1) { try { network.moveNode(id, cx, cy); } catch (e) {} return; }
+      var a2 = (ni / arr.length) * Math.PI * 2;
+      try { network.moveNode(id, cx + Math.cos(a2) * r, cy + Math.sin(a2) * r); } catch (e) {}
+    });
+  });
+  setTimeout(fitAll, 60);
+  toast("기능별 군집화 (Clustering)");
+}
 
-// ---------- 10. CRUD 모달 (요구사항 1) ----------
+document.getElementById("btnFree").onclick = layoutFree;
+document.getElementById("btnVert").onclick = layoutVertical;
+document.getElementById("btnHorz").onclick = layoutHorizontal;
+document.getElementById("btnLayer").onclick = layoutByLayer;
+document.getElementById("btnCluster").onclick = layoutCluster;
+document.getElementById("btnFit").onclick = fitAll;
+
+/* ============================================================
+   11. 연결선 스타일 토글 (요구사항 3)
+   ============================================================ */
+function toggleEdgeDash(edgeId) {
+  var raw = rawEdges.find(function (e) { return e.id === edgeId; });
+  if (!raw) return;
+  raw.dashes = !raw.dashes;
+  visEdges.update(makeVisEdge(raw));
+  saveWork();
+  toast(raw.dashes ? "점선으로 변경" : "실선으로 변경");
+}
+
+/* ============================================================
+   12. CRUD 모달 (노드 + 연결선 스타일)
+   ============================================================ */
 var modal = document.getElementById("modal");
 var fLabel = document.getElementById("fLabel");
 var fGroup = document.getElementById("fGroup");
 var fSummary = document.getElementById("fSummary");
 var fDetail = document.getElementById("fDetail");
 var fConnect = document.getElementById("fConnect");
+var fEdgeStyle = document.getElementById("fEdgeStyle");
 var connectRow = document.getElementById("connectRow");
 var fDelete = document.getElementById("fDelete");
 var modalMode = "add";
@@ -352,11 +638,12 @@ var editId = null;
 
 function fillGroupSelect() {
   fGroup.innerHTML = "";
-  Object.keys(GROUPS).forEach(function (k) {
-    var o = document.createElement("option");
-    o.value = k; o.textContent = GROUPS[k].label;
-    fGroup.appendChild(o);
-  });
+  groupsInTemplate().concat(Object.keys(GROUPS).filter(function (k) { return groupsInTemplate().indexOf(k) < 0; }))
+    .forEach(function (k) {
+      var o = document.createElement("option");
+      o.value = k; o.textContent = GROUPS[k].label;
+      fGroup.appendChild(o);
+    });
 }
 function fillConnectSelect() {
   fConnect.innerHTML = '<option value="">— 연결 없음 —</option>';
@@ -374,8 +661,9 @@ function openModalAdd() {
   document.getElementById("modalTitle").textContent = "노드 추가";
   fillGroupSelect(); fillConnectSelect();
   fLabel.value = ""; fSummary.value = ""; fDetail.value = "";
-  fGroup.value = currentId && nodeMap[currentId] ? nodeMap[currentId].group : Object.keys(GROUPS)[0];
-  if (currentId) fConnect.value = currentId;  // 현재 선택 노드와 연결 기본값
+  fGroup.value = currentId && nodeMap[currentId] ? nodeMap[currentId].group : groupsInTemplate()[0];
+  if (currentId) fConnect.value = currentId;
+  fEdgeStyle.value = "solid";
   connectRow.style.display = "block";
   fDelete.style.display = "none";
   modal.classList.remove("hidden");
@@ -414,11 +702,11 @@ function saveModal() {
     visNodes.add(makeVisNode(node));
     var conn = fConnect.value;
     if (conn && nodeMap[conn]) {
-      var ed = { id: newEdgeId(), from: conn, to: id };
+      var ed = { id: newEdgeId(), from: conn, to: id, dashes: fEdgeStyle.value === "dashed" };
       rawEdges.push(ed);
       visEdges.add(makeVisEdge(ed));
     }
-    rebuildMap(); saveLS(); buildChips(); applyFilter();
+    rebuildMap(); initFilters(); saveWork(); buildChips(); applyVisibility();
     closeModal();
     toast("노드 추가됨");
     setTimeout(function () { focusNode(id); }, 60);
@@ -426,7 +714,7 @@ function saveModal() {
     var n = nodeMap[editId]; if (!n) { closeModal(); return; }
     n.label = label; n.group = group; n.summary = summary; n.detail = detail;
     visNodes.update(makeVisNode(n));
-    rebuildMap(); saveLS(); buildChips(); applyFilter();
+    rebuildMap(); saveWork(); buildChips(); applyVisibility();
     closeModal();
     openPanel(editId);
     toast("수정됨");
@@ -444,7 +732,7 @@ function deleteNode(id) {
   visNodes.remove(id);
   visEdges.remove(removeE.map(function (e) { return e.id; }));
 
-  rebuildMap(); saveLS(); buildChips(); applyFilter();
+  rebuildMap(); initFilters(); saveWork(); buildChips(); applyVisibility();
   clearDim(); closePanel();
   toast("삭제됨: " + name);
 }
@@ -459,7 +747,179 @@ document.getElementById("btnDel").onclick = function () { if (currentId) deleteN
 modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
 document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
 
-// ---------- 11. 내보내기 / 복원 ----------
+/* ============================================================
+   13. Save / History (요구사항 2)
+   ============================================================ */
+function tsLabel(d) {
+  function p(x) { return (x < 10 ? "0" : "") + x; }
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) +
+         " " + p(d.getHours()) + ":" + p(d.getMinutes()) + ":" + p(d.getSeconds());
+}
+
+function saveSnapshot() {
+  saveWork();
+  var hist = lsGet(LS_HISTORY) || [];
+  var now = new Date();
+  hist.unshift({
+    ts: now.getTime(),
+    label: tsLabel(now),
+    tid: tid,
+    tname: PROCESS_TEMPLATES[tid].name,
+    nodes: clone(rawNodes),
+    edges: clone(rawEdges),
+    colors: currentColors(),
+    count: rawNodes.length
+  });
+  if (hist.length > HISTORY_MAX) hist = hist.slice(0, HISTORY_MAX);
+  lsSet(LS_HISTORY, hist);
+  toast("💾 저장됨 — " + tsLabel(now));
+  renderHistory();
+}
+
+function renderHistory() {
+  var box = document.getElementById("historyList");
+  if (!box) return;
+  var hist = lsGet(LS_HISTORY) || [];
+  box.innerHTML = "";
+  if (hist.length === 0) {
+    box.innerHTML = '<p class="empty-hint">저장된 내역이 없습니다. 상단 💾 저장을 눌러보세요.</p>';
+    return;
+  }
+  hist.forEach(function (h, i) {
+    var row = document.createElement("div");
+    row.className = "history-item";
+    row.innerHTML =
+      '<div class="hi-main"><span class="hi-time">🕘 ' + h.label + '</span>' +
+      '<span class="hi-meta">' + (h.tname || h.tid) + ' · ' + (h.count || (h.nodes ? h.nodes.length : 0)) + '개</span></div>' +
+      '<button class="hi-del" title="삭제">×</button>';
+    row.querySelector(".hi-main").onclick = function () { restoreSnapshot(i); };
+    row.querySelector(".hi-del").onclick = function (e) {
+      e.stopPropagation();
+      var hh = lsGet(LS_HISTORY) || []; hh.splice(i, 1); lsSet(LS_HISTORY, hh); renderHistory();
+    };
+    box.appendChild(row);
+  });
+}
+
+function restoreSnapshot(i) {
+  var hist = lsGet(LS_HISTORY) || [];
+  var h = hist[i]; if (!h) return;
+  if (!confirm("이 시점(" + h.label + ")으로 맵을 복원할까요?\n현재 작업은 덮어쓰여집니다.")) return;
+  // 템플릿이 다르면 전환
+  if (h.tid && PROCESS_TEMPLATES[h.tid]) { tid = h.tid; TPL = PROCESS_TEMPLATES[tid]; var sel = document.getElementById("tplSelect"); if (sel) sel.value = tid; }
+  rawNodes = clone(h.nodes);
+  rawEdges = clone(h.edges);
+  var seq = 0; rawEdges.forEach(function (e) { if (!e.id) e.id = "e" + (seq++); });
+  applyColors(h.colors);
+  reloadNetwork();
+  toast("복원됨 — " + h.label);
+}
+
+document.getElementById("btnSave").onclick = saveSnapshot;
+document.getElementById("tab-history").onclick = function () { openPanelTab("history"); };
+document.getElementById("btnHistory").onclick = function () { openPanelTab("history"); };
+
+/* ============================================================
+   14. 색상 커스터마이징 (요구사항 5)
+   ============================================================ */
+function renderColorPicker() {
+  var box = document.getElementById("colorList");
+  if (!box) return;
+  box.innerHTML = "";
+  groupsInTemplate().forEach(function (k) {
+    var g = GROUPS[k];
+    var row = document.createElement("div");
+    row.className = "color-row";
+    row.innerHTML =
+      '<span class="color-name"><span class="dot" style="background:' + g.color + '"></span>' + g.label + '</span>';
+    var inp = document.createElement("input");
+    inp.type = "color"; inp.value = toHex(g.color);
+    inp.oninput = function () { setGroupColor(k, inp.value); row.querySelector(".dot").style.background = inp.value; };
+    row.appendChild(inp);
+    box.appendChild(row);
+  });
+}
+
+function toHex(c) {
+  if (/^#([0-9a-f]{6})$/i.test(c)) return c;
+  if (/^#([0-9a-f]{3})$/i.test(c)) { return "#" + c.slice(1).split("").map(function (x) { return x + x; }).join(""); }
+  return "#356cb5";
+}
+
+function setGroupColor(group, color) {
+  GROUPS[group].color = color;
+  // 해당 그룹 노드 즉시 갱신
+  visNodes.update(rawNodes.filter(function (n) { return n.group === group; }).map(makeVisNode));
+  // 필터 칩(노드+상단 필터 버튼 색상) 갱신
+  buildChips();
+  // 패널 태그 갱신
+  if (currentId && nodeMap[currentId] && nodeMap[currentId].group === group) {
+    var tag = document.getElementById("panelTag"); tag.style.background = color;
+  }
+  saveWork();
+}
+
+document.getElementById("tab-color").onclick = function () { openPanelTab("color"); };
+document.getElementById("btnColor").onclick = function () { openPanelTab("color"); };
+document.getElementById("tab-info").onclick = function () { setTab("info"); };
+document.getElementById("btnColorReset").onclick = function () {
+  if (!confirm("색상을 기본값으로 되돌릴까요?")) return;
+  applyColors(null);
+  visNodes.update(rawNodes.map(makeVisNode));
+  buildChips(); renderColorPicker(); saveWork();
+  toast("색상 초기화");
+};
+
+/* ============================================================
+   15. 프로세스 템플릿 전환 (요구사항 8)
+   ============================================================ */
+function buildTemplateSelect() {
+  var sel = document.getElementById("tplSelect");
+  sel.innerHTML = "";
+  Object.keys(PROCESS_TEMPLATES).forEach(function (k) {
+    var o = document.createElement("option");
+    o.value = k; o.textContent = PROCESS_TEMPLATES[k].name;
+    sel.appendChild(o);
+  });
+  sel.value = tid;
+  sel.onchange = function () { switchTemplate(sel.value); };
+  document.getElementById("tplDesc").textContent = TPL.desc || "";
+}
+
+function switchTemplate(id) {
+  if (!PROCESS_TEMPLATES[id]) return;
+  tid = id;
+  TPL = PROCESS_TEMPLATES[id];
+  loadTemplateData(id);
+  reloadNetwork();
+  document.getElementById("tplDesc").textContent = TPL.desc || "";
+  toast("템플릿 로드: " + TPL.name);
+}
+
+/* 데이터셋 전체 교체 후 UI 재구성 */
+function reloadNetwork() {
+  exitIsolate(true);
+  rebuildMap();
+  initFilters();
+  visNodes.clear(); visEdges.clear();
+  visNodes.add(rawNodes.map(makeVisNode));
+  visEdges.add(rawEdges.map(makeVisEdge));
+  buildChips();
+  applyVisibility();
+  closePanel();
+  setActiveLayout("btnFree");
+  network.setOptions({ layout: { hierarchical: { enabled: false } }, physics: freePhysics });
+  network.stabilize(200);
+  network.once("stabilizationIterationsDone", function () {
+    network.setOptions({ physics: false });
+    network.fit({ animation: { duration: 600 } });
+  });
+  saveWork();
+}
+
+/* ============================================================
+   16. 내보내기 / 복원
+   ============================================================ */
 function download(name, text) {
   var blob = new Blob([text], { type: "text/javascript;charset=utf-8" });
   var a = document.createElement("a");
@@ -470,26 +930,33 @@ function download(name, text) {
 document.getElementById("btnExport").onclick = function () {
   var ng = JSON.stringify(GROUPS, null, 2);
   var nn = JSON.stringify(rawNodes.map(function (n) {
-    return { id: n.id, group: n.group, label: n.label, summary: n.summary || "", detail: n.detail || [] };
+    var o = { id: n.id, group: n.group };
+    if (n.layer) o.layer = n.layer;
+    o.label = n.label; o.summary = n.summary || ""; o.detail = n.detail || [];
+    return o;
   }), null, 2);
   var ne = JSON.stringify(rawEdges.map(function (e) {
     var o = { from: e.from, to: e.to }; if (e.dashes) o.dashes = true; return o;
   }), null, 2);
-  var text = "/* 자동 생성된 data.js — 마인드맵 편집 결과 */\n\n" +
+  var text = "/* 자동 생성 data.js — 템플릿: " + TPL.name + " (" + tid + ") */\n\n" +
              "const GROUPS = " + ng + ";\n\n" +
              "const NODES = " + nn + ";\n\n" +
              "const EDGES = " + ne + ";\n";
-  download("data.js", text);
-  toast("data.js 내보냄 — 다운로드 폴더 확인");
+  download("data.export.js", text);
+  toast("data.export.js 내보냄 — 다운로드 폴더 확인");
 };
 
 document.getElementById("btnRestore").onclick = function () {
-  if (!confirm("브라우저에 저장된 편집 내용을 지우고 원본 data.js로 되돌릴까요?")) return;
-  try { localStorage.removeItem(LS_KEY); } catch (e) {}
-  location.reload();
+  if (!confirm("현재 템플릿의 편집 내용을 지우고 원본으로 되돌릴까요?")) return;
+  try { localStorage.removeItem(LS_WORK + tid); } catch (e) {}
+  loadTemplateData(tid);
+  reloadNetwork();
+  toast("기본값 복원");
 };
 
-// ---------- 12. 토스트 ----------
+/* ============================================================
+   17. 토스트
+   ============================================================ */
 var toastTimer = null;
 function toast(msg) {
   var t = document.getElementById("toast");
@@ -498,9 +965,15 @@ function toast(msg) {
   toastTimer = setTimeout(function () { t.classList.add("hidden"); }, 2200);
 }
 
-// ---------- 13. 초기화 ----------
+/* ============================================================
+   18. 초기화
+   ============================================================ */
+initFilters();
+buildTemplateSelect();
 buildChips();
-applyFilter();
+applyVisibility();
+setTab("info");
+setActiveLayout("btnFree");
 window.addEventListener("load", function () {
   setTimeout(function () { network.fit({ animation: { duration: 700 } }); }, 400);
 });

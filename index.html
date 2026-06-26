@@ -14,11 +14,25 @@
     <div class="brand">
       <h1>E2E 성과관리 · HR 아키텍처 <span>마인드맵</span></h1>
       <p class="subtitle">목표수립 · 체크인 · 평가 · 피드백 &nbsp;|&nbsp; CSF→KPI &nbsp;|&nbsp; HR AI 4-Layer</p>
+
+      <!-- 요구사항 8: 프로세스 종류 선택 -->
+      <div class="tpl-row">
+        <label for="tplSelect">프로세스 종류</label>
+        <select id="tplSelect"></select>
+        <span id="tplDesc" class="tpl-desc"></span>
+      </div>
     </div>
 
     <div class="filters">
-      <div class="filter-label">그룹 필터 (클릭 = 표시/숨김)</div>
-      <div id="filterChips" class="chips"><!-- JS가 그룹 칩 생성 --></div>
+      <!-- 요구사항 6: 그룹(기능) 필터 + Layer 필터 = AND -->
+      <div class="filter-block">
+        <div class="filter-label">그룹(기능) 필터 — 클릭=표시/숨김 · 더블클릭=단독</div>
+        <div id="filterChips" class="chips"></div>
+      </div>
+      <div class="filter-block">
+        <div class="filter-label">Layer 필터 (그룹과 AND 교집합 적용)</div>
+        <div id="layerChips" class="chips"></div>
+      </div>
       <div class="filter-actions">
         <input type="text" id="searchBox" placeholder="🔍 노드 검색 후 Enter" />
         <button id="btnAll" class="btn">전체</button>
@@ -29,44 +43,83 @@
 
   <!-- ===== 본문: 마인드맵 + 사이드패널 ===== -->
   <main id="stage">
-    <!-- 플로팅 툴바 (요구사항 1·2) -->
+    <!-- 상단 좌측: 편집/저장 툴바 -->
     <div class="floating-toolbar">
-      <button id="btnAdd"     class="tool primary">＋ 노드 추가</button>
-      <button id="btnTidy"    class="tool">⟳ 화면 정리</button>
-      <button id="btnHier"    class="tool">⌗ 계층형</button>
-      <button id="btnFit"     class="tool">⤢ 전체 보기</button>
-      <button id="btnExport"  class="tool">⭳ data.js 내보내기</button>
-      <button id="btnRestore" class="tool ghost2">↺ 기본값 복원</button>
+      <button id="btnAdd"        class="tool primary">＋ 노드 추가</button>
+      <button id="btnSave"       class="tool">💾 저장</button>
+      <button id="btnHistory"    class="tool">🕘 History</button>
+      <button id="btnColor"      class="tool">🎨 색상</button>
+      <button id="btnFit"        class="tool">⤢ 전체 보기</button>
+      <button id="btnExport"     class="tool">⭳ 내보내기</button>
+      <button id="btnRestore"    class="tool ghost2">↺ 기본값</button>
+      <button id="btnIsolateOff" class="tool danger-tool" style="display:none">✕ 단독 해제</button>
+    </div>
+
+    <!-- 요구사항 4: 레이아웃 정렬 컨트롤러 (상단 우측) -->
+    <div class="layout-toolbar">
+      <span class="lt-label">정렬</span>
+      <button id="btnFree"    class="tool active">⟳ 자유</button>
+      <button id="btnVert"    class="tool">⌗ 수직계층</button>
+      <button id="btnHorz"    class="tool">⌗ 수평계층</button>
+      <button id="btnLayer"   class="tool">▥ Layer그룹</button>
+      <button id="btnCluster" class="tool">❉ 기능군집</button>
     </div>
 
     <div id="network"></div>
 
     <aside id="sidepanel" class="closed">
       <button id="panelClose" aria-label="닫기">×</button>
-      <div class="panel-tag" id="panelTag">그룹</div>
-      <h2 id="panelTitle">노드를 클릭하세요</h2>
 
-      <div class="panel-actions" id="panelActions" style="display:none">
-        <button id="btnEdit" class="btn small">✎ 수정</button>
-        <button id="btnDel"  class="btn small danger">🗑 삭제</button>
+      <!-- 패널 탭: 정보 / History / 색상 -->
+      <div class="panel-tabs">
+        <button id="tab-info"    class="ptab active">정보</button>
+        <button id="tab-history" class="ptab">History</button>
+        <button id="tab-color"   class="ptab">색상</button>
       </div>
 
-      <p id="panelSummary" class="panel-summary">
-        노드를 클릭하면 상세 설명과 연결관계가 표시됩니다. 클릭 시 이웃 노드가 강조되고 나머지는 흐려집니다.
-      </p>
-      <ul id="panelDetail" class="panel-detail"></ul>
-      <div class="panel-related" id="panelRelatedWrap" style="display:none">
-        <div class="related-label">연결된 노드</div>
-        <div id="panelRelated" class="related-list"></div>
-      </div>
+      <!-- 탭1: 정보 -->
+      <section id="pane-info">
+        <div class="panel-tag" id="panelTag">그룹</div>
+        <h2 id="panelTitle">노드를 클릭하세요</h2>
+
+        <div class="panel-actions" id="panelActions" style="display:none">
+          <button id="btnEdit"        class="btn small">✎ 수정</button>
+          <button id="btnIsolateNode" class="btn small">🎯 단독</button>
+          <button id="btnDel"         class="btn small danger">🗑 삭제</button>
+        </div>
+
+        <p id="panelSummary" class="panel-summary">
+          노드를 클릭하면 상세 설명과 연결관계가 표시됩니다. 더블클릭 → 수정, 선 더블클릭 → 실선/점선 전환.
+        </p>
+        <ul id="panelDetail" class="panel-detail"></ul>
+        <div class="panel-related" id="panelRelatedWrap" style="display:none">
+          <div class="related-label">연결된 노드</div>
+          <div id="panelRelated" class="related-list"></div>
+        </div>
+      </section>
+
+      <!-- 탭2: History (요구사항 2) -->
+      <section id="pane-history" style="display:none">
+        <h2 class="pane-h">저장 내역 (History)</h2>
+        <p class="pane-sub">항목을 클릭하면 해당 시점으로 맵을 복원합니다.</p>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <!-- 탭3: 색상 (요구사항 5) -->
+      <section id="pane-color" style="display:none">
+        <h2 class="pane-h">색상 커스터마이징</h2>
+        <p class="pane-sub">그룹별 색상을 바꾸면 노드와 상단 필터 버튼에 즉시 반영됩니다.</p>
+        <div id="colorList" class="color-list"></div>
+        <button id="btnColorReset" class="btn ghost-dark small" style="margin-top:14px">색상 기본값으로</button>
+      </section>
     </aside>
   </main>
 
   <footer id="legendbar">
-    <span class="hint">💡 노드/선 클릭 → 이웃 강조 + 상세 &nbsp;·&nbsp; 빈 곳 클릭 → 해제 &nbsp;·&nbsp; 휠 확대 / 드래그 이동 &nbsp;·&nbsp; 점선 = 보조 연결</span>
+    <span class="hint">💡 노드 클릭 → 강조+상세 · 더블클릭 → 수정 · 선 더블클릭 → 실선/점선 · 칩 더블클릭 → 단독 보기 · 휠 확대 / 드래그 이동</span>
   </footer>
 
-  <!-- ===== CRUD 모달 (요구사항 1) ===== -->
+  <!-- ===== CRUD 모달 ===== -->
   <div id="modal" class="modal-overlay hidden">
     <div class="modal">
       <button id="modalClose" aria-label="닫기">×</button>
@@ -87,7 +140,13 @@
       <div id="connectRow">
         <label for="fConnect">연결할 노드 (선택)</label>
         <select id="fConnect"></select>
-        <small class="hint-sm">선택한 노드와 새 노드를 선으로 연결합니다.</small>
+        <!-- 요구사항 3: 연결선 스타일 -->
+        <label for="fEdgeStyle" style="margin-top:10px">연결선 스타일</label>
+        <select id="fEdgeStyle">
+          <option value="solid">─ 실선 (Solid)</option>
+          <option value="dashed">┄ 점선 (Dashed)</option>
+        </select>
+        <small class="hint-sm">선택한 노드와 새 노드를 선으로 연결합니다. (선을 더블클릭하면 실선/점선 전환)</small>
       </div>
 
       <div class="modal-actions">
