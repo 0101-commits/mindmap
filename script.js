@@ -106,15 +106,19 @@ function idealText(hex) {
 var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 function animOpt(d) { return REDUCE_MOTION ? false : { duration: d, easingFunction: "easeInOutQuad" }; }
 
+var UNIFORM_BOX_WIDTH = 150;
+var UNIFORM_BOX_HEIGHT = 60;
+
 function makeVisNode(n) {
   var grp = GROUPS[n.group] || { color: "#64748b" };
   var c = grp.color;
   var isRoot = n.id === "root";
+  var isProcess = n.group === "process";
   var nodeObj = {
     id: n.id,
     label: n.label,
     group: n.group,
-    shape: isRoot ? "circle" : "box",
+    shape: "box",
     opacity: 1,
     hidden: false,
     color: {
@@ -124,16 +128,17 @@ function makeVisNode(n) {
       hover: { background: shade(c, 8), border: shade(c, -25) }
     },
     font: {
-      color: "#111827",
-      size: isRoot ? fontSize(20) : fontSize(14),
+      color: isRoot || isProcess ? "#ffffff" : "#111827",
+      size: isRoot ? fontSize(16) : fontSize(13),
       face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif",
-      strokeWidth: 3,
+      strokeWidth: isRoot || isProcess ? 0 : 3,
       strokeColor: "#ffffff",
       multi: false
     },
     borderWidth: 2,
-    margin: isRoot ? 14 : 10,
-    widthConstraint: isRoot ? 110 : { maximum: 160 },
+    margin: 8,
+    widthConstraint: { minimum: UNIFORM_BOX_WIDTH, maximum: UNIFORM_BOX_WIDTH },
+    heightConstraint: { minimum: UNIFORM_BOX_HEIGHT },
     mass: isRoot ? 4 : 1.3
   };
   // 레이아웃 엔진이 level 속성을 참조할 수 있도록 유지
@@ -509,7 +514,7 @@ function clearLevels() {
   visNodes.update(rawNodes.map(function (n) { return { id: n.id, level: undefined }; }));
 }
 
-// 🏢 신규: 프로세스 중심(Hierarchical) 레이아웃
+// 🏢 프로세스 중심: 상단 프로세스 + 하단 Activity 컬럼 배치
 function getProcessLevel(n) {
   if (n.id === "root") return 0;
   if (n.group === "process") return 1;
@@ -524,32 +529,114 @@ function getProcessLevel(n) {
   return 4;
 }
 
-function layoutProcessCentric() {
-  setActiveLayout("btnProcessHier");
-  
-  // 노드별 계층 레벨을 비즈니스 로직에 맞게 강제로 주입
-  visNodes.update(rawNodes.map(function (n) {
-    return { id: n.id, level: getProcessLevel(n) };
-  }));
+/* BFS로 프로세스 → 소속 Activity 노드를 탐색 */
+function buildProcessActivityMap() {
+  // 프로세스 노드 목록
+  var processNodes = rawNodes.filter(function (n) { return n.group === "process"; });
+  var processIds = {};
+  processNodes.forEach(function (n) { processIds[n.id] = true; });
 
-  network.setOptions({
-    physics: false,
-    layout: {
-      hierarchical: {
-        enabled: true,
-        direction: "UD",
-        sortMethod: "directed", 
-        levelSeparation: 150,
-        nodeSpacing: 180,
-        treeSpacing: 250,
-        blockShifting: true,
-        edgeMinimization: true,
-        parentCentralization: true
+  // 인접 리스트 (프로세스 간 연결, root→process 연결 제외)
+  var adj = {};
+  rawNodes.forEach(function (n) { adj[n.id] = []; });
+  rawEdges.forEach(function (e) {
+    // process→process, root→process 연결은 activity 탐색에서 제외
+    if (processIds[e.from] && processIds[e.to]) return;
+    if (e.from === "root" && processIds[e.to]) return;
+    if (e.from === "root" && !processIds[e.to]) return; // root→비process도 제외
+    adj[e.from] = adj[e.from] || [];
+    adj[e.to] = adj[e.to] || [];
+    adj[e.from].push(e.to);
+    adj[e.to].push(e.from);
+  });
+
+  var assigned = {}; // nodeId → processId
+  var procActivities = {}; // processId → [nodeId, ...]
+  processNodes.forEach(function (p) { procActivities[p.id] = []; });
+
+  // 각 프로세스에서 BFS로 연결된 비프로세스·비root 노드 수집
+  processNodes.forEach(function (p) {
+    var queue = [p.id];
+    var visited = {};
+    visited[p.id] = true;
+    while (queue.length > 0) {
+      var cur = queue.shift();
+      var neighbors = adj[cur] || [];
+      for (var i = 0; i < neighbors.length; i++) {
+        var nb = neighbors[i];
+        if (visited[nb]) continue;
+        if (nb === "root") continue;
+        if (processIds[nb]) continue;
+        if (assigned[nb]) continue; // 이미 다른 프로세스에 할당됨
+        visited[nb] = true;
+        assigned[nb] = p.id;
+        procActivities[p.id].push(nb);
+        queue.push(nb);
       }
     }
   });
+
+  // root에서 직접 연결된 비프로세스 노드 중 아직 미할당인 것 → 별도 "기타" 그룹
+  var unassigned = [];
+  rawNodes.forEach(function (n) {
+    if (n.id === "root") return;
+    if (processIds[n.id]) return;
+    if (!assigned[n.id]) unassigned.push(n.id);
+  });
+
+  return { processNodes: processNodes, procActivities: procActivities, unassigned: unassigned };
+}
+
+function layoutProcessCentric() {
+  setActiveLayout("btnProcessHier");
+
+  // 계층형 레이아웃 비활성화 — 수동 좌표 배치
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: false } } });
+  clearLevels();
+
+  var map = buildProcessActivityMap();
+  var processNodes = map.processNodes;
+  var procActivities = map.procActivities;
+  var unassigned = map.unassigned;
+
+  var COL_GAP = 220;    // 컬럼 간 수평 간격
+  var ROW_GAP = 90;     // Activity 간 수직 간격
+  var PROC_Y = 0;       // 프로세스 행 Y 좌표
+  var ACT_START_Y = 120; // Activity 시작 Y 좌표
+  var ROOT_Y = -120;     // Root 노드 Y 좌표
+
+  // 전체 컬럼 수 (프로세스 + 기타)
+  var totalCols = processNodes.length + (unassigned.length > 0 ? 1 : 0);
+  var totalWidth = (totalCols - 1) * COL_GAP;
+  var startX = -totalWidth / 2;
+
+  // Root 노드 배치 (중앙 상단)
+  try { network.moveNode("root", 0, ROOT_Y); } catch (e) {}
+
+  // 프로세스 노드 배치 (상단 행, 균등 간격)
+  processNodes.forEach(function (p, ci) {
+    var x = startX + ci * COL_GAP;
+    try { network.moveNode(p.id, x, PROC_Y); } catch (e) {}
+
+    // 해당 프로세스의 Activity 노드를 아래 컬럼에 배치
+    var activities = procActivities[p.id];
+    activities.forEach(function (aid, ri) {
+      var y = ACT_START_Y + ri * ROW_GAP;
+      try { network.moveNode(aid, x, y); } catch (e) {}
+    });
+  });
+
+  // 미할당 노드 → 마지막 컬럼에 배치
+  if (unassigned.length > 0) {
+    var extraX = startX + processNodes.length * COL_GAP;
+    unassigned.forEach(function (nid, ri) {
+      var y = ACT_START_Y + ri * ROW_GAP;
+      try { network.moveNode(nid, extraX, y); } catch (e) {}
+    });
+  }
+
   setTimeout(fitAll, 80);
-  toast("🏢 계층형 · 프로세스 중심 배치");
+  toast("🏢 프로세스 상단 · Activity 하단 배치");
 }
 
 function layoutFree() {
