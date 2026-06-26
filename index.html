@@ -4,8 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>개인 E2E 성과관리 · HR 아키텍처 마인드맵</title>
-  <!-- vis-network (CDN) -->
-  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <!-- SEO / 공유 메타 (P0-5) -->
+  <meta name="description" content="개인 단위 End-to-End 성과관리(목표수립·체크인·평가·피드백)와 CSF→KPI, HR AI 4-Layer 아키텍처를 4개 프로세스 템플릿(E2E·OKR·MBO·역량)으로 탐색하는 인터랙티브 HR 마인드맵." />
+  <meta name="theme-color" content="#356CB5" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="개인 E2E 성과관리 · HR 아키텍처 마인드맵" />
+  <meta property="og:description" content="목표수립→체크인→평가→피드백 + CSF/KPI + HR AI 4-Layer를 한 화면에서 필터·탐색하는 HR 컨설팅 데모 마인드맵." />
+  <meta property="og:url" content="https://0101-commits.github.io/mindmap/" />
+  <!-- 인라인 SVG favicon (data-URI, 외부 의존 없음) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMiAzMic+PHJlY3Qgd2lkdGg9JzMyJyBoZWlnaHQ9JzMyJyByeD0nNycgZmlsbD0nIzM1NkNCNScvPjxjaXJjbGUgY3g9JzE2JyBjeT0nOScgcj0nMy40JyBmaWxsPScjZmZmJy8+PGNpcmNsZSBjeD0nOScgY3k9JzIzJyByPSczLjQnIGZpbGw9JyNmZmYnLz48Y2lyY2xlIGN4PScyMycgY3k9JzIzJyByPSczLjQnIGZpbGw9JyNmZmYnLz48cGF0aCBkPSdNMTYgOSBMOSAyMyBNMTYgOSBMMjMgMjMgTTkgMjMgTDIzIDIzJyBzdHJva2U9JyNmZmYnIHN0cm9rZS13aWR0aD0nMS43JyBmaWxsPSdub25lJy8+PC9zdmc+" />
+
+  <!-- Pretendard 폰트 (P0-2) — dynamic-subset, 고정버전 + SRI -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" as="style" crossorigin
+        href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        integrity="sha384-/uC/GIvKJ/9RN6i1izHoBY9ubYo60OAsQRNQ3NRFiNsN+N/MVQJHD5OYcZz6wvwn" />
+
+  <!-- vis-network (P0-1) — jsDelivr 고정버전 10.1.0 + SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/vis-network@10.1.0/standalone/umd/vis-network.min.js"
+          integrity="sha384-Kp7cMaDnHOrgpE8FT6l7tUuGIo7kBcBVcttockpXN/whrsQBcy9ZcpKmr/1a/nMo"
+          crossorigin="anonymous"></script>
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -65,7 +85,8 @@
       <button id="btnCluster" class="tool">❉ 기능군집</button>
     </div>
 
-    <div id="network"></div>
+    <div id="network" role="application" aria-label="성과관리 마인드맵 시각화. 캔버스 탐색이 어려우면 상단의 그룹·Layer 필터와 검색으로 노드를 찾으세요."></div>
+    <p class="sr-only">마인드맵은 캔버스로 렌더링됩니다. 키보드 사용자는 상단 그룹 필터·Layer 필터(Tab 이동, Enter/Space 토글, Shift+Enter 단독 보기)와 검색창을 이용해 탐색할 수 있습니다.</p>
 
     <aside id="sidepanel" class="closed">
       <button id="panelClose" aria-label="닫기">×</button>

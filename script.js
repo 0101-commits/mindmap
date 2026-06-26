@@ -24,6 +24,13 @@ var HISTORY_MAX = 30;
 
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
+/* XSS 하드닝(P0-3): innerHTML 보간 시 사용 */
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+
 function lsGet(k) { try { var r = localStorage.getItem(k); return r ? JSON.parse(r) : null; } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
@@ -115,10 +122,11 @@ function makeVisNode(n) {
       hover: { background: shade(c, 8), border: shade(c, -25) }
     },
     font: {
-      color: "#ffffff",
+      color: "#111827",                 // 글자색 검정(잉크)
       size: isRoot ? fontSize(20) : fontSize(14),
       face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif",
-      strokeWidth: 0,
+      strokeWidth: 3,                    // 진한 배경에서도 가독 — 흰색 외곽선(halo)
+      strokeColor: "#ffffff",
       multi: false
     },
     borderWidth: 2,
@@ -370,6 +378,40 @@ function initFilters() {
 var chipWrap = document.getElementById("filterChips");
 var layerWrap = document.getElementById("layerChips");
 
+/* 칩 1개 생성 — 시맨틱 <button>(P0-4) + DOM 조립(P0-3 XSS 안전).
+   클릭/Enter/Space=토글, 더블클릭·Shift+Enter=단독 보기. */
+function makeChip(opt) {
+  var btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "chip" + (opt.cls ? " " + opt.cls : "") + (opt.active ? "" : " off");
+  btn.setAttribute("aria-pressed", opt.active ? "true" : "false");
+  btn.title = "클릭/Enter=표시·숨김 · 더블클릭/Shift+Enter=단독 보기";
+  if (opt.dotColor) {
+    var dot = document.createElement("span");
+    dot.className = "dot";
+    dot.style.background = opt.dotColor;
+    btn.appendChild(dot);
+  }
+  btn.appendChild(document.createTextNode(opt.label + " "));
+  var cnt = document.createElement("span");
+  cnt.className = "cnt";
+  cnt.textContent = opt.count;
+  btn.appendChild(cnt);
+
+  btn.onclick = function () {
+    if (isolateSet) exitIsolate(true);
+    var on = opt.toggle();
+    btn.classList.toggle("off", !on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    applyVisibility();
+  };
+  btn.ondblclick = function (e) { e.preventDefault(); opt.isolate(); };
+  btn.addEventListener("keydown", function (e) {
+    if (e.shiftKey && e.key === "Enter") { e.preventDefault(); opt.isolate(); }
+  });
+  return btn;
+}
+
 function buildChips() {
   // 그룹(기능) 칩
   chipWrap.innerHTML = "";
@@ -377,22 +419,11 @@ function buildChips() {
   rawNodes.forEach(function (n) { gCounts[n.group] = (gCounts[n.group] || 0) + 1; });
   groupsInTemplate().forEach(function (k) {
     var g = GROUPS[k];
-    var chip = document.createElement("span");
-    chip.className = "chip" + (activeGroups[k] ? "" : " off");
-    chip.innerHTML = '<span class="dot" style="background:' + g.color + '"></span>' +
-                     g.label + '<span class="cnt">' + (gCounts[k] || 0) + '</span>';
-    chip.title = "클릭=표시/숨김 · 더블클릭=단독 보기";
-    chip.onclick = function () {
-      if (isolateSet) exitIsolate(true);
-      activeGroups[k] = !activeGroups[k];
-      chip.classList.toggle("off", !activeGroups[k]);
-      applyVisibility();
-    };
-    chip.ondblclick = function (e) {
-      e.preventDefault();
-      isolateBy(function (n) { return n.group === k; }, "그룹 단독: " + g.label);
-    };
-    chipWrap.appendChild(chip);
+    chipWrap.appendChild(makeChip({
+      label: g.label, count: gCounts[k] || 0, dotColor: g.color, active: activeGroups[k],
+      toggle: function () { activeGroups[k] = !activeGroups[k]; return activeGroups[k]; },
+      isolate: function () { isolateBy(function (n) { return n.group === k; }, "그룹 단독: " + g.label); }
+    }));
   });
 
   // Layer 칩
@@ -402,21 +433,11 @@ function buildChips() {
   rawNodes.forEach(function (n) { var L = nodeLayer(n); lCounts[L] = (lCounts[L] || 0) + 1; });
   lays.forEach(function (k) {
     var L = TPL.layers[k];
-    var chip = document.createElement("span");
-    chip.className = "chip layer-chip" + (activeLayers[k] ? "" : " off");
-    chip.innerHTML = L.label + '<span class="cnt">' + (lCounts[k] || 0) + '</span>';
-    chip.title = "클릭=표시/숨김 · 더블클릭=단독 보기";
-    chip.onclick = function () {
-      if (isolateSet) exitIsolate(true);
-      activeLayers[k] = !activeLayers[k];
-      chip.classList.toggle("off", !activeLayers[k]);
-      applyVisibility();
-    };
-    chip.ondblclick = function (e) {
-      e.preventDefault();
-      isolateBy(function (n) { return nodeLayer(n) === k; }, "Layer 단독: " + L.label);
-    };
-    layerWrap.appendChild(chip);
+    layerWrap.appendChild(makeChip({
+      label: L.label, count: lCounts[k] || 0, cls: "layer-chip", active: activeLayers[k],
+      toggle: function () { activeLayers[k] = !activeLayers[k]; return activeLayers[k]; },
+      isolate: function () { isolateBy(function (n) { return nodeLayer(n) === k; }, "Layer 단독: " + L.label); }
+    }));
   });
 }
 
@@ -789,8 +810,8 @@ function renderHistory() {
     var row = document.createElement("div");
     row.className = "history-item";
     row.innerHTML =
-      '<div class="hi-main"><span class="hi-time">🕘 ' + h.label + '</span>' +
-      '<span class="hi-meta">' + (h.tname || h.tid) + ' · ' + (h.count || (h.nodes ? h.nodes.length : 0)) + '개</span></div>' +
+      '<div class="hi-main"><span class="hi-time">🕘 ' + escapeHtml(h.label) + '</span>' +
+      '<span class="hi-meta">' + escapeHtml(h.tname || h.tid) + ' · ' + (h.count || (h.nodes ? h.nodes.length : 0)) + '개</span></div>' +
       '<button class="hi-del" title="삭제">×</button>';
     row.querySelector(".hi-main").onclick = function () { restoreSnapshot(i); };
     row.querySelector(".hi-del").onclick = function (e) {
@@ -831,7 +852,7 @@ function renderColorPicker() {
     var row = document.createElement("div");
     row.className = "color-row";
     row.innerHTML =
-      '<span class="color-name"><span class="dot" style="background:' + g.color + '"></span>' + g.label + '</span>';
+      '<span class="color-name"><span class="dot" style="background:' + escapeHtml(g.color) + '"></span>' + escapeHtml(g.label) + '</span>';
     var inp = document.createElement("input");
     inp.type = "color"; inp.value = toHex(g.color);
     inp.oninput = function () { setGroupColor(k, inp.value); row.querySelector(".dot").style.background = inp.value; };
