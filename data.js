@@ -21,7 +21,11 @@ const GROUPS = {
   context:   { label: "맥락",     color: "#0891b2" },
   indicator: { label: "지표",     color: "#059669" },
   principle: { label: "원칙",     color: "#d97706" },
-  operation: { label: "운영",     color: "#7c3aed" }
+  operation: { label: "운영",     color: "#7c3aed" },
+  layer1:    { label: "Layer 1 · 인터페이스",     color: "#14b8a6" },
+  layer2:    { label: "Layer 2 · 오케스트레이션", color: "#ef4444" },
+  layer3:    { label: "Layer 3 · 보안·API",       color: "#64748b" },
+  layer4:    { label: "Layer 4 · 분산 데이터",     color: "#db2777" }
 };
 
 const NODES = [
@@ -409,7 +413,153 @@ const NODES = [
       "⑤ 책임 주기 설정(Daily/Weekly/Monthly/Quarterly).",
       "⑥ AD-FIT 코칭(Assess·Define·Focus·Implement·Take-away)."
     ]
-  }
+  },
+
+  /* ============================================================
+   *  HR AI 아키텍처 4계층 (Layer 1~4)
+   * ============================================================ */
+
+  /* ---------- LAYER 1 · HR INTERFACE ---------- */
+  {
+    id: "l1_users", group: "layer1", label: "👤 임직원 · 리더\nHR 담당자",
+    summary: "평가 대상자(임직원)·평가자(리더)·HR 인사 담당자 — 시스템 사용 주체.",
+    detail: [
+      "임직원: 평가 대상자.",
+      "리더: 평가자.",
+      "HR 담당자: 인사 운영 주체.",
+      "각자의 사번·직급 권한 정보를 가지고 시스템에 접근."
+    ]
+  },
+  {
+    id: "l1_agent", group: "layer1", label: "💬 HR AI Agent\n(UI/UX)",
+    summary: "권한별 맞춤형 화면 및 챗봇 인터페이스 제공.",
+    detail: [
+      "사용자의 사번·직급 권한 정보와 함께 명령 전달.",
+      "권한(Role)에 따라 노출 화면·기능을 차등 제공.",
+      "자연어 챗봇으로 성과·보상 관련 질의 처리."
+    ]
+  },
+
+  /* ---------- LAYER 2 · ORCHESTRATION & SUB-AGENT ---------- */
+  {
+    id: "l2_manager", group: "layer2", label: "🤖 HR AI Manager",
+    summary: "인사 거버넌스 및 데이터 권한 통제관.",
+    detail: [
+      "Interface Layer의 명령을 받아 실무 에이전트로 분배.",
+      "데이터 권한·거버넌스의 중앙 통제 지점.",
+      "Security Filter와 Multi-Agent System을 관장."
+    ]
+  },
+  {
+    id: "l2_security", group: "layer2", label: "🛡️ Security Filter",
+    summary: "사용자 권한(Role)별 데이터 접근 한도 최종 검증.",
+    detail: [
+      "Role 기반으로 접근 가능한 데이터 범위를 최종 게이트.",
+      "권한 초과 요청 차단.",
+      "API Gateway 진입 전 1차 검증선."
+    ]
+  },
+  {
+    id: "l2_mas", group: "layer2", label: "⚙️ Multi-Agent\nSystem",
+    summary: "역할 분담형 실무 에이전트 집합.",
+    detail: [
+      "업무별로 독립된 sub-Agent로 작업 분담.",
+      "각 에이전트는 데이터망 진입 시 독립 인증 요청."
+    ]
+  },
+  {
+    id: "l2_perf", group: "layer2", label: "[실무1] Performance\nEvaluation Agent",
+    summary: "정량/정성 성과 분석 실무 에이전트.",
+    detail: [
+      "KPI 달성도·정성평가 데이터 분석.",
+      "E2E 프로세스의 '평가' 단계를 지원.",
+      "데이터망 진입을 위한 독립 인증 요청."
+    ]
+  },
+  {
+    id: "l2_comp", group: "layer2", label: "[실무2] Compensation\nCalibration Agent",
+    summary: "보상 및 연봉 조정 시뮬레이션 실무 에이전트.",
+    detail: [
+      "성과 결과 기반 보상·연봉 조정 시뮬레이션.",
+      "E2E 프로세스의 'Feedback·보상연계'를 지원.",
+      "데이터망 진입을 위한 독립 인증 요청."
+    ]
+  },
+
+  /* ---------- LAYER 3 · SECURITY & API INTEGRATION ---------- */
+  {
+    id: "l3_gw", group: "layer3", label: "🔒 HR API Gateway\n& IAM",
+    summary: "HR 데이터 권한 독립성 게이트웨이 — 권한 격리의 핵심.",
+    detail: [
+      "각 데이터망에 대한 독립 인증·권한 격리 수행.",
+      "Open API 기반 권한 격리 접근 / 사내 폐쇄망 보안 접근 / 의미적 탐색으로 분기.",
+      "IAM(Identity & Access Management)으로 신원·접근 통제."
+    ]
+  },
+  {
+    id: "l3_saas", group: "layer3", label: "🌐 SaaS 전용 API",
+    summary: "개별 테넌트 인증 (OAuth 2.0 토큰 기반, 사외 클라우드 보안).",
+    detail: [
+      "테넌트별 OAuth 2.0 토큰 인증.",
+      "사외 클라우드(SaaS) 보안 연동.",
+      "→ SaaS Platform Data Layer 접근."
+    ]
+  },
+  {
+    id: "l3_onprem", group: "layer3", label: "🧱 On-Prem 전용 API",
+    summary: "사내 망분리 연동 (VPN/전용선, DB 접근 제어 솔루션).",
+    detail: [
+      "VPN/전용선 기반 사내 망분리 연동.",
+      "DB 접근 제어 솔루션 적용.",
+      "→ On-Premise Core Systems 접근."
+    ]
+  },
+  {
+    id: "l3_mask", group: "layer3", label: "👁️ Data Masking\nTool",
+    summary: "주민번호·사번 등 민감정보 실시간 비식별화 처리.",
+    detail: [
+      "민감정보(주민번호·사번 등) 실시간 비식별화.",
+      "SaaS·On-Prem 데이터에 마스킹 적용.",
+      "권한 외 사용자에게 원본 노출 차단."
+    ]
+  },
+
+  /* ---------- LAYER 4 · FEDERATED HR DATA ---------- */
+  {
+    id: "l4_saas", group: "layer4", label: "[4-A] SaaS Platform\nData Layer",
+    summary: "외부 클라우드 기반 협업/활동 데이터.",
+    detail: ["HRIS·소통·협업/산출물 데이터를 SaaS 형태로 보관."]
+  },
+  { id: "l4a_1", group: "layer4", label: "Workday /\nSuccessFactors",
+    summary: "HRIS (인사정보 시스템).", detail: ["클라우드 기반 핵심 인사정보 관리."] },
+  { id: "l4a_2", group: "layer4", label: "Slack / MS Teams",
+    summary: "소통 데이터.", detail: ["협업 메신저 기반 커뮤니케이션 활동 데이터."] },
+  { id: "l4a_3", group: "layer4", label: "Jira / Confluence",
+    summary: "협업/산출물 데이터.", detail: ["과제·문서 산출물 및 협업 이력."] },
+
+  {
+    id: "l4_onprem", group: "layer4", label: "[4-B] On-Premise\nCore Systems",
+    summary: "사내 폐쇄망 기반 코어 인사.",
+    detail: ["구축형 ERP·급여·징계 등 민감 코어 데이터를 폐쇄망에 보관."]
+  },
+  { id: "l4b_1", group: "layer4", label: "SAP / Oracle ERP",
+    summary: "구축형 ERP.", detail: ["온프레미스 전사 자원관리 시스템."] },
+  { id: "l4b_2", group: "layer4", label: "급여/보상\n레거시",
+    summary: "사내 급여·보상 레거시 시스템.", detail: ["민감 보상 데이터 — 강한 접근통제 필요."] },
+  { id: "l4b_3", group: "layer4", label: "징계·인사위\n문서",
+    summary: "징계 기록 및 인사위원회 문서.", detail: ["최고 민감 등급 — 마스킹·권한 격리 필수."] },
+
+  {
+    id: "l4_llm", group: "layer4", label: "[4-C] LLM Context\nData Layer",
+    summary: "특정 회사 고유 맥락 지식 DB.",
+    detail: ["의미적 탐색(semantic search)용 사내 고유 맥락 지식."]
+  },
+  { id: "l4c_1", group: "layer4", label: "Vector DB",
+    summary: "사내 규정·평가기준 임베딩.", detail: ["규정/평가기준 문서를 벡터화하여 의미 검색."] },
+  { id: "l4c_2", group: "layer4", label: "지식 그래프",
+    summary: "조직도·업무 관계.", detail: ["조직도·업무 관계를 그래프로 구조화."] },
+  { id: "l4c_3", group: "layer4", label: "신년사 ·\n인재상",
+    summary: "경영진 신년사 및 인재상 텍스트.", detail: ["회사 고유 가치·인재상 맥락 텍스트."] }
 ];
 
 const EDGES = [
@@ -484,5 +634,43 @@ const EDGES = [
   { from: "op_review", to: "p4", dashes: true },
   { from: "root", to: "op_change" },
   { from: "op_change", to: "op_action" },
-  { from: "op_action", to: "op_cfr", dashes: true }
+  { from: "op_action", to: "op_cfr", dashes: true },
+
+  /* ===== HR AI 아키텍처 계층 연결 ===== */
+  /* L1 → L2 */
+  { from: "l1_users", to: "l1_agent" },
+  { from: "l1_agent", to: "l2_manager" },
+  /* L2 내부 */
+  { from: "l2_manager", to: "l2_security" },
+  { from: "l2_manager", to: "l2_mas" },
+  { from: "l2_mas", to: "l2_perf" },
+  { from: "l2_mas", to: "l2_comp" },
+  /* L2 → L3 */
+  { from: "l2_perf", to: "l3_gw" },
+  { from: "l2_comp", to: "l3_gw" },
+  { from: "l2_security", to: "l3_gw", dashes: true },
+  /* L3 내부 분기 */
+  { from: "l3_gw", to: "l3_saas" },
+  { from: "l3_gw", to: "l3_onprem" },
+  { from: "l3_gw", to: "l3_mask" },
+  /* L3 → L4 */
+  { from: "l3_saas", to: "l4_saas" },
+  { from: "l3_onprem", to: "l4_onprem" },
+  { from: "l3_gw", to: "l4_llm", dashes: true },
+  { from: "l3_mask", to: "l4_onprem", dashes: true },
+  { from: "l3_mask", to: "l4_saas", dashes: true },
+  /* L4 데이터 소스 */
+  { from: "l4_saas", to: "l4a_1" },
+  { from: "l4_saas", to: "l4a_2" },
+  { from: "l4_saas", to: "l4a_3" },
+  { from: "l4_onprem", to: "l4b_1" },
+  { from: "l4_onprem", to: "l4b_2" },
+  { from: "l4_onprem", to: "l4b_3" },
+  { from: "l4_llm", to: "l4c_1" },
+  { from: "l4_llm", to: "l4c_2" },
+  { from: "l4_llm", to: "l4c_3" },
+  /* 아키텍처 ↔ E2E 프로세스 통합(보조 연결) */
+  { from: "root", to: "l1_agent", dashes: true },
+  { from: "l2_perf", to: "p3", dashes: true },
+  { from: "l2_comp", to: "p4", dashes: true }
 ];

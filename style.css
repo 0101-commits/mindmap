@@ -1,16 +1,16 @@
 /* ===================================================
-   개인 E2E 성과관리 마인드맵 — Style
-   현대적/깔끔 UI · 사이드 패널 · 필터 칩
+   E2E 성과관리 · HR 아키텍처 마인드맵 — Style
+   현대적/깔끔 UI · 사이드 패널 · 필터 칩 · CRUD 모달 · 툴바
    =================================================== */
 :root {
   --bg:          #0f172a;
-  --bg-soft:     #1e293b;
   --surface:     #ffffff;
   --ink:         #1f2937;
   --ink-soft:    #64748b;
   --line:        #e2e8f0;
   --brand:       #356CB5;
   --brand-dark:  #244c80;
+  --danger:      #dc2626;
   --radius:      14px;
   --shadow:      0 10px 30px rgba(15, 23, 42, .12);
   --font: "Pretendard", -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
@@ -32,37 +32,38 @@ html, body {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 16px 26px;
+  padding: 14px 24px;
   background: linear-gradient(120deg, var(--brand-dark), var(--brand));
   color: #fff;
   box-shadow: 0 4px 18px rgba(15, 23, 42, .18);
   z-index: 10;
   flex-wrap: wrap;
 }
-.brand h1 { font-size: 20px; font-weight: 800; letter-spacing: -.3px; }
+.brand h1 { font-size: 19px; font-weight: 800; letter-spacing: -.3px; }
 .brand h1 span { font-weight: 400; opacity: .85; }
-.subtitle { font-size: 12.5px; opacity: .82; margin-top: 3px; }
+.subtitle { font-size: 12px; opacity: .82; margin-top: 3px; }
 
-.filters { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
-.filter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: .7; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.filters { display: flex; flex-direction: column; gap: 7px; align-items: flex-end; }
+.filter-label { font-size: 11px; letter-spacing: .5px; opacity: .7; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; max-width: 640px; }
 
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 11px; border-radius: 999px;
-  font-size: 12.5px; font-weight: 600; cursor: pointer;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
   background: rgba(255,255,255,.16); color: #fff;
   border: 1.5px solid transparent;
   user-select: none; transition: all .15s ease;
 }
 .chip .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
-.chip.off { opacity: .42; text-decoration: line-through; }
-.chip:hover { background: rgba(255,255,255,.28); }
+.chip .cnt { font-size: 10px; opacity: .7; font-weight: 700; }
+.chip.off { opacity: .4; text-decoration: line-through; }
+.chip:hover { background: rgba(255,255,255,.3); }
 
 .filter-actions { display: flex; gap: 6px; align-items: center; }
 #searchBox {
   padding: 6px 11px; border-radius: 8px; border: none;
-  font-size: 12.5px; width: 150px; font-family: var(--font);
+  font-size: 12.5px; width: 180px; font-family: var(--font);
 }
 .btn {
   padding: 6px 13px; border-radius: 8px; border: none; cursor: pointer;
@@ -71,19 +72,41 @@ html, body {
 }
 .btn:hover { transform: translateY(-1px); }
 .btn.ghost { background: rgba(255,255,255,.16); color: #fff; }
+.btn.ghost-dark { background: #f1f5f9; color: var(--ink); }
+.btn.primary { background: var(--brand); color: #fff; }
+.btn.danger { background: var(--danger); color: #fff; }
+.btn.small { padding: 5px 11px; font-size: 12px; }
 
 /* ---------- 무대 ---------- */
-#stage { position: relative; height: calc(100% - 64px - 34px); }
+#stage { position: relative; height: calc(100% - 60px - 34px); }
 #network { width: 100%; height: 100%; background:
   radial-gradient(circle at 30% 20%, #ffffff 0%, #eef2f7 55%, #e2e8f0 100%); }
+
+/* ---------- 플로팅 툴바 ---------- */
+.floating-toolbar {
+  position: absolute; top: 14px; left: 14px; z-index: 4;
+  display: flex; gap: 7px; flex-wrap: wrap; max-width: 60%;
+}
+.tool {
+  padding: 8px 13px; border-radius: 10px; border: 1px solid var(--line);
+  background: rgba(255,255,255,.94); color: var(--ink);
+  font-size: 12.5px; font-weight: 700; cursor: pointer;
+  font-family: var(--font); box-shadow: var(--shadow);
+  backdrop-filter: blur(4px); transition: all .15s;
+}
+.tool:hover { transform: translateY(-1px); border-color: var(--brand); color: var(--brand-dark); }
+.tool.primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+.tool.primary:hover { background: var(--brand-dark); color: #fff; }
+.tool.active { background: var(--brand-dark); color: #fff; border-color: var(--brand-dark); }
+.tool.ghost2 { background: rgba(255,255,255,.7); color: var(--ink-soft); }
 
 /* ---------- 사이드 패널 ---------- */
 #sidepanel {
   position: absolute; top: 0; right: 0; height: 100%;
-  width: 380px; max-width: 88vw;
+  width: 384px; max-width: 88vw;
   background: var(--surface);
   box-shadow: -12px 0 30px rgba(15,23,42,.14);
-  padding: 26px 24px; overflow-y: auto;
+  padding: 24px 22px; overflow-y: auto;
   transition: transform .32s cubic-bezier(.4,0,.2,1);
   z-index: 5;
 }
@@ -99,16 +122,18 @@ html, body {
 
 .panel-tag {
   display: inline-block; font-size: 11px; font-weight: 800;
-  letter-spacing: .6px; text-transform: uppercase;
-  padding: 4px 10px; border-radius: 999px;
-  color: #fff; background: var(--brand); margin-bottom: 12px;
+  letter-spacing: .4px; padding: 4px 10px; border-radius: 999px;
+  color: #fff; background: var(--brand); margin-bottom: 10px;
 }
-#panelTitle { font-size: 22px; font-weight: 800; letter-spacing: -.4px; line-height: 1.25; }
+#panelTitle { font-size: 21px; font-weight: 800; letter-spacing: -.4px; line-height: 1.25; }
+
+.panel-actions { display: flex; gap: 7px; margin-top: 12px; }
+
 .panel-summary {
   margin-top: 12px; font-size: 14px; color: var(--ink-soft);
-  line-height: 1.6; padding-bottom: 16px; border-bottom: 1px solid var(--line);
+  line-height: 1.6; padding-bottom: 14px; border-bottom: 1px solid var(--line);
 }
-.panel-detail { list-style: none; margin-top: 16px; }
+.panel-detail { list-style: none; margin-top: 14px; }
 .panel-detail li {
   position: relative; padding: 9px 0 9px 20px; font-size: 13.5px;
   line-height: 1.55; color: var(--ink); border-bottom: 1px dashed var(--line);
@@ -117,8 +142,8 @@ html, body {
   content: ""; position: absolute; left: 2px; top: 16px;
   width: 7px; height: 7px; border-radius: 50%; background: var(--brand);
 }
-.panel-related { margin-top: 20px; }
-.related-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
+.panel-related { margin-top: 18px; }
+.related-label { font-size: 11px; font-weight: 700; color: var(--ink-soft); letter-spacing: .5px; margin-bottom: 8px; }
 .related-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .related-pill {
   font-size: 12px; padding: 5px 10px; border-radius: 8px; cursor: pointer;
@@ -133,11 +158,59 @@ html, body {
   background: var(--bg); color: #cbd5e1; font-size: 12px;
 }
 
+/* ---------- CRUD 모달 ---------- */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(15,23,42,.5); backdrop-filter: blur(3px);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .2s;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  position: relative; width: 440px; max-width: 92vw; max-height: 90vh; overflow-y: auto;
+  background: #fff; border-radius: 16px; padding: 26px 26px 22px;
+  box-shadow: 0 24px 60px rgba(15,23,42,.35);
+}
+.modal h3 { font-size: 19px; font-weight: 800; margin-bottom: 16px; }
+#modalClose {
+  position: absolute; top: 14px; right: 16px;
+  width: 30px; height: 30px; border: none; border-radius: 8px;
+  background: #f1f5f9; color: var(--ink-soft); font-size: 20px; cursor: pointer; line-height: 1;
+}
+.modal label {
+  display: block; font-size: 12.5px; font-weight: 700;
+  color: var(--ink-soft); margin: 12px 0 5px;
+}
+.modal label em { color: var(--danger); font-style: normal; }
+.modal input, .modal select, .modal textarea {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--line);
+  border-radius: 9px; font-size: 13.5px; font-family: var(--font);
+  color: var(--ink); background: #f8fafc; transition: border .15s;
+}
+.modal input:focus, .modal select:focus, .modal textarea:focus {
+  outline: none; border-color: var(--brand); background: #fff;
+}
+.modal textarea { resize: vertical; }
+.hint-sm { display: block; font-size: 11px; color: var(--ink-soft); margin-top: 4px; }
+.modal-actions { display: flex; align-items: center; gap: 8px; margin-top: 22px; }
+.modal-actions .spacer { flex: 1; }
+
+/* ---------- 토스트 ---------- */
+.toast {
+  position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+  background: var(--bg); color: #fff; padding: 11px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 600; z-index: 60; box-shadow: var(--shadow);
+  transition: opacity .25s, transform .25s;
+}
+.toast.hidden { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(8px); }
+
 /* 반응형 */
-@media (max-width: 720px) {
+@media (max-width: 760px) {
   #topbar { flex-direction: column; align-items: stretch; }
   .filters { align-items: stretch; }
   .chips, .filter-actions { justify-content: flex-start; }
-  #searchBox { flex: 1; }
+  .chips { max-width: 100%; }
+  #searchBox { flex: 1; width: auto; }
+  .floating-toolbar { max-width: 92%; }
   #sidepanel { width: 100%; }
 }
