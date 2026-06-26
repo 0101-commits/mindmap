@@ -54,7 +54,10 @@
         <div id="layerChips" class="chips"></div>
       </div>
       <div class="filter-actions">
-        <input type="text" id="searchBox" placeholder="🔍 노드 검색 후 Enter" />
+        <span class="search-wrap">
+          <input type="text" id="searchBox" placeholder="🔍 노드 검색 후 Enter" aria-label="노드 검색" aria-describedby="searchResults" />
+          <div id="searchResults" class="search-results hidden" role="listbox" aria-label="검색 결과"></div>
+        </span>
         <button id="btnAll" class="btn">전체</button>
         <button id="btnNone" class="btn ghost">모두 끄기</button>
       </div>
@@ -71,9 +74,13 @@
       <button id="btnColor"      class="tool">🎨 색상</button>
       <button id="btnFit"        class="tool">⤢ 전체 보기</button>
       <button id="btnExport"     class="tool">⭳ 내보내기</button>
+      <button id="btnExportJson" class="tool">⬇ JSON</button>
+      <button id="btnImport"     class="tool">⬆ 가져오기</button>
+      <button id="btnPng"        class="tool">🖼 PNG</button>
       <button id="btnRestore"    class="tool ghost2">↺ 기본값</button>
       <button id="btnIsolateOff" class="tool danger-tool" style="display:none">✕ 단독 해제</button>
     </div>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
 
     <!-- 요구사항 4: 레이아웃 정렬 컨트롤러 (상단 우측) -->
     <div class="layout-toolbar">

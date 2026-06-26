@@ -22,6 +22,9 @@ var LS_WORK    = "mm_v3_work_";        // + tid → { nodes, edges, colors }
 var LS_HISTORY = "mm_v3_history";      // [ { ts, tid, name, nodes, edges, colors } ]
 var HISTORY_MAX = 30;
 
+/* P1-2: 들어온 딥링크는 updateUrl()이 덮어쓰기 전에 캡처해 둔다 */
+var INITIAL_SEARCH = location.search;
+
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 
 /* XSS 하드닝(P0-3): innerHTML 보간 시 사용 */
@@ -165,7 +168,7 @@ var freePhysics = {
 
 var options = {
   layout: { improvedLayout: true, hierarchical: { enabled: false } },
-  interaction: { hover: true, tooltipDelay: 150, navigationButtons: false, keyboard: false, hideEdgesOnZoom: false },
+  interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
   physics: freePhysics,
   nodes: { shadow: { enabled: true, size: 8, x: 0, y: 3, color: "rgba(15,23,42,.18)" } },
   edges: { arrows: { to: { enabled: false } } }
@@ -312,12 +315,14 @@ function openPanel(id) {
 
   panel.classList.remove("closed");
   setTab("info");
+  updateUrl();   // P1-2: 선택 노드 URL 반영
 }
 
 function closePanel() {
   panel.classList.add("closed");
   document.getElementById("panelActions").style.display = "none";
   currentId = null;
+  updateUrl();   // P1-2
 }
 
 function focusNode(id) {
@@ -342,6 +347,7 @@ network.on("click", function (params) {
   } else {
     clearDim(); closePanel();
   }
+  var sr = document.getElementById("searchResults"); if (sr) sr.classList.add("hidden");
 });
 
 // 더블클릭: 노드 → 수정 / 엣지 → 선 스타일(실선·점선) 토글 (요구사항 3)
@@ -459,6 +465,7 @@ function applyVisibility() {
   visEdges.update(rawEdges.map(function (e) {
     return { id: e.id, hidden: !(vis[e.from] && vis[e.to]) };
   }));
+  updateUrl();   // P1-2: 필터/가시성 변경 시 URL 동기화
 }
 
 document.getElementById("btnAll").onclick = function () {
@@ -512,15 +519,50 @@ document.getElementById("btnIsolateNode").onclick = function () { if (currentId)
 /* ============================================================
    9. 검색
    ============================================================ */
+/* 매칭 노드 일괄 하이라이트 (P1-3) */
+function highlightMany(idSet) {
+  var keepE = new Set();
+  rawEdges.forEach(function (e) { if (idSet.has(e.from) && idSet.has(e.to)) keepE.add(e.id); });
+  applyDim(idSet, keepE);
+}
+
+function runSearch(raw) {
+  var q = (raw || "").trim().toLowerCase();
+  var box = document.getElementById("searchResults");
+  box.innerHTML = ""; box.classList.add("hidden");
+  if (!q) { clearDim(); return; }
+  var hits = rawNodes.filter(function (n) {
+    return ((n.label || "") + " " + (n.summary || "")).toLowerCase().indexOf(q) >= 0 && isVisibleNode(n);
+  });
+  if (hits.length === 0) { toast("검색 결과 없음 (필터/단독보기 확인)"); return; }
+
+  // 매칭 일괄 강조
+  highlightMany(new Set(hits.map(function (n) { return n.id; })));
+
+  if (hits.length === 1) { focusNode(hits[0].id); return; }
+
+  // 결과 리스트
+  var head = document.createElement("div");
+  head.className = "sr-head";
+  head.textContent = "검색 결과 " + hits.length + "건 — 선택 시 이동";
+  box.appendChild(head);
+  hits.forEach(function (n) {
+    var g = GROUPS[n.group] || { color: "#64748b" };
+    var item = document.createElement("button");
+    item.type = "button"; item.className = "sr-item"; item.setAttribute("role", "option");
+    var dot = document.createElement("span"); dot.className = "sr-dot"; dot.style.background = g.color;
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(n.label.replace(/\n/g, " ")));
+    item.onclick = function () { box.classList.add("hidden"); focusNode(n.id); };
+    box.appendChild(item);
+  });
+  box.classList.remove("hidden");
+  toast("🔍 " + hits.length + "건 매칭 (일괄 강조)");
+}
+
 document.getElementById("searchBox").addEventListener("keyup", function (ev) {
-  var q = this.value.trim().toLowerCase();
-  if (ev.key === "Enter" && q) {
-    var hit = rawNodes.find(function (n) {
-      return ((n.label || "") + " " + (n.summary || "")).toLowerCase().indexOf(q) >= 0 && isVisibleNode(n);
-    });
-    if (hit) focusNode(hit.id);
-    else toast("검색 결과 없음 (필터/단독보기 확인)");
-  }
+  if (ev.key === "Enter") runSearch(this.value);
+  else if (ev.key === "Escape") document.getElementById("searchResults").classList.add("hidden");
 });
 
 /* ============================================================
@@ -967,6 +1009,85 @@ document.getElementById("btnExport").onclick = function () {
   toast("data.export.js 내보냄 — 다운로드 폴더 확인");
 };
 
+/* --- P1-1: JSON 내보내기 (Import 왕복용 · 선택필드 src/label/rel 보존) --- */
+function exportNode(n) {
+  var o = { id: n.id, group: n.group };
+  if (n.layer) o.layer = n.layer;
+  o.label = n.label; o.summary = n.summary || ""; o.detail = n.detail || [];
+  if (n.src) o.src = n.src;
+  return o;
+}
+function exportEdge(e) {
+  var o = { from: e.from, to: e.to };
+  if (e.dashes) o.dashes = true;
+  if (e.label) o.label = e.label;
+  if (e.rel) o.rel = e.rel;
+  return o;
+}
+function downloadText(name, text, mime) {
+  var blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+}
+
+document.getElementById("btnExportJson").onclick = function () {
+  var payload = {
+    tid: tid, name: TPL.name, colors: currentColors(),
+    nodes: rawNodes.map(exportNode), edges: rawEdges.map(exportEdge)
+  };
+  downloadText("mindmap." + tid + ".json", JSON.stringify(payload, null, 2), "application/json");
+  toast("JSON 내보냄 — mindmap." + tid + ".json");
+};
+
+/* --- P1-1: JSON 가져오기 (검증·실패 시 토스트, 현재 템플릿 교체) --- */
+var importFileEl = document.getElementById("importFile");
+document.getElementById("btnImport").onclick = function () { importFileEl.value = ""; importFileEl.click(); };
+importFileEl.onchange = function () {
+  var f = importFileEl.files && importFileEl.files[0];
+  if (!f) return;
+  var reader = new FileReader();
+  reader.onload = function () {
+    var data;
+    try { data = JSON.parse(reader.result); }
+    catch (e) { toast("가져오기 실패: JSON 파싱 오류"); return; }
+    if (!data || !Array.isArray(data.nodes) || !Array.isArray(data.edges)) {
+      toast("가져오기 실패: nodes/edges 배열이 필요합니다"); return;
+    }
+    var ids = {};
+    for (var i = 0; i < data.nodes.length; i++) {
+      var n = data.nodes[i];
+      if (!n || !n.id || !n.group || !n.label) { toast("가져오기 실패: 노드 " + (i + 1) + "에 id/group/label 누락"); return; }
+      ids[n.id] = true;
+    }
+    for (var j = 0; j < data.edges.length; j++) {
+      var e = data.edges[j];
+      if (!e || !ids[e.from] || !ids[e.to]) { toast("가져오기 실패: 엣지 " + (j + 1) + "의 from/to가 노드와 불일치"); return; }
+    }
+    if (!confirm("현재 템플릿(" + TPL.name + ")의 노드/엣지/색상을 가져온 데이터로 교체할까요?")) return;
+    rawNodes = clone(data.nodes);
+    rawEdges = clone(data.edges);
+    var seq = 0; rawEdges.forEach(function (ed) { if (!ed.id) ed.id = "e" + (seq++); });
+    applyColors(data.colors || null);
+    reloadNetwork();
+    toast("가져오기 완료 — " + rawNodes.length + "개 노드");
+  };
+  reader.readAsText(f, "utf-8");
+};
+
+/* --- P1-1: 현재 화면 PNG 내보내기 --- */
+document.getElementById("btnPng").onclick = function () {
+  var cv = container.getElementsByTagName("canvas")[0];
+  if (!cv) { toast("캔버스를 찾지 못했습니다"); return; }
+  try {
+    var a = document.createElement("a");
+    a.href = cv.toDataURL("image/png");
+    a.download = "mindmap." + tid + ".png";
+    a.click();
+    toast("PNG 저장 — 현재 화면");
+  } catch (e) { toast("PNG 내보내기 실패"); }
+};
+
 document.getElementById("btnRestore").onclick = function () {
   if (!confirm("현재 템플릿의 편집 내용을 지우고 원본으로 되돌릴까요?")) return;
   try { localStorage.removeItem(LS_WORK + tid); } catch (e) {}
@@ -987,12 +1108,53 @@ function toast(msg) {
 }
 
 /* ============================================================
+   17.5 URL 딥링크 (P1-2) — tpl / 활성 group·layer / 선택 노드
+   ============================================================ */
+function updateUrl() {
+  try {
+    var p = new URLSearchParams();
+    p.set("tpl", tid);
+    var allG = groupsInTemplate();
+    var gs = allG.filter(function (k) { return activeGroups[k] !== false; });
+    if (gs.length < allG.length) p.set("g", gs.join(","));     // 전체 ON이면 생략
+    var allL = layersInTemplate();
+    var ls = allL.filter(function (k) { return activeLayers[k] !== false; });
+    if (ls.length < allL.length) p.set("l", ls.join(","));
+    if (currentId) p.set("node", currentId);
+    history.replaceState(null, "", location.pathname + "?" + p.toString());
+  } catch (e) {}
+}
+
+function applyUrlState() {
+  var p;
+  try { p = new URLSearchParams(INITIAL_SEARCH); } catch (e) { return; }
+  if (!p.toString()) return;
+  var t = p.get("tpl");
+  if (t && PROCESS_TEMPLATES[t] && t !== tid) {
+    switchTemplate(t);
+    var sel = document.getElementById("tplSelect"); if (sel) sel.value = t;
+  }
+  if (p.has("g")) {
+    var gset = {}; (p.get("g") || "").split(",").filter(Boolean).forEach(function (k) { gset[k] = true; });
+    groupsInTemplate().forEach(function (k) { activeGroups[k] = !!gset[k]; });
+  }
+  if (p.has("l")) {
+    var lset = {}; (p.get("l") || "").split(",").filter(Boolean).forEach(function (k) { lset[k] = true; });
+    layersInTemplate().forEach(function (k) { activeLayers[k] = !!lset[k]; });
+  }
+  buildChips(); applyVisibility();
+  var nd = p.get("node");
+  if (nd && nodeMap[nd]) setTimeout(function () { focusNode(nd); }, 500);
+}
+
+/* ============================================================
    18. 초기화
    ============================================================ */
 initFilters();
 buildTemplateSelect();
 buildChips();
 applyVisibility();
+applyUrlState();   // P1-2: URL 상태 복원
 setTab("info");
 setActiveLayout("btnFree");
 window.addEventListener("load", function () {
