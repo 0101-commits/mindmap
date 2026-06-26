@@ -128,10 +128,10 @@ function makeVisNode(n) {
       hover: { background: shade(c, 8), border: shade(c, -25) }
     },
     font: {
-      color: isRoot || isProcess ? "#ffffff" : "#111827",
+      color: "#111827",
       size: isRoot ? fontSize(16) : fontSize(13),
       face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif",
-      strokeWidth: isRoot || isProcess ? 0 : 3,
+      strokeWidth: 3,
       strokeColor: "#ffffff",
       multi: false
     },

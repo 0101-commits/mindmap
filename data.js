@@ -639,7 +639,7 @@ const TPL_E2E_EDGES = [
   { from: "i_vdt", to: "i_fin", dashes: true },
 
   /* 원칙 */
-  { from: "root", to: "pr_okr" },
+  // { from: "root", to: "pr_okr" },
   { from: "pr_okr", to: "pr_fast" },
   { from: "pr_okr", to: "pr_bii" },
   { from: "p1", to: "pr_smart", dashes: true },
@@ -648,7 +648,7 @@ const TPL_E2E_EDGES = [
   { from: "pr_bii", to: "i_strat", dashes: true },
 
   /* 운영 */
-  { from: "root", to: "op_checkin" },
+  // { from: "root", to: "op_checkin" },
   { from: "p2", to: "op_checkin" },
   { from: "op_checkin", to: "op_weekly" },
   { from: "op_weekly", to: "op_cfr" },
@@ -656,7 +656,7 @@ const TPL_E2E_EDGES = [
   { from: "p3", to: "op_eval" },
   { from: "p3", to: "op_talent" },
   { from: "op_review", to: "p4", dashes: true },
-  { from: "root", to: "op_change" },
+  // { from: "root", to: "op_change" },
   { from: "op_change", to: "op_action" },
   { from: "op_action", to: "op_cfr", dashes: true },
 
@@ -694,7 +694,7 @@ const TPL_E2E_EDGES = [
   { from: "l4_llm", to: "l4c_2" },
   { from: "l4_llm", to: "l4c_3" },
   /* 아키텍처 ↔ E2E 프로세스 통합(보조 연결) */
-  { from: "root", to: "l1_agent", dashes: true },
+  // { from: "root", to: "l1_agent", dashes: true },
   { from: "l2_perf", to: "p3", dashes: true },
   { from: "l2_comp", to: "p4", dashes: true },
 
