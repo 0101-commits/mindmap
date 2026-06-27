@@ -13,9 +13,9 @@
 /* ============================================================
    0. 저장소 키 / 유틸
    ============================================================ */
-var LS_STATE   = "mm_v4_state";        // { tid }
-var LS_WORK    = "mm_v4_work_";        // + tid → { nodes, edges, colors }
-var LS_HISTORY = "mm_v4_history";      // [ { ts, tid, name, nodes, edges, colors } ]
+var LS_STATE   = "mm_v5_state";        // { tid }
+var LS_WORK    = "mm_v5_work_";        // + tid → { nodes, edges, colors }
+var LS_HISTORY = "mm_v5_history";      // [ { ts, tid, name, nodes, edges, colors } ]
 var HISTORY_MAX = 30;
 
 var INITIAL_SEARCH = location.search;
