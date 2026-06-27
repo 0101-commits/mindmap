@@ -110,11 +110,10 @@ var UNIFORM_BOX_WIDTH = 150;
 var UNIFORM_BOX_HEIGHT = 60;
 
 function makeVisNode(n) {
-  var grp = GROUPS[n.group] || { color: "#64748b" };
+  var grp = GROUPS[n.group] || { color: "#dee3e9" };
   var c = grp.color;
   var isRoot = n.id === "root";
-  var isProcess = n.group === "process";
-  var textColor = idealText(c); // Use dark/light text based on node color
+  var textColor = idealText(c); // Dark or Light text
 
   var nodeObj = {
     id: n.id,
@@ -125,27 +124,22 @@ function makeVisNode(n) {
     hidden: false,
     color: {
       background: c,
-      border: shade(c, -20),
-      highlight: { background: shade(c, 20), border: "#ffffff" },
-      hover: { background: shade(c, 10), border: shade(c, -30) }
+      border: shade(c, -10),
+      highlight: { background: c, border: "#1876f2" },
+      hover: { background: shade(c, 10), border: shade(c, -20) }
     },
     font: {
       color: textColor,
       size: isRoot ? fontSize(18) : fontSize(14),
-      face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif",
+      face: "'Optimistic VF', Pretendard, sans-serif",
       strokeWidth: 0,
       multi: false,
       bold: { color: textColor }
     },
-    borderWidth: isRoot ? 3 : 2,
-    margin: 12,
-    shadow: {
-      enabled: true,
-      color: "rgba(0,0,0,0.4)",
-      size: 15,
-      x: 0,
-      y: 4
-    },
+    shapeProperties: { borderRadius: 16 },
+    borderWidth: 1,
+    margin: 16,
+    shadow: false,
     widthConstraint: { minimum: UNIFORM_BOX_WIDTH, maximum: UNIFORM_BOX_WIDTH },
     heightConstraint: { minimum: UNIFORM_BOX_HEIGHT },
     mass: isRoot ? 4 : 1.3
@@ -156,7 +150,7 @@ function makeVisNode(n) {
 }
 
 function edgeBaseColor(e) {
-  return e.dashes ? { color: "#64748b", opacity: 0.7 } : { color: "#94a3b8", opacity: 0.9 };
+  return e.dashes ? { color: "#8595a4", opacity: 0.7 } : { color: "#ced0d4", opacity: 1 };
 }
 
 var REL_STYLE = {
@@ -177,13 +171,13 @@ function makeVisEdge(e) {
     width: e.dashes ? 1.5 : 2.5,
     color: edgeColor(e),
     smooth: { enabled: true, type: "cubicBezier", roundness: 0.55 },
-    shadow: { enabled: true, size: 5, x: 0, y: 2, color: "rgba(0,0,0,0.3)" }
+    shadow: false
   };
   if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.6 } };
   var lbl = e.label || (rel ? rel.label : "");
   if (lbl) {
     o.label = lbl;
-    o.font = { size: 12, color: "#cbd5e1", strokeWidth: 2, strokeColor: "#0f172a", face: "Pretendard, sans-serif", align: "middle" };
+    o.font = { size: 12, color: "#444950", strokeWidth: 2, strokeColor: "#ffffff", face: "'Optimistic VF', Pretendard, sans-serif", align: "middle" };
   }
   return o;
 }
@@ -207,8 +201,8 @@ var options = {
   layout: { improvedLayout: true, hierarchical: { enabled: false } },
   interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
   physics: freePhysics,
-  nodes: { shadow: { enabled: true, size: 15, x: 0, y: 4, color: "rgba(0,0,0,0.4)" } },
-  edges: { arrows: { to: { enabled: false } }, shadow: { enabled: true, size: 5, x: 0, y: 2, color: "rgba(0,0,0,0.3)" } }
+  nodes: { shadow: false },
+  edges: { arrows: { to: { enabled: false } }, shadow: false }
 };
 
 var network = new vis.Network(container, { nodes: visNodes, edges: visEdges }, options);
@@ -258,11 +252,11 @@ function nodeLayer(n) {
 var dimmed = false;
 function applyDim(keepNodes, keepEdges) {
   var nu = rawNodes.map(function (n) {
-    return { id: n.id, opacity: keepNodes.has(n.id) ? 1 : 0.15 };
+    return { id: n.id, opacity: keepNodes.has(n.id) ? 1 : 0.2 };
   });
   var eu = rawEdges.map(function (e) {
     var on = keepEdges.has(e.id);
-    return { id: e.id, color: on ? { color: "#356CB5", opacity: 1 } : { color: "#cbd5e1", opacity: 0.08 } };
+    return { id: e.id, color: on ? { color: "#0064e0", opacity: 1 } : { color: "#ced0d4", opacity: 0.2 } };
   });
   visNodes.update(nu); visEdges.update(eu); dimmed = true;
 }
