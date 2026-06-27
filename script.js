@@ -763,12 +763,95 @@ function buildProcessActivityMap() {
 }
 
 function layoutProcessCentric() {
-  isLayoutFrozen = false;
+  isLayoutFrozen = true;
   setActiveLayout("btnProcessHier");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 350, nodeSpacing: 400, treeSpacing: 500 } } });
-  network.once("afterDrawing", freezeHierarchicalLayout);
+  
+  // 물리엔진 및 기본 계층형 레이아웃 끄기
+  network.setOptions({ 
+    physics: false, 
+    layout: { hierarchical: { enabled: false } },
+    nodes: { fixed: { x: true, y: true } } // 노드 고정식으로 변경 (제멋대로 움직임 방지)
+  });
+
+  var map = buildProcessActivityMap();
+  // p1, p2, p3, p4 순서대로 정렬
+  var procNodes = map.processNodes.sort(function(a, b) { return a.id.localeCompare(b.id); });
+  
+  var sectionY = {
+    0: -350, // root
+    1: 0,    // 프로세스
+    2: 350,  // HR 활동
+    3: 700,  // 데이터/내용
+    4: 1050, // 맥락/지표
+    5: 1400  // 레이어
+  };
+  
+  var colSpacing = 600; // 프로세스별 가로 간격
+  var startX = -((procNodes.length - 1) * colSpacing) / 2;
+  
+  var updates = [];
+  var nodeCols = {};
+  
+  // 프로세스별로 열(Column) 할당
+  procNodes.forEach(function(p, i) {
+    nodeCols[p.id] = i;
+    map.procActivities[p.id].forEach(function(cid) {
+      nodeCols[cid] = i;
+    });
+  });
+  
+  // 할당되지 않은 노드는 맨 우측 '기타' 열에 배치
+  var miscColIndex = procNodes.length;
+  map.unassigned.forEach(function(cid) {
+    nodeCols[cid] = miscColIndex;
+  });
+  
+  // 열(Column)과 섹션(Level)을 기준으로 그리드 셀(Grid Cell) 생성
+  var grid = {}; 
+  rawNodes.forEach(function(n) {
+    var col = nodeCols[n.id];
+    if (col === undefined) col = miscColIndex;
+    
+    var lvl = getProcessLevel(n);
+    if (n.id === "root") col = procNodes.length / 2 - 0.5; // root는 중앙에 배치
+    
+    var key = col + "_" + lvl;
+    if (!grid[key]) grid[key] = [];
+    grid[key].push(n.id);
+  });
+  
+  var staggerYOffsets = [-120, 0, 120];
+  var staggerXOffsets = [0, -180, 180];
+  
+  Object.keys(grid).forEach(function(key) {
+    var nodesInCell = grid[key];
+    var parts = key.split("_");
+    var col = parseFloat(parts[0]);
+    var lvl = parseInt(parts[1]);
+    
+    var baseX = startX + (col * colSpacing);
+    var baseY = sectionY[lvl];
+    if (baseY === undefined) baseY = lvl * 350;
+    
+    nodesInCell.forEach(function(nid, idx) {
+       var offsetX = 0, offsetY = 0;
+       if (nodesInCell.length > 1) {
+         offsetX = staggerXOffsets[idx % 3] || 0;
+         offsetY = staggerYOffsets[Math.floor((idx % 9) / 3)] || staggerYOffsets[idx % 3]; 
+       }
+       
+       updates.push({
+         id: nid,
+         x: baseX + offsetX,
+         y: baseY + offsetY,
+         fixed: { x: true, y: true } // 완전히 고정
+       });
+    });
+  });
+  
+  visNodes.update(updates);
   setTimeout(fitAll, 80);
-  toast("🏢 5단계 계층형 배치 (Level 1~5)");
+  toast("🏢 프로세스/단계별 고정형 배치 완료");
 }
 
 function layoutFree() {
