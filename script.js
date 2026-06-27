@@ -114,6 +114,8 @@ function makeVisNode(n) {
   var c = grp.color;
   var isRoot = n.id === "root";
   var isProcess = n.group === "process";
+  var textColor = idealText(c); // Use dark/light text based on node color
+
   var nodeObj = {
     id: n.id,
     label: n.label,
@@ -123,20 +125,27 @@ function makeVisNode(n) {
     hidden: false,
     color: {
       background: c,
-      border: shade(c, -18),
-      highlight: { background: shade(c, 12), border: shade(c, -25) },
-      hover: { background: shade(c, 8), border: shade(c, -25) }
+      border: shade(c, -20),
+      highlight: { background: shade(c, 20), border: "#ffffff" },
+      hover: { background: shade(c, 10), border: shade(c, -30) }
     },
     font: {
-      color: "#111827",
-      size: isRoot ? fontSize(16) : fontSize(13),
+      color: textColor,
+      size: isRoot ? fontSize(18) : fontSize(14),
       face: "Pretendard, Segoe UI, Malgun Gothic, sans-serif",
-      strokeWidth: 3,
-      strokeColor: "#ffffff",
-      multi: false
+      strokeWidth: 0,
+      multi: false,
+      bold: { color: textColor }
     },
-    borderWidth: 2,
-    margin: 8,
+    borderWidth: isRoot ? 3 : 2,
+    margin: 12,
+    shadow: {
+      enabled: true,
+      color: "rgba(0,0,0,0.4)",
+      size: 15,
+      x: 0,
+      y: 4
+    },
     widthConstraint: { minimum: UNIFORM_BOX_WIDTH, maximum: UNIFORM_BOX_WIDTH },
     heightConstraint: { minimum: UNIFORM_BOX_HEIGHT },
     mass: isRoot ? 4 : 1.3
@@ -147,14 +156,14 @@ function makeVisNode(n) {
 }
 
 function edgeBaseColor(e) {
-  return e.dashes ? { color: "#94a3b8", opacity: 0.7 } : { color: "#cbd5e1", opacity: 1 };
+  return e.dashes ? { color: "#64748b", opacity: 0.7 } : { color: "#94a3b8", opacity: 0.9 };
 }
 
 var REL_STYLE = {
-  contribute: { color: "#16a34a", label: "기여" },
-  cascade:    { color: "#356CB5", label: "캐스케이딩" },
-  measure:    { color: "#0891b2", label: "측정" },
-  align:      { color: "#d97706", label: "정렬" }
+  contribute: { color: "#34d399", label: "기여" },
+  cascade:    { color: "#60a5fa", label: "캐스케이딩" },
+  measure:    { color: "#22d3ee", label: "측정" },
+  align:      { color: "#fbbf24", label: "정렬" }
 };
 function edgeColor(e) {
   var rel = e.rel && REL_STYLE[e.rel];
@@ -165,15 +174,16 @@ function makeVisEdge(e) {
   var rel = e.rel && REL_STYLE[e.rel];
   var o = {
     id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
-    width: e.dashes ? 1 : 2,
+    width: e.dashes ? 1.5 : 2.5,
     color: edgeColor(e),
-    smooth: { enabled: true, type: "cubicBezier", roundness: 0.55 }
+    smooth: { enabled: true, type: "cubicBezier", roundness: 0.55 },
+    shadow: { enabled: true, size: 5, x: 0, y: 2, color: "rgba(0,0,0,0.3)" }
   };
-  if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.55 } };
+  if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.6 } };
   var lbl = e.label || (rel ? rel.label : "");
   if (lbl) {
     o.label = lbl;
-    o.font = { size: 11, color: "#475569", strokeWidth: 3, strokeColor: "#ffffff", face: "Pretendard, sans-serif", align: "middle" };
+    o.font = { size: 12, color: "#cbd5e1", strokeWidth: 2, strokeColor: "#0f172a", face: "Pretendard, sans-serif", align: "middle" };
   }
   return o;
 }
@@ -197,8 +207,8 @@ var options = {
   layout: { improvedLayout: true, hierarchical: { enabled: false } },
   interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
   physics: freePhysics,
-  nodes: { shadow: { enabled: true, size: 8, x: 0, y: 3, color: "rgba(15,23,42,.18)" } },
-  edges: { arrows: { to: { enabled: false } } }
+  nodes: { shadow: { enabled: true, size: 15, x: 0, y: 4, color: "rgba(0,0,0,0.4)" } },
+  edges: { arrows: { to: { enabled: false } }, shadow: { enabled: true, size: 5, x: 0, y: 2, color: "rgba(0,0,0,0.3)" } }
 };
 
 var network = new vis.Network(container, { nodes: visNodes, edges: visEdges }, options);

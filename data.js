@@ -33,6 +33,9 @@ const GROUPS = {
   operation: { label: "운영",     color: "#7c3aed" },
   develop:   { label: "육성",     color: "#16a34a" },
   evaluate:  { label: "평가",     color: "#e11d48" },
+  data:      { label: "데이터",   color: "#0284c7" },
+  content:   { label: "내용",     color: "#ca8a04" },
+  activity:  { label: "액티비티", color: "#9333ea" },
   layer1:    { label: "Layer 1 · 인터페이스",     color: "#14b8a6" },
   layer2:    { label: "Layer 2 · 오케스트레이션", color: "#ef4444" },
   layer3:    { label: "Layer 3 · 보안·API",       color: "#64748b" },
@@ -1612,6 +1615,188 @@ const TPL_COMP_EDGES = [
 ];
 
 /* ============================================================
+ *  템플릿 5 — 프로세스별 상세 (데이터/맥락/액티비티)
+ * ============================================================ */
+const TPL_PROCESS_DETAIL_NODES = [
+  { id: "root", group: "core", layer: "common", label: "프로세스별 상세\n(Data·Context·Activity)",
+    summary: "E2E 성과관리 4단계별 필요 데이터, 맥락, 내용, 운영 액티비티를 정의합니다.",
+    detail: [
+      "각 단계(목표수립, 체크인, 평가, 피드백)에서 요구되는 실무적 기반을 상세화.",
+      "Data: 시스템/현황 데이터 기반, Content: 채워야 할 실질적 내용, Context: 목적/배경적 맥락, Activity: 실제 일어나는 활동."
+    ] },
+
+  /* 1단계: 목표수립 */
+  { id: "pd_p1", group: "process", layer: "p1", label: "1. 목표수립",
+    summary: "조직 목표와 개인 직무를 연계하여 당해 성과 목표를 수립.",
+    detail: ["조직과 개인의 정렬(Alignment)을 확보하는 출발점."] },
+  { id: "pd_p1_data", group: "data", layer: "p1", label: "Data\n(데이터)",
+    summary: "목표수립을 위해 요구되는 기초 데이터.",
+    detail: [
+      "직무기술서(Job Description) 및 역할 프로파일.",
+      "전년도 평가 결과 및 미달성 KPI 현황.",
+      "상위 조직(본부/팀)의 당해 목표 및 경영계획 데이터."
+    ] },
+  { id: "pd_p1_content", group: "content", layer: "p1", label: "Content\n(내용)",
+    summary: "목표설정서에 실질적으로 담겨야 할 내용.",
+    detail: [
+      "당해 핵심성공요인(CSF) 및 핵심성과지표(KPI) 정의.",
+      "KPI별 목표수준(Target, Threshold, Cap) 및 가중치 배분.",
+      "개인개발계획(IDP) 및 육성 목표 연계안."
+    ] },
+  { id: "pd_p1_context", group: "context", layer: "p1", label: "Context\n(맥락)",
+    summary: "목표수립의 배경적/전략적 맥락.",
+    detail: [
+      "전사 비전 및 경영전략과의 수직적 정렬(Vertical Alignment).",
+      "유관/협업 부서와의 수평적 정렬(Horizontal Alignment).",
+      "왜 이 목표가 중요한지에 대한 리더-팀원 간 공감대 형성."
+    ] },
+  { id: "pd_p1_activity", group: "activity", layer: "p1", label: "Activity\n(액티비티)",
+    summary: "목표수립 단계의 주요 운영 활동.",
+    detail: [
+      "KPI Pool 검토 및 7대 적정성(SMART) 기준 점검.",
+      "목표 검토회의(1:1 미팅)를 통한 목표 난이도 및 가중치 협의.",
+      "1, 2차 평가자 목표 확정 및 서명(Sign-off)."
+    ] },
+
+  /* 2단계: Mid-year Review */
+  { id: "pd_p2", group: "process", layer: "p2", label: "2. Mid-year\nReview",
+    summary: "연중/반기 중간 점검을 통한 진행 상황 확인 및 목표 보완.",
+    detail: ["목표 달성을 위한 리소스 재배분 및 코칭."] },
+  { id: "pd_p2_data", group: "data", layer: "p2", label: "Data\n(데이터)",
+    summary: "중간점검을 위해 요구되는 진척 데이터.",
+    detail: [
+      "상반기 KPI 달성률 및 실적 집계 데이터.",
+      "프로젝트 마일스톤 진척도 및 예산 집행 현황.",
+      "수시 피드백/체크인 이력 텍스트 데이터."
+    ] },
+  { id: "pd_p2_content", group: "content", layer: "p2", label: "Content\n(내용)",
+    summary: "리뷰 면담에서 다루어야 할 실질적 내용.",
+    detail: [
+      "부진 KPI의 원인 분석 및 병목(Bottleneck) 요인 식별.",
+      "하반기 Catch-up을 위한 실행 계획(Action Plan).",
+      "필요한 추가 지원 사항(인력, 예산, 권한 등)."
+    ] },
+  { id: "pd_p2_context", group: "context", layer: "p2", label: "Context\n(맥락)",
+    summary: "중간점검 시 고려해야 할 환경적 변화 맥락.",
+    detail: [
+      "대내외 비즈니스 환경 변화에 따른 목표 타당성 재검토.",
+      "목표 우선순위 변경 여부 및 전략적 Pivot 필요성.",
+      "팀원의 업무 피로도 및 동기부여 상태."
+    ] },
+  { id: "pd_p2_activity", group: "activity", layer: "p2", label: "Activity\n(액티비티)",
+    summary: "Mid-year Review 주요 운영 활동.",
+    detail: [
+      "피평가자의 중간 점검 양식 자가 작성.",
+      "리더-팀원 1:1 중간 리뷰 면담 및 코칭(AD-FIT).",
+      "환경 변화에 따른 목표 재설정(필요 시) 및 리소스 재조정."
+    ] },
+
+  /* 3단계: 평가 */
+  { id: "pd_p3", group: "process", layer: "p3", label: "3. 평가",
+    summary: "연간 성과에 대한 종합적 판단 및 등급 확정.",
+    detail: ["객관성과 수용성을 확보하기 위한 평가 과정."] },
+  { id: "pd_p3_data", group: "data", layer: "p3", label: "Data\n(데이터)",
+    summary: "평가 시 요구되는 실적 기반 데이터.",
+    detail: [
+      "연간 KPI 최종 실적 및 달성률 데이터.",
+      "다면평가(360도 평가) 결과 및 동료 피드백 종합.",
+      "조직 전체의 등급 분포 및 가이드라인 데이터."
+    ] },
+  { id: "pd_p3_content", group: "content", layer: "p3", label: "Content\n(내용)",
+    summary: "평가 과정에서 다루어지는 핵심 내용.",
+    detail: [
+      "자기평가서(실적 증빙 및 정성적 성과 기술).",
+      "상사평가서(항목별 평점 및 정성평가 코멘트).",
+      "Calibration(등급 조정)을 위한 인재 스냅샷 및 평가 근거."
+    ] },
+  { id: "pd_p3_context", group: "context", layer: "p3", label: "Context\n(맥락)",
+    summary: "성과의 단순 수치를 넘어선 해석적 맥락.",
+    detail: [
+      "목표의 난이도(도전성, 복잡성) 및 기여도.",
+      "통제 불가능한 외부 요인(시장 변동 등)의 영향.",
+      "단기 성과와 장기적 역량 성장 간의 균형(Trade-off)."
+    ] },
+  { id: "pd_p3_activity", group: "activity", layer: "p3", label: "Activity\n(액티비티)",
+    summary: "평가 단계의 주요 운영 활동.",
+    detail: [
+      "자기평가 실시 및 증빙 자료 제출.",
+      "1차/2차 평가자의 평가 및 타당성 검토.",
+      "평가자 간 Calibration Meeting을 통한 최종 등급 조정(평가 오류 최소화)."
+    ] },
+
+  /* 4단계: Feedback */
+  { id: "pd_p4", group: "process", layer: "p4", label: "4. Feedback",
+    summary: "평가 결과 공유 및 차기 성장을 위한 피드백.",
+    detail: ["단순 통보가 아닌 인정과 성장을 위한 대화."] },
+  { id: "pd_p4_data", group: "data", layer: "p4", label: "Data\n(데이터)",
+    summary: "피드백 면담을 위해 필요한 데이터.",
+    detail: [
+      "최종 확정 평가 등급 및 개인/조직 성과급 산정 데이터.",
+      "역량 Gap 분석 결과 및 강점/약점 데이터.",
+      "과거 피드백 이력 및 행동 변화 트래킹 지표."
+    ] },
+  { id: "pd_p4_content", group: "content", layer: "p4", label: "Content\n(내용)",
+    summary: "피드백 면담에서 전달 및 기록될 내용.",
+    detail: [
+      "Feedback Note(최종 결과 통보 및 종합 코멘트).",
+      "우수 성과에 대한 구체적인 인정(Recognition) 사항.",
+      "개선 필요 영역 및 차년도 개발 포커스."
+    ] },
+  { id: "pd_p4_context", group: "context", layer: "p4", label: "Context\n(맥락)",
+    summary: "수용성을 높이기 위한 소통적 맥락.",
+    detail: [
+      "평가 결과와 보상(연봉/성과급) 연계의 논리적 배경 설명.",
+      "조직의 기대 수준과 개인의 성취 수준 간의 간극 인식.",
+      "심리적 안전감이 보장된 건설적인 피드백 환경 조성."
+    ] },
+  { id: "pd_p4_activity", group: "activity", layer: "p4", label: "Activity\n(액티비티)",
+    summary: "피드백 단계의 주요 운영 활동.",
+    detail: [
+      "평가 결과 및 보상 내역 개별 통보.",
+      "1:1 공식 피드백 면담(결과 설명 및 이의제기 절차 안내).",
+      "차년도 목표 수립(IDP 연계)을 위한 사전 방향성 논의."
+    ] }
+];
+
+const TPL_PROCESS_DETAIL_EDGES = [
+  /* root -> 4단계 */
+  { from: "root", to: "pd_p1" },
+  { from: "root", to: "pd_p2" },
+  { from: "root", to: "pd_p3" },
+  { from: "root", to: "pd_p4" },
+
+  /* 흐름 연결 */
+  { from: "pd_p1", to: "pd_p2" },
+  { from: "pd_p2", to: "pd_p3" },
+  { from: "pd_p3", to: "pd_p4" },
+  { from: "pd_p4", to: "pd_p1", dashes: true },
+
+  /* 1. 목표수립 하위 */
+  { from: "pd_p1", to: "pd_p1_data" },
+  { from: "pd_p1", to: "pd_p1_content" },
+  { from: "pd_p1", to: "pd_p1_context" },
+  { from: "pd_p1", to: "pd_p1_activity" },
+
+  /* 2. Mid-year Review 하위 */
+  { from: "pd_p2", to: "pd_p2_data" },
+  { from: "pd_p2", to: "pd_p2_content" },
+  { from: "pd_p2", to: "pd_p2_context" },
+  { from: "pd_p2", to: "pd_p2_activity" },
+
+  /* 3. 평가 하위 */
+  { from: "pd_p3", to: "pd_p3_data" },
+  { from: "pd_p3", to: "pd_p3_content" },
+  { from: "pd_p3", to: "pd_p3_context" },
+  { from: "pd_p3", to: "pd_p3_activity" },
+
+  /* 4. Feedback 하위 */
+  { from: "pd_p4", to: "pd_p4_data" },
+  { from: "pd_p4", to: "pd_p4_content" },
+  { from: "pd_p4", to: "pd_p4_context" },
+  { from: "pd_p4", to: "pd_p4_activity" }
+];
+
+/* ============================================================
  *  프로세스 템플릿 레지스트리
  * ============================================================ */
 const PROCESS_TEMPLATES = {
@@ -1677,6 +1862,23 @@ const PROCESS_TEMPLATES = {
       develop: "develop", evaluate: "eval", operation: "place", principle: "develop"
     },
     nodes: TPL_COMP_NODES, edges: TPL_COMP_EDGES
+  },
+
+  process_detail: {
+    name: "프로세스별 상세 (데이터/맥락/액티비티)",
+    desc: "4단계 프로세스별 Data, Content, Context, Activity 심층 맵.",
+    layers: {
+      common: { label: "공통" },
+      p1: { label: "1. 목표수립" },
+      p2: { label: "2. 중간점검" },
+      p3: { label: "3. 평가" },
+      p4: { label: "4. 피드백" }
+    },
+    groupLayer: {
+      core: "common", process: "common",
+      data: "common", content: "common", context: "common", activity: "common"
+    },
+    nodes: TPL_PROCESS_DETAIL_NODES, edges: TPL_PROCESS_DETAIL_EDGES
   }
 };
 
