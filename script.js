@@ -13,9 +13,9 @@
 /* ============================================================
    0. 저장소 키 / 유틸
    ============================================================ */
-var LS_STATE   = "mm_v3_state";        // { tid }
-var LS_WORK    = "mm_v3_work_";        // + tid → { nodes, edges, colors }
-var LS_HISTORY = "mm_v3_history";      // [ { ts, tid, name, nodes, edges, colors } ]
+var LS_STATE   = "mm_v4_state";        // { tid }
+var LS_WORK    = "mm_v4_work_";        // + tid → { nodes, edges, colors }
+var LS_HISTORY = "mm_v4_history";      // [ { ts, tid, name, nodes, edges, colors } ]
 var HISTORY_MAX = 30;
 
 var INITIAL_SEARCH = location.search;
@@ -193,6 +193,10 @@ function makeVisEdge(e) {
 /* ============================================================
    3. 네트워크 생성 & Topbar 토글
    ============================================================ */
+var nodeMap = {};
+function rebuildMap() { nodeMap = {}; rawNodes.forEach(function (n) { nodeMap[n.id] = n; }); }
+rebuildMap();
+
 var visNodes = new vis.DataSet(rawNodes.map(makeVisNode));
 var visEdges = new vis.DataSet(rawEdges.map(makeVisEdge));
 var container = document.getElementById("network");
@@ -321,9 +325,7 @@ document.getElementById("btnToggleTopbar").onclick = function () {
 /* ============================================================
    4. nodeMap / 레이어 헬퍼
    ============================================================ */
-var nodeMap = {};
-function rebuildMap() { nodeMap = {}; rawNodes.forEach(function (n) { nodeMap[n.id] = n; }); }
-rebuildMap();
+/* nodeMap is now initialized earlier */
 
 function nodeLayer(n) {
   return n.layer || (TPL.groupLayer && TPL.groupLayer[n.group]) || "_";
