@@ -598,7 +598,32 @@ const TPL_E2E_NODES = [
   },
   { id: "l4c_3", group: "layer4", level: 6, section: 3, hashtags: ["#신년사", "#인재상"], label: "신년사 ·\n인재상",
     summary: "경영진 신년사 및 인재상 텍스트.", detail: ["회사 고유 가치·인재상 맥락 텍스트."], src: "기획회의 (HR AI 아키텍처)"
-  }
+  },
+  /* ---------- Process 2 (체크인) ---------- */
+  { id: "p2_prep", group: "activity", level: 2, section: 2, hashtags: ["#가이드", "#일정수립"], label: "Mid-year Review\n준비", summary: "Mid-year Review 운영 계획 수립 및 본인 중간 점검 양식을 작성합니다.", detail: ["HR: Review 일정 및 Guide 수립, 교육 실시", "피평가자: 중간점검 양식 작성 및 특이사항 정리", "평가자: 중간점검 결과 사전 Review 및 개인 면담 일정 수립"], src: "PM Manual" },
+  { id: "p2_meeting", group: "activity", level: 2, section: 2, hashtags: ["#체크인", "#면담"], label: "중간 점검\n1:1 면담", summary: "평가자와 피평가자 간 1:1 면담을 통해 상반기 진척도를 점검하고 하반기 계획을 수립합니다.", detail: ["피평가자: 목표 달성도 및 부진원인, 지원필요사항 설명", "평가자: 개선 방향 제시 및 Resource Allocation 논의", "HR: 면담 진행 참관 및 현황 모니터링"], src: "PM Manual" },
+  { id: "p2_report", group: "activity", level: 2, section: 2, hashtags: ["#결과취합", "#모니터링"], label: "면담 결과\n정리 및 취합", summary: "중간 점검 면담 결과를 요약 정리하여 HR에 제출하고 보고합니다.", detail: ["평가자: 현 수준에 대한 평가자 의견 및 면담 결과 기록 후 HR 송부", "HR: 진행 경과, 목표 달성도 및 주요 Issue 요약, 경영진 보고"], src: "PM Manual" },
+  { id: "p2_data_form", group: "data", level: 3, section: 3, hashtags: ["#중간점검양식", "#달성도"], label: "본인 중간\n점검 양식", summary: "목표 달성도, 부진원인, 지원필요사항 등 특이사항을 기록한 문서 데이터입니다.", detail: ["KPI별 중간 실적 및 달성도 사전 점검", "부진 항목에 대한 원인 분석 및 하반기 개선 방향", "조직 차원의 지원 필요 사항(Resource Allocation) 명시"], src: "PM Manual" },
+  { id: "p2_context_A", group: "context", level: 4, section: 4, hashtags: ["#조직변화", "#R&R"], label: "진도/책임\n완수 확인", summary: "Mid-year Review 시 상반기 동안 발생한 조직 및 직무의 변화를 확인합니다.", detail: ["조직(Organization)의 변화: 조직 변경 및 R&R 변화 여부 확인", "직무(Job)의 변화: 신규 입사, 타 부서 전출/전입 인원 확인"], src: "PM Manual" },
+  { id: "p2_context_B", group: "indicator", level: 4, section: 4, hashtags: ["#목표진척도", "#원인분석"], label: "목표\n진척도 확인", summary: "목표 진척 부진 또는 우수 원인을 분석하여 하반기 Action Plan에 반영합니다.", detail: ["부진 원인 점검: 개인 역량 부족, 통제 불가능한 외부 환경 변화, 타 부서 지원 부족 등", "우수 요인 점검: 탁월한 개인 역량, 외부 환경 호조 등"], src: "PM Manual" },
+  { id: "p2_principle", group: "principle", level: 4, section: 4, hashtags: ["#동기부여", "#성과향상"], label: "Mid-year\nReview 원칙", summary: "단순 평가가 아닌, 피평가자와의 소통을 통해 목표 달성을 돕고 성과를 극대화하는 것이 핵심입니다.", detail: ["결과 측정/서열화가 목적이 아님 (평가보다는 성과 향상을 위한 조언/지도에 집중)", "남은 평가 기간 동안 목표 달성을 위한 Catch-up 가이드 제공", "저성과자/저역량자에 대한 적극적인 Coaching 및 지원 방안 수립 필수"], src: "PM Manual" },
+  /* ---------- Process 3 (평가) ---------- */
+  { id: "p3_act1", group: "activity", level: 2, section: 2, hashtags: ["#평가지침", "#Training"], label: "평가 지침 수립\n및 안내", summary: "연간 평가 및 Feedback에 대한 운영 계획과 가이드를 수립하고 전파합니다.", detail: ["평가 및 Feedback 운영 계획 수립 후 Top Team 보고", "자회사/BG HR 대상 설명회 및 가이드 배포", "중역 및 팀장 대상 평가 가이드 배포 및 Training 실시"], src: "PM Manual" },
+  { id: "p3_act2", group: "evaluate", level: 2, section: 2, hashtags: ["#본인평가", "#실적집계"], label: "자기 평가", summary: "피평가자 본인이 평가항목별 실적 자료를 집계하고 자기 평가서를 작성합니다.", detail: ["실적 자료 집계를 위해 유관팀에 협조 요청 및 취합", "평가항목별 목표 수준 달성도에 따른 평점 산정", "달성 근거 및 부진 원인 등 평가 의견 작성 후 직속상사에게 송부"], src: "PM Manual" },
+  { id: "p3_act3", group: "evaluate", level: 2, section: 2, hashtags: ["#1차평가", "#정성평가"], label: "상사 평가", summary: "1차 평가자가 실적자료의 정확성을 검토하고 상사 평가를 실시합니다.", detail: ["실적자료의 정확성 및 신뢰성, 자기평가 결과의 타당성 검토", "목표 설정서 기준으로 정량평가 및 정성평가 점수 부여", "정성평가 근거를 작성하여 차상위자 및 HR에 제출"], src: "PM Manual" },
+  { id: "p3_act4", group: "evaluate", level: 2, section: 2, hashtags: ["#Calibration", "#평가조정"], label: "Calibration\n(평가 조정)", summary: "평가 결과의 타당성을 검토하고 필요 시 1차/2차 평가자 간 조정을 실시합니다.", detail: ["취합된 상사평가 결과 검토 및 HR Review Report 작성", "차상위자(2차 평가자)의 평가 결과 및 세부 근거 타당성 Review", "조정 필요 시 1차/2차 평가자 간 Calibration Meeting 실시"], src: "PM Manual" },
+  { id: "p3_act5", group: "activity", level: 2, section: 2, hashtags: ["#평가확정", "#CEO보고"], label: "평가 결과 확정\n및 보고", summary: "최종 평가 점수와 등급을 확정하고 경영진에게 결과를 보고합니다.", detail: ["Calibration 결과를 반영하여 평가점수 확정", "직원 평가의 경우 평가등급 비율 가이드를 준수하여 등급 부여", "MBO 평가 결과 정리 및 CEO/BG장 보고 실시"], src: "PM Manual" },
+  { id: "p3_data1", group: "data", level: 3, section: 3, hashtags: ["#실적데이터", "#달성도"], label: "실적 자료\n및 근거 데이터", summary: "자기 평가 시 목표 달성도를 측정하기 위한 기초 데이터입니다.", detail: ["MBO 목표 달성도를 증빙할 수 있는 성과 데이터", "재무, 전략 등 각 유관부서에서 산출 및 검증한 실적 자료"], src: "PM Manual" },
+  { id: "p3_data2", group: "content", level: 3, section: 3, hashtags: ["#HR리포트", "#조정가이드"], label: "HR Review Report\n및 가이드라인", summary: "Calibration의 원활한 진행을 위해 HR이 제공하는 분석 리포트입니다.", detail: ["전체 부서/개인 간 평가 경향성 분석 자료", "Calibration 시 준수해야 할 평가 지침 및 가이드라인"], src: "PM Manual" },
+  { id: "p3_ctx1", group: "context", level: 4, section: 4, hashtags: ["#타당성", "#신뢰성"], label: "평가 타당성\n및 신뢰성 검토", summary: "상사 평가 시 피평가자의 실적과 자기평가 내용의 정확성을 철저히 검증하는 원칙입니다.", detail: ["제출된 실적 데이터의 객관적 신뢰성 확인", "자기 평가 결과가 실제 기여도와 일치하는지 타당성 검토"], src: "PM Manual" },
+  { id: "p3_ctx2", group: "operation", level: 4, section: 4, hashtags: ["#등급비율", "#상대평가"], label: "평가 등급 비율\n가이드 준수", summary: "평가 인플레이션을 방지하고 부문 간 형평성을 맞추기 위한 비율 준수 원칙입니다.", detail: ["해당 부문의 평가 등급별 인원 비율 가이드 엄격 적용", "부문별 인원 등급 비율 준수 여부를 HR에서 최종 재확인"], src: "PM Manual" },
+  /* ---------- Process 4 (피드백) ---------- */
+  { id: "p4_prep", group: "activity", level: 2, section: 2, hashtags: ["#피드백준비", "#안내"], label: "Feedback 준비", summary: "Feedback 일정 및 가이드를 안내하고 면담 계획 및 Feedback Note를 작성합니다.", detail: ["평가자 대상 Feedback 실시 안내 (일정, 양식, Guideline 등 배포)", "Calibration 및 검토 결과 확정된 평가결과 평가자에게 재송부", "피평가자별 1:1 Feedback 면담 계획 수립 및 BG HR 송부", "목표달성 과정에 대한 종합적 검토 및 Feedback Note 작성"], src: "PM Manual" },
+  { id: "p4_data_note", group: "data", level: 3, section: 3, hashtags: ["#피드백노트", "#평가결과"], label: "Feedback Note\n(평가 결과)", summary: "Feedback 면담 시 피평가자에게 제공할 성과 결과 및 피드백 자료입니다.", detail: ["KPI 항목 별 최종 평가 점수 (재무, 전략, 인재육성) 제시", "Calibration을 거쳐 확정된 개인별 최종 평가 점수 및 등급 제시", "성과 목표 달성 과정 및 결과에 대한 종합적 Feedback Comment", "향후 성과 향상에 초점을 두고 부진 성과 원인 파악 및 지원 방안 제시"], src: "PM Manual" },
+  { id: "p4_exec", group: "activity", level: 2, section: 2, hashtags: ["#면담실시", "#1:1면담"], label: "Feedback 실시\n(면담)", summary: "평가자와 피평가자 간 1:1 면담을 통해 평가 결과를 공유하고 개선방안을 논의합니다.", detail: ["사전 작성한 Feedback 양식 중심 평가결과 및 산정 근거 설명", "자기평가 결과와 Gap이 큰 평가항목 및 미달성 KPI 중심 상세 논의", "차년도 목표 수립 시 고려사항 및 향후 개선 필요사항 협의", "제출된 Feedback Meeting 일정 계획 대비 진행 상황 Monitoring"], src: "PM Manual" },
+  { id: "p4_context_prin", group: "principle", level: 4, section: 4, hashtags: ["#면담원칙", "#성과향상"], label: "면담 원칙\n및 운영 지침", summary: "1:1 면담을 원칙으로 하며 성과 향상과 부진요인 개선방안 모색에 초점을 맞춥니다.", detail: ["평가자-피평가자 간 1:1 면담을 원칙으로 공식적 수행", "과거에 대한 평가를 넘어 향후 성과 향상을 위한 지원 방안 및 육성 중심", "목표 달성 부진요인 분석 및 조직 차원/개인 차원의 개선방안 논의"], src: "PM Manual" },
+  { id: "p4_summary", group: "activity", level: 2, section: 2, hashtags: ["#결과정리", "#결과보고"], label: "Feedback\n결과 정리", summary: "Feedback 면담 결과를 취합하여 HR에 제출하고 진행 현황을 보고합니다.", detail: ["피평가자 별 평가 점수 부여 결과 및 Feedback 실시 여부, 특이사항 정리", "평가자 별 Feedback Meeting 결과 양식을 취합하여 Process 진행 수준 점검", "지주부문 HR 송부 및 자회사/BG별 CEO 및 BG장 결과 보고"], src: "PM Manual" },
+  { id: "p4_data_report", group: "data", level: 3, section: 3, hashtags: ["#리포트", "#특이사항"], label: "Feedback\n결과 Report", summary: "취합된 Feedback 면담 결과를 종합 정리한 최종 보고 문서입니다.", detail: ["면담 진행 수준 및 미실시 사유", "피평가자 특이사항 및 평가 피드백 관련 이슈", "경영진(CEO/BG장) 보고를 위한 종합 데이터"], src: "PM Manual" }
 ];
 
 const TPL_E2E_EDGES = [
@@ -724,7 +749,35 @@ const TPL_E2E_EDGES = [
   { from: "o_kpi", to: "i_select", rel: "measure", dashes: true },
   { from: "o_target", to: "i_select", arrows: "from", rel: "measure", dashes: true },
   { from: "p1", to: "c_upper", arrows: "from", rel: "align", dashes: true },
-  { from: "p3", to: "o_confirm", arrows: "from", rel: "contribute", dashes: true }
+  { from: "p3", to: "o_confirm", arrows: "from", rel: "contribute", dashes: true },
+  
+  /* Process 2 Edges */
+  { from: "p2", to: "p2_prep" },
+  { from: "p2_prep", to: "p2_data_form" },
+  { from: "p2_data_form", to: "p2_meeting" },
+  { from: "p2", to: "p2_meeting" },
+  { from: "p2_meeting", to: "p2_report" },
+  { from: "p2", to: "p2_report" },
+  { from: "p2_meeting", to: "p2_context_A" },
+  { from: "p2_meeting", to: "p2_context_B" },
+  { from: "p2_meeting", to: "p2_principle" },
+  /* Process 3 Edges */
+  { from: "p3", to: "p3_act1" },
+  { from: "p3", to: "p3_act2" },
+  { from: "p3", to: "p3_act3" },
+  { from: "p3", to: "p3_act4" },
+  { from: "p3", to: "p3_act5" },
+  { from: "p3_act2", to: "p3_data1" },
+  { from: "p3_act4", to: "p3_data2" },
+  { from: "p3_act3", to: "p3_ctx1" },
+  { from: "p3_act5", to: "p3_ctx2" },
+  /* Process 4 Edges */
+  { from: "p4", to: "p4_prep" },
+  { from: "p4", to: "p4_exec" },
+  { from: "p4", to: "p4_summary" },
+  { from: "p4_prep", to: "p4_data_note" },
+  { from: "p4_exec", to: "p4_context_prin" },
+  { from: "p4_summary", to: "p4_data_report" }
 ];
 
 /* ============================================================
