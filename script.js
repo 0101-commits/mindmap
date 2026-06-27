@@ -169,7 +169,7 @@ function makeVisEdge(e) {
     id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
     width: e.dashes ? 1.5 : 2.5,
     color: edgeColor(e),
-    smooth: false,
+    smooth: { type: 'cubicBezier', forceDirection: 'vertical', roundness: 0.4 },
     shadow: false
   };
   if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.6 } };
@@ -197,18 +197,16 @@ var freePhysics = {
 };
 
 var options = {
-  layout: { improvedLayout: true, hierarchical: { enabled: false } },
+  layout: {
+    hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 250, nodeSpacing: 250, treeSpacing: 350 }
+  },
   interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
-  physics: freePhysics,
+  physics: false,
   nodes: { shadow: false },
   edges: { arrows: { to: { enabled: false } }, shadow: false }
 };
 
 var network = new vis.Network(container, { nodes: visNodes, edges: visEdges }, options);
-
-network.once("stabilizationIterationsDone", function () {
-  network.setOptions({ physics: false });
-});
 
 function refreshDprAndRedraw() {
   DPR = window.devicePixelRatio || 1;
@@ -384,13 +382,30 @@ function makeChip(opt) {
   btn.className = "chip" + (opt.cls ? " " + opt.cls : "") + (opt.active ? "" : " off");
   btn.setAttribute("aria-pressed", opt.active ? "true" : "false");
   btn.title = "클릭/Enter=표시·숨김 · 더블클릭/Shift+Enter=단독 보기";
-  if (opt.dotColor) { var dot = document.createElement("span"); dot.className = "dot"; dot.style.background = opt.dotColor; btn.appendChild(dot); }
   btn.appendChild(document.createTextNode(opt.label + " "));
   var cnt = document.createElement("span"); cnt.className = "cnt"; cnt.textContent = opt.count; btn.appendChild(cnt);
+
+  function updateColor(isActive) {
+    if (opt.dotColor) {
+      if (isActive) {
+        btn.style.background = opt.dotColor;
+        btn.style.color = idealText(opt.dotColor);
+        btn.style.borderColor = opt.dotColor;
+        cnt.style.color = idealText(opt.dotColor);
+      } else {
+        btn.style.background = "";
+        btn.style.color = "";
+        btn.style.borderColor = "";
+        cnt.style.color = "";
+      }
+    }
+  }
+  updateColor(opt.active);
 
   btn.onclick = function () {
     if (isolateSet) exitIsolate(true);
     var on = opt.toggle(); btn.classList.toggle("off", !on); btn.setAttribute("aria-pressed", on ? "true" : "false");
+    updateColor(on);
     applyVisibility();
   };
   btn.ondblclick = function (e) { e.preventDefault(); opt.isolate(); };
