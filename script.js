@@ -199,7 +199,7 @@ var freePhysics = {
 
 var options = {
   layout: {
-    hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 250, nodeSpacing: 400, treeSpacing: 500 }
+    hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 350, nodeSpacing: 400, treeSpacing: 500 }
   },
   interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
   manipulation: {
@@ -755,7 +755,7 @@ function buildProcessActivityMap() {
 function layoutProcessCentric() {
   isLayoutFrozen = false;
   setActiveLayout("btnProcessHier");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 250, nodeSpacing: 400, treeSpacing: 500 } } });
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 350, nodeSpacing: 400, treeSpacing: 500 } } });
   network.once("afterDrawing", freezeHierarchicalLayout);
   setTimeout(fitAll, 80);
   toast("🏢 5단계 계층형 배치 (Level 1~5)");
@@ -1068,16 +1068,25 @@ function freezeHierarchicalLayout() {
   if (isLayoutFrozen) return;
   var pos = network.getPositions();
   var updates = [];
-  visNodes.get().forEach(function(n) {
-     if (pos[n.id]) {
-       var lvl = getProcessLevel(n);
-       var spreadY = pos[n.id].y;
-       if (lvl >= 2 && lvl <= 4) {
-         spreadY += (Math.random() * 160 - 80); // 동일 섹션 내 높낮이 분산
-       }
-       updates.push({ id: n.id, x: pos[n.id].x, y: spreadY });
-     }
+  
+  var staggerIndex = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  var staggerOffsets = [-120, 0, 120];
+
+  var sortedNodes = visNodes.get().filter(function(n) { return pos[n.id]; }).sort(function(a, b) {
+    return pos[a.id].x - pos[b.id].x;
   });
+
+  sortedNodes.forEach(function(n) {
+     var lvl = getProcessLevel(n);
+     var spreadY = pos[n.id].y;
+     
+     if (lvl >= 2 && lvl <= 4) {
+       spreadY += staggerOffsets[staggerIndex[lvl] % 3];
+       staggerIndex[lvl]++;
+     }
+     updates.push({ id: n.id, x: pos[n.id].x, y: spreadY });
+  });
+
   visNodes.update(updates);
   network.setOptions({ layout: { hierarchical: { enabled: false } } }); // 위치를 절대 고정
   isLayoutFrozen = true;
