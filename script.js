@@ -166,11 +166,19 @@ function edgeColor(e) {
 }
 function makeVisEdge(e) {
   var rel = e.rel && REL_STYLE[e.rel];
+  
+  var nFrom = nodeMap[e.from];
+  var nTo = nodeMap[e.to];
+  var isSameSection = false;
+  if (nFrom && nTo) {
+    isSameSection = getProcessLevel(nFrom) === getProcessLevel(nTo);
+  }
+
   var o = {
     id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
     width: e.dashes ? 1.5 : 2.5,
     color: edgeColor(e),
-    smooth: false, // 직선 (꺾은선 느낌)으로 연결
+    smooth: isSameSection ? { type: 'curvedCW', roundness: 0.25 } : false, // 같은 섹션은 꺾은(휜) 선, 다른 섹션은 직선
     shadow: false
   };
   if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.6 } };
