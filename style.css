@@ -82,7 +82,7 @@ body {
 .brand { display: flex; flex-direction: column; gap: 0px; }
 .brand h1 { font-size: 14px; font-weight: 500; letter-spacing: -0.5px; color: var(--ink-deep); }
 .brand h1 span { font-weight: 300; color: var(--charcoal); }
-.subtitle { font-size: 10px; font-weight: 400; color: var(--steel); letter-spacing: -0.14px; }
+.subtitle { font-size: 11px; font-weight: 500; color: var(--charcoal); letter-spacing: -0.14px; }
 
 .collapsible-menu {
   display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 100%;
@@ -106,8 +106,8 @@ body {
 }
 .chip .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .chip .cnt { font-size: 11px; font-weight: 400; color: var(--steel); margin-left: 2px; }
-.chip.off { background: var(--surface-soft); color: var(--disabled-text); border-color: var(--surface-soft); }
-.chip.off .cnt { color: var(--disabled-text); }
+.chip.off { background: var(--surface-soft); color: var(--stone); border-color: var(--hairline-soft); }
+.chip.off .cnt { color: var(--stone); }
 .chip.off .dot { opacity: 0.5; filter: grayscale(100%); }
 .chip:hover:not(.off) { background: var(--surface-soft); }
 .chip.active-chip { background: var(--ink-deep); color: var(--canvas); border-color: var(--ink-deep); }
@@ -116,12 +116,13 @@ body {
 .filter-actions { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
 .search-wrap { position: relative; display: inline-block; }
 #searchBox {
-  padding: 6px 12px; border-radius: var(--rounded-md); border: 1px solid var(--hairline);
+  padding: 6px 14px; border-radius: var(--rounded-full); border: 1px solid var(--hairline);
   font-size: 12px; width: 180px; font-family: var(--font);
-  background: var(--canvas); color: var(--ink); height: 32px;
+  background: var(--surface-soft); color: var(--ink); height: 32px;
   transition: all 0.2s;
 }
-#searchBox:focus { border: 2px solid var(--fb-blue); padding: 5px 11px; }
+#searchBox::placeholder { color: var(--steel); }
+#searchBox:focus { border: 2px solid var(--fb-blue); padding: 5px 13px; background: var(--canvas); }
 
 .search-results {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 30;
@@ -241,9 +242,11 @@ body {
 #panelClose:hover { background: var(--hairline-soft); }
 
 .panel-tag {
-  display: inline-block; font-size: 11px; font-weight: 700;
-  padding: 4px 10px; border-radius: var(--rounded-sm);
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.2px;
+  padding: 4px 12px; border-radius: var(--rounded-full);
   color: var(--on-primary); background: var(--primary); margin-bottom: 12px;
+  /* 그룹 색이 밝아도(노랑 등) 흰 글자 가독 유지 */
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
 }
 #panelTitle { font-size: 20px; font-weight: 500; color: var(--ink-deep); line-height: 1.25; margin-bottom: 8px; }
 
@@ -281,10 +284,10 @@ body {
 #legendbar {
   height: 28px; display: flex; align-items: center; padding: 0 16px;
   background: var(--canvas); border-top: 1px solid var(--hairline-soft);
-  color: var(--steel); font-size: 11px; font-weight: 400; z-index: 10;
+  color: var(--charcoal); font-size: 11px; font-weight: 500; z-index: 10;
   flex-shrink: 0;
 }
-#legendbar .hint { opacity: 1; } /* Just reuse color without changing it */
+#legendbar .hint { opacity: 1; color: var(--charcoal); }
 
 /* ---------- CRUD 모달 ---------- */
 @keyframes modalPop {
@@ -472,17 +475,81 @@ body {
 }
 
 .vis-manipulation {
-  background: var(--surface) !important;
-  border-bottom: 1px solid var(--border) !important;
+  background: var(--canvas) !important;
+  border-bottom: 1px solid var(--hairline-soft) !important;
   border-top: none !important;
-  font-family: 'Optimistic VF', Pretendard, sans-serif !important;
+  font-family: var(--font) !important;
   font-size: 13px !important;
+  color: var(--ink) !important;
   padding: 8px !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+  box-shadow: var(--shadow-subtle) !important;
 }
+.vis-manipulation .vis-button { color: var(--ink) !important; }
+
+/* vis-network 노드 툴팁 — 대비 확보 */
+div.vis-tooltip {
+  background: var(--ink-deep) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: var(--rounded-lg) !important;
+  padding: 8px 12px !important;
+  font-family: var(--font) !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  box-shadow: var(--shadow-sticky) !important;
+  max-width: 280px !important;
+  white-space: normal !important;
+}
+
+/* ---------- 토글형 툴 버튼(이웃 포커스 등) ---------- */
+.tool.toggled {
+  background: var(--primary); color: var(--on-primary);
+  border-color: var(--primary);
+}
+.tool.toggled:hover { background: var(--primary-deep); }
+
+/* ---------- 가이드 투어 ---------- */
+.tour-overlay {
+  position: fixed; inset: 0; z-index: 55;
+  background: rgba(10, 19, 23, 0.28);
+  pointer-events: none; /* 캔버스 조작 허용, 카드만 클릭 */
+  transition: opacity 0.3s;
+}
+.tour-overlay.hidden { display: none; }
+
+.tour-card {
+  position: absolute; left: 50%; bottom: 56px; transform: translateX(-50%);
+  width: min(440px, 92vw);
+  background: var(--canvas);
+  border: 1px solid var(--hairline-soft);
+  border-radius: var(--rounded-xxl);
+  box-shadow: var(--shadow-sticky);
+  padding: 20px 24px;
+  pointer-events: auto;
+}
+.tour-step {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.4px;
+  color: var(--primary); text-transform: uppercase; margin-bottom: 6px;
+}
+.tour-title { font-size: 18px; font-weight: 700; color: var(--ink-deep); line-height: 1.3; margin-bottom: 6px; }
+.tour-body { font-size: 13px; font-weight: 400; color: var(--charcoal); line-height: 1.5; margin-bottom: 16px; }
+.tour-controls { display: flex; align-items: center; gap: 8px; }
+.tour-controls .spacer { flex: 1; }
+.tour-progress { font-size: 12px; font-weight: 600; color: var(--steel); }
+.tour-btn {
+  padding: 8px 18px; border-radius: var(--rounded-full); border: 1px solid var(--hairline);
+  background: var(--canvas); color: var(--ink); font-family: var(--font);
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.tour-btn:hover { background: var(--surface-soft); }
+.tour-btn.primary { background: var(--ink-button); color: var(--on-ink-button); border-color: var(--ink-button); }
+.tour-btn.primary:hover { background: var(--charcoal); }
+.tour-btn.ghost { border-color: transparent; color: var(--steel); }
+.tour-btn.ghost:hover { background: var(--surface-soft); color: var(--ink); }
 
 /* 반응형 */
 @media (max-width: 768px) {
+  .tour-card { bottom: 12px; padding: 16px 18px; }
   .topbar-header { align-items: flex-start; }
   .filters { align-items: stretch; }
   .chips, .filter-actions { justify-content: flex-start; }

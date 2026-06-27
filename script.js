@@ -13,9 +13,9 @@
 /* ============================================================
    0. 저장소 키 / 유틸
    ============================================================ */
-var LS_STATE   = "mm_v5_state";        // { tid }
-var LS_WORK    = "mm_v5_work_";        // + tid → { nodes, edges, colors }
-var LS_HISTORY = "mm_v5_history";      // [ { ts, tid, name, nodes, edges, colors } ]
+var LS_STATE   = "mm_v6_state";        // { tid }
+var LS_WORK    = "mm_v6_work_";        // + tid → { nodes, edges, colors }
+var LS_HISTORY = "mm_v6_history";      // [ { ts, tid, name, nodes, edges, colors } ]
 var HISTORY_MAX = 30;
 
 var INITIAL_SEARCH = location.search;
@@ -94,13 +94,28 @@ function shade(hex, pct) {
 var DPR = window.devicePixelRatio || 1;
 function fontSize(base) { return Math.round(base * (DPR >= 2 ? 1.15 : 1)); }
 
+/* WCAG 2.1 상대휘도 (sRGB 감마 보정) */
+function relLuminance(hex) {
+  var f = parseInt(String(hex).slice(1), 16);
+  var ch = [(f >> 16) & 255, (f >> 8) & 255, f & 255].map(function (v) {
+    v = v / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+}
+function contrastRatio(L1, L2) {
+  var hi = Math.max(L1, L2), lo = Math.min(L1, L2);
+  return (hi + 0.05) / (lo + 0.05);
+}
+/* 배경색 대비 대비비(contrast ratio)가 더 높은 글자색 선택 (흰색 vs 짙은 잉크) */
+var INK_DARK = "#0a1317"; // DESIGN-meta ink-deep
 function idealText(hex) {
   try {
-    var f = parseInt(String(hex).slice(1), 16);
-    var r = (f >> 16) & 255, g = (f >> 8) & 255, b = f & 255;
-    var L = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return L > 0.45 ? "#000000" : "#ffffff";
-  } catch (e) { return "#000000"; }
+    var L = relLuminance(hex);
+    var cWhite = contrastRatio(L, 1.0);          // vs #ffffff
+    var cDark = contrastRatio(L, relLuminance(INK_DARK)); // vs ink-deep
+    return cWhite >= cDark ? "#ffffff" : INK_DARK;
+  } catch (e) { return INK_DARK; }
 }
 
 var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -132,8 +147,9 @@ function makeVisNode(n) {
       color: textColor,
       size: isRoot ? fontSize(22) : fontSize(16),
       face: "Pretendard, -apple-system, sans-serif",
-      strokeWidth: textColor === "#ffffff" ? 1 : 0,
-      strokeColor: "rgba(0,0,0,0.3)",
+      // 색 무관 또렷함: 흰 글자엔 어두운 후광, 짙은 글자엔 밝은 후광
+      strokeWidth: 2,
+      strokeColor: textColor === "#ffffff" ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.9)",
       multi: false,
       bold: { color: textColor }
     },
@@ -335,13 +351,14 @@ function nodeLayer(n) {
    5. Focus / Highlight (이웃 강조)
    ============================================================ */
 var dimmed = false;
+var dimStrength = 0.2; // 이웃 포커스 모드 ON 시 더 강하게(0.08)
 function applyDim(keepNodes, keepEdges) {
   var nu = rawNodes.map(function (n) {
-    return { id: n.id, opacity: keepNodes.has(n.id) ? 1 : 0.2 };
+    return { id: n.id, opacity: keepNodes.has(n.id) ? 1 : dimStrength };
   });
   var eu = rawEdges.map(function (e) {
     var on = keepEdges.has(e.id);
-    return { id: e.id, color: on ? { color: "#0064e0", opacity: 1 } : { color: "#ced0d4", opacity: 0.2 } };
+    return { id: e.id, color: on ? { color: "#0064e0", opacity: 1 } : { color: "#ced0d4", opacity: dimStrength } };
   });
   visNodes.update(nu); visEdges.update(eu); dimmed = true;
 }
@@ -1028,7 +1045,7 @@ function setGroupColor(group, color) {
   GROUPS[group].color = color;
   visNodes.update(rawNodes.filter(function (n) { return n.group === group; }).map(makeVisNode));
   buildChips();
-  if (currentId && nodeMap[currentId] && nodeMap[currentId].group === group) { var tag = document.getElementById("panelTag"); tag.style.background = color; }
+  if (currentId && nodeMap[currentId] && nodeMap[currentId].group === group) { var tag = document.getElementById("panelTag"); tag.style.background = color; tag.style.color = idealText(color); }
   saveWork();
 }
 document.getElementById("tab-color").onclick = function () { openPanelTab("color"); }; document.getElementById("btnColor").onclick = function () { openPanelTab("color"); }; document.getElementById("tab-info").onclick = function () { setTab("info"); };
@@ -1208,3 +1225,172 @@ if (btnToggleSection) {
 window.addEventListener("load", function () {
   layoutProcessCentric();
 });
+
+/* ============================================================
+   19. 기능 고도화 — 가이드 투어 / 이웃 포커스 모드
+   (추가 DOM은 JS로 동적 생성 — index.html 수정 없음)
+   ============================================================ */
+(function () {
+  var toolbar = document.querySelector(".floating-toolbar");
+  if (!toolbar) return;
+
+  /* ---- 버튼 동적 생성 ---- */
+  var btnTour = document.createElement("button");
+  btnTour.id = "btnTour"; btnTour.className = "tool";
+  btnTour.textContent = "▶ 가이드 투어";
+  btnTour.title = "핵심 노드를 순서대로 안내합니다 (← → 이동, Esc 종료)";
+
+  var btnNF = document.createElement("button");
+  btnNF.id = "btnNeighborFocus"; btnNF.className = "tool";
+  btnNF.textContent = "🔦 이웃 포커스";
+  btnNF.title = "켜면 선택 노드의 1-hop 이웃만 강하게 강조하고 포커스를 유지합니다";
+
+  toolbar.appendChild(btnNF);
+  toolbar.appendChild(btnTour);
+
+  /* ============ 이웃 포커스 모드 (focus lock) ============ */
+  var neighborFocusMode = false;
+  var nfLast = null;
+
+  btnNF.onclick = function () {
+    neighborFocusMode = !neighborFocusMode;
+    btnNF.classList.toggle("active", neighborFocusMode);
+    dimStrength = neighborFocusMode ? 0.08 : 0.2;
+    if (neighborFocusMode) {
+      toast("🔦 이웃 포커스 ON — 노드를 클릭하면 이웃만 강조·유지");
+      if (currentId && !isolateSet) { nfLast = currentId; highlightNode(currentId); }
+    } else {
+      toast("이웃 포커스 OFF");
+      if (!isolateSet && currentId) highlightNode(currentId); // 약한 dim으로 재적용
+    }
+  };
+
+  // 노드 클릭 기록 + 빈 곳 클릭 시 포커스 잠금 유지
+  network.on("click", function (params) {
+    if (params.nodes && params.nodes.length) {
+      nfLast = params.nodes[0];
+    } else if (neighborFocusMode && !tourActive && nfLast && nodeMap[nfLast] && !isolateSet) {
+      // 기본 click 핸들러가 clearDim/closePanel 한 뒤 재적용 (focus lock)
+      setTimeout(function () {
+        if (!neighborFocusMode || !nodeMap[nfLast]) return;
+        network.selectNodes([nfLast]); highlightNode(nfLast); openPanel(nfLast);
+      }, 0);
+    }
+  });
+
+  /* ============ 가이드 투어 ============ */
+  var tourActive = false;
+  var tourSeq = [];
+  var tourIdx = 0;
+  var overlay = null;
+  var lblEl = null;
+
+  function buildTourSequence() {
+    var seq = [];
+    var seen = {};
+    function push(id) {
+      if (id && nodeMap[id] && !seen[id] && isVisibleNode(nodeMap[id])) { seq.push(id); seen[id] = 1; }
+    }
+    if (nodeMap["root"]) push("root");
+    // 프로세스 → 소속 직속 활동(level 2) 순으로
+    try {
+      var map = buildProcessActivityMap();
+      map.processNodes.forEach(function (p) {
+        push(p.id);
+        (map.procActivities[p.id] || []).forEach(function (cid) {
+          var n = nodeMap[cid];
+          if (n && getProcessLevel(n) === 2) push(cid);
+        });
+      });
+    } catch (e) {}
+    // 폴백: 비어 있으면 보이는 노드를 레벨 순으로
+    if (seq.length < 2) {
+      seq = []; seen = {};
+      rawNodes.slice().sort(function (a, b) { return getProcessLevel(a) - getProcessLevel(b); })
+        .forEach(function (n) { push(n.id); });
+    }
+    return seq;
+  }
+
+  function ensureOverlay() {
+    if (overlay) return;
+    overlay = document.createElement("div");
+    overlay.id = "tourOverlay"; overlay.className = "tour-overlay";
+    // CSS(style.css)가 .tour-overlay를 스타일링하지만, 없어도 동작하도록 최소 인라인 폴백
+    overlay.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:8px;";
+
+    var prev = document.createElement("button");
+    prev.className = "tool tour-btn"; prev.textContent = "◀ 이전";
+    prev.onclick = function () { gotoStep(tourIdx - 1); };
+
+    lblEl = document.createElement("span");
+    lblEl.className = "tour-label";
+    lblEl.style.cssText = "min-width:160px;text-align:center;font-weight:700;";
+
+    var next = document.createElement("button");
+    next.className = "tool tour-btn"; next.textContent = "다음 ▶";
+    next.onclick = function () { gotoStep(tourIdx + 1); };
+
+    var close = document.createElement("button");
+    close.className = "tool tour-btn danger-tool"; close.textContent = "✕ 종료";
+    close.onclick = endTour;
+
+    var controls = document.createElement("div");
+    controls.className = "tour-controls";
+    controls.style.cssText = "display:flex;align-items:center;gap:8px;background:#ffffff;border:1px solid #ced0d4;border-radius:100px;padding:8px 14px;box-shadow:0 4px 16px rgba(10,19,23,0.18);";
+    controls.appendChild(prev); controls.appendChild(lblEl); controls.appendChild(next); controls.appendChild(close);
+    overlay.appendChild(controls);
+    document.body.appendChild(overlay);
+  }
+
+  function gotoStep(i) {
+    if (!tourActive) return;
+    if (i < 0) i = 0;
+    if (i > tourSeq.length - 1) i = tourSeq.length - 1;
+    tourIdx = i;
+    var id = tourSeq[tourIdx];
+    nfLast = id;
+    focusNode(id); // 선택 + focus + 이웃 강조 + 패널
+    var n = nodeMap[id];
+    if (lblEl) lblEl.textContent = (tourIdx + 1) + " / " + tourSeq.length + " · " + (n ? n.label.replace(/\n/g, " ") : "");
+  }
+
+  function startTour() {
+    if (tourActive) { endTour(); return; }
+    tourSeq = buildTourSequence();
+    if (!tourSeq.length) { toast("투어할 노드가 없습니다 (필터 확인)"); return; }
+    tourActive = true;
+    btnTour.classList.add("active");
+    btnTour.textContent = "■ 투어 종료";
+    if (isolateSet) exitIsolate(true);
+    ensureOverlay();
+    overlay.style.display = "flex";
+    document.addEventListener("keydown", onTourKey);
+    gotoStep(0);
+    toast("▶ 가이드 투어 시작 (" + tourSeq.length + "단계) — ← → 이동, Esc 종료");
+  }
+
+  function endTour() {
+    if (!tourActive) return;
+    tourActive = false;
+    btnTour.classList.remove("active");
+    btnTour.textContent = "▶ 가이드 투어";
+    if (overlay) overlay.style.display = "none";
+    document.removeEventListener("keydown", onTourKey);
+    if (!neighborFocusMode) clearDim();
+    toast("투어 종료");
+  }
+
+  function onTourKey(e) {
+    if (!tourActive) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); gotoStep(tourIdx + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); gotoStep(tourIdx - 1); }
+    else if (e.key === "Escape") { e.preventDefault(); endTour(); }
+  }
+
+  btnTour.onclick = startTour;
+
+  // 템플릿 전환 시 진행 중 투어 종료(안전)
+  var _switchTemplate = switchTemplate;
+  switchTemplate = function (id) { if (tourActive) endTour(); return _switchTemplate(id); };
+})();

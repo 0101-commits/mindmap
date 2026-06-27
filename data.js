@@ -26,15 +26,16 @@
 const GROUPS = {
   core:      { label: "중심",     color: "#1c1e21" },
   process:   { label: "프로세스", color: "#0064e0" },
-  objective: { label: "목표",     color: "#1876f2" },
+  objective: { label: "목표",     color: "#1567d6" },
   context:   { label: "맥락",     color: "#385898" },
   indicator: { label: "지표",     color: "#31a24c" },
   principle: { label: "원칙",     color: "#f2a918" },
+  rule:      { label: "규칙",     color: "#4b4c4f" },
   operation: { label: "운영",     color: "#a121ce" },
   develop:   { label: "육성",     color: "#e41e3f" },
   evaluate:  { label: "평가",     color: "#0457cb" },
   data:      { label: "데이터",   color: "#f7b928" },
-  content:   { label: "내용",     color: "#1876f2" },
+  content:   { label: "내용",     color: "#1567d6" },
   activity:  { label: "액티비티", color: "#0064e0" },
   layer1:    { label: "Layer 1 · 인터페이스",     color: "#385898" },
   layer2:    { label: "Layer 2 · 오케스트레이션", color: "#e41e3f" },
@@ -1827,7 +1828,313 @@ const TPL_PROCESS_DETAIL_NODES = [
       "평가 결과 및 보상 내역 개별 통보.",
       "1:1 공식 피드백 면담(결과 설명 및 이의제기 절차 안내).",
       "차년도 목표 수립(IDP 연계)을 위한 사전 방향성 논의."
-    ] }
+    ] },
+
+  /* ===================================================================
+   *  HR 프로세스별 HR 활동 노드 (PM Manual + OKR Manual 근거)
+   *  역할: 지주부문 HR / 자회사·BG HR / 피평가자 / 1차·2차 평가자 / 평가자
+   *  보조: data(데이터·산출물) / context(맥락) / principle(원칙) / rule(규칙) / operation(운영)
+   * =================================================================== */
+
+  /* ---------- 1. 목표수립 — HR 역할별 활동 ---------- */
+  { id: "hr_p1_holding", group: "activity", level: 2, layer: "p1", hashtags: ["#지주HR", "#지침수립"], label: "지주부문 HR\n지침 수립·배포",
+    summary: "연간 MBO 운영계획·지침을 수립하고 Top Team 보고로 확정 후 배포.",
+    detail: [
+      "재무목표/전략목표 수립 지침은 FA/VM과 협의하여 작성.",
+      "자회사/BG HR 대상 설명회 실시 — 목표수립 지침 및 Activity Guide 안내.",
+      "전사 Cascading 기준·Category(재무/전략/인재) 비중 가이드 제시."
+    ], src: "PM Manual p.8" },
+  { id: "hr_p1_bghr", group: "activity", level: 2, layer: "p1", hashtags: ["#BGHR", "#설명회", "#Facilitating"], label: "자회사·BG HR\n운영계획·검토회의 주관",
+    summary: "지주 지침을 BG 상황에 맞게 조정해 운영계획 수립, 중역/팀장 설명회 및 목표검토회의 Facilitating.",
+    detail: [
+      "전년도 지침으로 내부 Guideline 우선 수립 후 그룹 지침과 Align.",
+      "중역/팀장 대상 평가자 Activity Guide 설명회 실시.",
+      "목표검토회의 일정 Arrange·자료 준비·진행·결과 정리 (10명↑ 시 조 분리)."
+    ], src: "PM Manual p.8·33~37" },
+  { id: "hr_p1_evaluatee", group: "activity", level: 2, layer: "p1", hashtags: ["#피평가자", "#자기목표"], label: "피평가자\n자기 목표 수립",
+    summary: "사업계획·상위목표·핵심 고유업무를 Review하여 자기 목표설정서 작성.",
+    detail: [
+      "상위 조직장 목표 달성을 지원하는 역할책임(R&R) 정의.",
+      "핵심 고유업무별 CSF 도출 → 재무/전략/인재 KPI 및 목표수준(Cap/Threshold) 설정.",
+      "KPI 항목별 가중치 부여, 중역은 전략MBO 계획서·Milestone 추가 작성."
+    ], src: "PM Manual p.9" },
+  { id: "hr_p1_eval1", group: "activity", level: 2, layer: "p1", hashtags: ["#1차평가자", "#목표Review"], label: "1차 평가자\n목표 Review·서명",
+    summary: "목표검토회의에서 자기목표 결과를 Review·협의하고 개인목표설정서에 서명.",
+    detail: [
+      "Cascading Matrix 기반 상위자–피평가자 KPI Alignment 확인.",
+      "Target·가중치 적정성 협의 및 개선방향 제시.",
+      "피평가자가 서명한 목표설정서 최종 Review 후 1차 서명."
+    ], src: "PM Manual p.10·12" },
+  { id: "hr_p1_eval2", group: "activity", level: 2, layer: "p1", hashtags: ["#2차평가자", "#Confirm"], label: "2차 평가자\n최종 Confirm",
+    summary: "2차 평가자가 최종 Review 후 서명함으로써 목표를 Confirm.",
+    detail: [
+      "자회사/BG별 1차/2차 평가자 체계 준용.",
+      "필수 양식 누락 여부 점검, 중역 서명본은 지주부문 HR에 전달.",
+      "목표수립 진행결과 Summary를 지주부문 HR에 Report."
+    ], src: "PM Manual p.12" },
+
+  /* 1. 목표수립 — 데이터/맥락/원칙/규칙/운영 */
+  { id: "pd_p1_goalsheet", group: "data", level: 3, layer: "p1", hashtags: ["#목표설정서", "#산출물"], label: "개인 목표설정서\n(경영성과 평가서)",
+    summary: "KPI·목표수준(Cap/Threshold)·가중치·Category를 담는 핵심 산출물.",
+    detail: [
+      "재무/전략/인재 Category별 KPI와 비중 기재.",
+      "Function(Front/Back/Staff)별 가중치 차등 적용.",
+      "Excel 양식으로 중역 개인별 Sheet 단위 취합."
+    ], src: "PM Manual p.9·44" },
+  { id: "pd_p1_cascading", group: "data", level: 3, layer: "p1", hashtags: ["#Cascading", "#Alignment"], label: "Cascading Matrix",
+    summary: "상위자–피평가자 KPI 정렬(Alignment)을 점검하는 도구.",
+    detail: [
+      "목표검토회의 전 사전 작성하여 Alignment 확인.",
+      "상위 KPI Direct Cascading 비중 점검에 활용."
+    ], src: "PM Manual p.34·39" },
+  { id: "pd_p1_strategymbo", group: "data", level: 3, layer: "p1", hashtags: ["#전략MBO", "#Milestone"], label: "전략 MBO 계획서·\nMilestone",
+    summary: "중역 전략과제의 성공정의·KPI·Action Plan·일정을 기술.",
+    detail: [
+      "전략과제, 중장기 성공의 정의(Objective), KPI/Target 서술.",
+      "KPI 항목별 실행계획을 시기별 Milestone으로 표시."
+    ], src: "PM Manual p.30~31" },
+  { id: "pd_p1_ctx_align", group: "context", level: 3, layer: "p1", hashtags: ["#정렬", "#투명성"], label: "수직·수평\nAlignment",
+    summary: "개인 업무를 전사 비전과 정렬하고 협업 조직과 연결.",
+    detail: [
+      "[수직] 전사 OKR → 조직 OKR → 개인 목표로 연결.",
+      "[수평] 협업 부서 간 목표 연계, 투명한 공유가 전제."
+    ], src: "OKR Deck p.17·26" },
+  { id: "pd_p1_prn_fast", group: "principle", level: 3, layer: "p1", hashtags: ["#OKR원칙", "#FAST"], label: "OKR 원칙\nFAST",
+    summary: "Focus·Align·Stretch·Track — OKR의 4대 핵심 원칙.",
+    detail: [
+      "Focus: 우선순위 3~5개 목표, 목표당 5개 이하 KR에 집중.",
+      "Stretch: 60~70% 달성 가능한 도전적 목표값 설정.",
+      "Track&Update: 환경 변화에 따라 지속·보완·시작·중단."
+    ], src: "OKR Deck p.17" },
+  { id: "pd_p1_prn_autonomy", group: "principle", level: 3, layer: "p1", hashtags: ["#자율", "#협의"], label: "자율·협의\n원칙",
+    summary: "Top-down 통제 방식을 벗어나 자율과 협의로 목표를 수립.",
+    detail: [
+      "경영진 일방 부과(통제 수단화)의 MBO 한계 극복.",
+      "팀원-팀장 논의로 공감대를 형성해 목표 몰입도 제고."
+    ], src: "OKR Deck p.5·24" },
+  { id: "pd_p1_rule_weight", group: "rule", level: 3, layer: "p1", hashtags: ["#가중치", "#Category"], label: "가중치·Category\n규칙",
+    summary: "재무/전략/인재 Category 분류와 Function별 가중치 배분 규칙.",
+    detail: [
+      "Front(직접 기여)/Back(직접 지원)/Staff(간접 지원) 직군 구분.",
+      "Level/Function별 가중치 기록, 우선순위 반영 적정성 점검."
+    ], src: "PM Manual p.43" },
+  { id: "pd_p1_rule_schedule", group: "rule", level: 3, layer: "p1", hashtags: ["#운영시기", "#순서"], label: "운영 시기·순서\n규칙",
+    summary: "목표수립은 2~3월, BG장→중역→팀장→팀원 순으로 진행.",
+    detail: [
+      "MBO 수립 안내·Training 후 목표수립 → 검토회의 → 서명.",
+      "Business Planning(AOP/LRP)과 연계해 일정 수립."
+    ], src: "PM Manual p.4~5" },
+  { id: "pd_p1_op_monitor", group: "operation", level: 3, layer: "p1", hashtags: ["#Monitoring", "#OverallReview"], label: "HR Overall Review\n(Monitoring Tool)",
+    summary: "Cascading 비율·가중치 Balance·Target 적정성을 전사 관점에서 점검.",
+    detail: [
+      "Guideline 상·하한 대비 이탈 항목 식별 후 협의·조정.",
+      "필요 시 FA/전략팀과 협의하여 Feedback Point 정리."
+    ], src: "PM Manual p.11·46" },
+
+  /* ---------- 2. Mid-year Review — HR 역할별 활동 ---------- */
+  { id: "hr_p2_holding", group: "activity", level: 2, layer: "p2", hashtags: ["#지주HR", "#Review준비"], label: "지주부문 HR\nReview 일정·Guide 수립",
+    summary: "Mid-year Review 운영계획(일정·Guide)을 수립하고 HR 설명회 실시.",
+    detail: [
+      "Mid-year Review Activity Guide 및 평가자 운영 Tip 배포.",
+      "2분기 QBR과 중복되지 않도록 일정 계획."
+    ], src: "PM Manual p.13~14" },
+  { id: "hr_p2_bghr", group: "activity", level: 2, layer: "p2", hashtags: ["#BGHR", "#취합", "#참관"], label: "자회사·BG HR\n양식 배포·결과 취합",
+    summary: "중간점검 양식 배포, 사전 점검, 면담 참관 Monitoring, 결과 취합·보고.",
+    detail: [
+      "본인 중간점검 양식·작성 안내 Mail 발송, KPI별 달성도 사전 점검.",
+      "BG장-중역·중역-팀장 면담 일부 Sampling 참관.",
+      "면담 결과 취합 → 자회사/지주부문 HR 송부, CEO 보고."
+    ], src: "PM Manual p.13~16" },
+  { id: "hr_p2_evaluatee", group: "activity", level: 2, layer: "p2", hashtags: ["#피평가자", "#중간점검"], label: "피평가자\n본인 중간점검 작성",
+    summary: "상반기 실적을 집계해 중간점검 양식을 작성하고 직속상사에 발송.",
+    detail: [
+      "KPI별 상반기 실적·목표 대비 달성도(%) 기입.",
+      "하반기 예상 실적 → 연말 실적 예상치 산출.",
+      "목표 초과/미달 원인 및 하반기 활동계획·지원 필요사항 기록."
+    ], src: "PM Manual p.14·49" },
+  { id: "hr_p2_eval1", group: "activity", level: 2, layer: "p2", hashtags: ["#1차평가자", "#1on1"], label: "1차 평가자\n1:1 중간점검 면담",
+    summary: "달성도를 점검하고 부진 원인·지원사항·Catch-up 계획을 협의.",
+    detail: [
+      "달성 항목 격려, 부진 항목은 개인·조직·환경 측면에서 장애요인 분석.",
+      "Action Plan/Milestone 조정 및 Resource(인력/예산) Allocation 협의."
+    ], src: "PM Manual p.15·50" },
+  { id: "pd_p2_midform", group: "data", level: 3, layer: "p2", hashtags: ["#중간점검양식", "#산출물"], label: "본인 중간점검 양식",
+    summary: "상반기 실적·달성도·하반기 예상·연말 예상치를 담는 점검 양식.",
+    detail: [
+      "연초 목표설정서의 KPI·Target을 차용해 항목 구성.",
+      "평가항목별 특이사항·지원 필요사항 기록."
+    ], src: "PM Manual p.49" },
+  { id: "pd_p2_result", group: "data", level: 3, layer: "p2", hashtags: ["#결과정리", "#산출물"], label: "Mid-year Review\n결과 정리",
+    summary: "면담 결과(평가자 의견·협의 내용·지도사항)를 기록한 산출물.",
+    detail: [
+      "KPI 항목·달성도·하반기 목표·연말 예상치 검증 후 확정.",
+      "부진요인 개선을 위한 주요 협의 내용 기입."
+    ], src: "PM Manual p.16·51" },
+  { id: "pd_p2_ctx_env", group: "context", level: 3, layer: "p2", hashtags: ["#환경변화", "#Pivot"], label: "환경변화·\n우선순위 재검토",
+    summary: "대내외 변화에 따라 목표 타당성과 우선순위를 재점검.",
+    detail: [
+      "빠른 환경 변화에 맞춰 목표를 유기적으로 변용(Track&Update).",
+      "전략적 Pivot 필요성 및 팀원 동기·피로도 점검."
+    ], src: "OKR Deck p.20" },
+  { id: "pd_p2_prn_checkin", group: "principle", level: 3, layer: "p2", hashtags: ["#체크인", "#상시"], label: "상시 체크인\n원칙",
+    summary: "짧은 주기로 필요 시 언제든 상시 점검하는 것이 핵심.",
+    detail: [
+      "연 1회 형식적 점검의 한계를 극복하는 상시 운영.",
+      "구글/Adobe Check-in 등 상시 피드백·코칭 사례."
+    ], src: "OKR Deck p.12·20" },
+  { id: "pd_p2_rule_qbr", group: "rule", level: 3, layer: "p2", hashtags: ["#QBR", "#순서"], label: "QBR 연계·\n면담 순서 규칙",
+    summary: "2분기 QBR과 중복 회피, 팀원→팀장→중역 순으로 면담.",
+    detail: [
+      "실적 집계·Catch-up Plan 수립 용이성을 감안한 순서.",
+      "Mid Year Review는 통상 7월 운영."
+    ], src: "PM Manual p.5·15" },
+  { id: "pd_p2_op_followup", group: "operation", level: 3, layer: "p2", hashtags: ["#Catchup", "#Resource"], label: "Catch-up·\nResource 재배분",
+    summary: "하반기 목표 달성을 위한 계획 조정과 자원 재배분.",
+    detail: [
+      "공식 면담 이후 추가 협의가 필요하면 관계자 대상 추가 논의.",
+      "Activity Plan 조정, 인력/예산 Allocation 실행."
+    ], src: "PM Manual p.15~16" },
+
+  /* ---------- 3. 평가 — HR 역할별 활동 ---------- */
+  { id: "hr_p3_holding", group: "activity", level: 2, layer: "p3", hashtags: ["#지주HR", "#평가지침"], label: "지주부문 HR\n평가지침·중역결과 취합",
+    summary: "평가/Feedback 운영계획을 수립하고 중역 평가 결과를 취합·검토·보고.",
+    detail: [
+      "평가/Feedback 일정·KPI 평가 Guide를 FA/VM과 협의.",
+      "중역 평가 결과 취합·검토 후 CXO/CEO 보고."
+    ], src: "PM Manual p.17~18" },
+  { id: "hr_p3_bghr", group: "activity", level: 2, layer: "p3", hashtags: ["#BGHR", "#ReviewReport", "#Calibration"], label: "자회사·BG HR\nReview Report·Calibration 지원",
+    summary: "설명회·Guide 배포, HR Review Report 작성, Calibration 배석 지원, 등급비율 점검.",
+    detail: [
+      "MBO 실적 취합을 위해 FA/전략팀과 운영계획 공유.",
+      "MBO 점수 종합·HR 검토 의견 기술 → Calibrator 전달.",
+      "Calibration Meeting 배석, 부문별 등급 인원비율 준수 재확인."
+    ], src: "PM Manual p.18·22·56" },
+  { id: "hr_p3_evaluatee", group: "activity", level: 2, layer: "p3", hashtags: ["#피평가자", "#자기평가"], label: "피평가자\n자기 평가",
+    summary: "실적자료를 집계해 목표설정서 기준으로 자기평가서를 작성.",
+    detail: [
+      "유관팀 협조로 KPI별 실적자료 집계·분석.",
+      "목표수준 달성도에 따라 항목별 점수·가중치 평점 산정.",
+      "달성 근거·부진 원인 등 평가 의견 작성 후 상사 발송."
+    ], src: "PM Manual p.19" },
+  { id: "hr_p3_eval1", group: "activity", level: 2, layer: "p3", hashtags: ["#1차평가자", "#상사평가"], label: "1차 평가자\n상사 평가",
+    summary: "자기평가 결과를 검토하고 정량+정성 평점을 산정.",
+    detail: [
+      "실적자료의 정확성·신뢰성 및 자기평가 타당성 검토.",
+      "목표설정서 기준 항목별 평점 + 정성평가 점수·근거 작성."
+    ], src: "PM Manual p.20" },
+  { id: "hr_p3_eval2", group: "activity", level: 2, layer: "p3", hashtags: ["#2차평가자", "#등급확정"], label: "2차 평가자\n평가결과 확정·등급",
+    summary: "차상위 Review·Calibration을 거쳐 평가점수·등급을 확정.",
+    detail: [
+      "각 평가자 항목별 결과·근거 타당성 Review, Issue 시 재평가 요청.",
+      "Calibration 결과 반영해 점수 확정, 등급 인원비율 Guide 준수."
+    ], src: "PM Manual p.21~22" },
+  { id: "pd_p3_selfeval", group: "data", level: 3, layer: "p3", hashtags: ["#자기평가서", "#실적자료"], label: "자기평가서·\n실적자료",
+    summary: "평가항목별 점수·가중치 평점과 달성 근거를 담는 데이터.",
+    detail: [
+      "정량지표는 산식, 정성지표는 기술식 목표 대비 달성도로 점수화.",
+      "정성평가 근거(추진 성과·Output·기여도) 별도 기술."
+    ], src: "PM Manual p.19·53~55" },
+  { id: "pd_p3_review", group: "data", level: 3, layer: "p3", hashtags: ["#HRReview", "#Calibrator"], label: "HR Review Report",
+    summary: "MBO 평가 점수를 종합·정리하고 HR 검토 의견을 기술한 자료.",
+    detail: [
+      "Calibrator(2차 평가자)에게 전달되어 조정 근거로 활용.",
+      "평가자별 평가 결과·세부 근거 타당성 사전 검토."
+    ], src: "PM Manual p.22·56" },
+  { id: "pd_p3_dist", group: "data", level: 3, layer: "p3", hashtags: ["#등급분포", "#Guide"], label: "평가등급 분포\nGuide",
+    summary: "부문별 평가등급별 인원비율 가이드라인 데이터.",
+    detail: [
+      "직원 평가 시 등급별 인원비율 Guide 준수.",
+      "확정 단계에서 부문별 비율 준수 여부 재확인."
+    ], src: "PM Manual p.22" },
+  { id: "pd_p3_ctx_interpret", group: "context", level: 3, layer: "p3", hashtags: ["#해석", "#난이도"], label: "성과의 해석\n(난이도·외부요인)",
+    summary: "수치를 넘어 목표 난이도·외부요인을 고려한 해석적 평가.",
+    detail: [
+      "목표 난이도(도전성·복잡성)와 기여도 반영.",
+      "통제 불가 외부요인(시장 변동) 영향, 단기-장기 균형 고려."
+    ], src: "OKR Deck p.7" },
+  { id: "pd_p3_prn_absolute", group: "principle", level: 3, layer: "p3", hashtags: ["#절대평가", "#공정성"], label: "절대평가·\n공정성 원칙",
+    summary: "줄세우기(Stack Ranking)를 지양하고 객관성·수용성을 확보.",
+    detail: [
+      "MS의 Stack Ranking 폐지·절대평가 전환 흐름.",
+      "동일 조직 매니저 공동 검토로 공정성·객관성 검증."
+    ], src: "OKR Deck p.10~11" },
+  { id: "pd_p3_rule_score", group: "rule", level: 3, layer: "p3", hashtags: ["#평가산식", "#점수"], label: "평가 산식\n규칙",
+    summary: "정량지표 점수를 목표 달성 구간별 산식으로 산정.",
+    detail: [
+      "Target 미달: 100 + 10×(실적-계획)/(계획-T/H).",
+      "Target 달성: 100 + 20×(실적-계획)/(Cap-계획).",
+      "항목 점수×가중치 합산으로 정량평가 합계 산출."
+    ], src: "PM Manual p.53" },
+  { id: "pd_p3_rule_calib", group: "rule", level: 3, layer: "p3", hashtags: ["#Calibration", "#조정"], label: "Calibration\n규칙",
+    summary: "1차 평가 결과 조정 필요 시 1·2차 평가자 1:1 회의 소집.",
+    detail: [
+      "Calibration Meeting 시 BG HR 배석, HR 검토 결과 설명.",
+      "재조정이 필요한 경우에 한해 회의체 소집."
+    ], src: "PM Manual p.57" },
+  { id: "pd_p3_op_calibmeet", group: "operation", level: 3, layer: "p3", hashtags: ["#운영", "#Meeting"], label: "Calibration\nMeeting 운영",
+    summary: "조정 근거·일정을 준비하고 평가 결과 확정을 지원.",
+    detail: [
+      "HR Review Report·Calibration Guideline을 Calibrator에 전달.",
+      "Issue 발생 시 평가자에게 재평가·조정 요청."
+    ], src: "PM Manual p.22·57" },
+
+  /* ---------- 4. Feedback — HR 역할별 활동 ---------- */
+  { id: "hr_p4_holding", group: "activity", level: 2, layer: "p4", hashtags: ["#지주HR", "#보고취합"], label: "지주부문 HR\nFeedback 결과 보고 취합",
+    summary: "BG별 Feedback 결과를 종합하여 CEO 보고.",
+    detail: [
+      "자회사 HR이 종합한 결과를 취합·정리.",
+      "Process 진행 수준·특이사항 Report 검토."
+    ], src: "PM Manual p.27" },
+  { id: "hr_p4_bghr", group: "activity", level: 2, layer: "p4", hashtags: ["#BGHR", "#준비", "#Monitoring"], label: "자회사·BG HR\nFeedback 준비·Monitoring",
+    summary: "Feedback 일정·양식·Guideline 송부, 확정결과 재송부, 진행현황 Monitoring·취합.",
+    detail: [
+      "Calibration·검토로 확정된 평가결과를 평가자에게 재송부.",
+      "Feedback Meeting 일정 계획 대비 진행 상황 확인.",
+      "면담 결과 취합 → 지주부문 HR 송부, BG장/CEO 보고."
+    ], src: "PM Manual p.24~27" },
+  { id: "hr_p4_eval", group: "activity", level: 2, layer: "p4", hashtags: ["#평가자", "#FeedbackNote", "#면담"], label: "평가자\nFeedback Note·면담",
+    summary: "Feedback Note를 작성하고 1:1 Feedback 면담을 실시.",
+    detail: [
+      "전 과정(활동·외부요인·지원사항) 종합 검토 후 Note 작성.",
+      "Note: 조직성과·개인성과(Category별 점수)·성과급 지급률·주요 Comment.",
+      "평가결과·성과급 산정 근거를 설명하는 1:1 면담."
+    ], src: "PM Manual p.24~25·60" },
+  { id: "hr_p4_evaluatee", group: "activity", level: 2, layer: "p4", hashtags: ["#피평가자", "#수용", "#차년도"], label: "피평가자\nFeedback 수용·차년도",
+    summary: "결과를 수용하고 Gap·미달 KPI를 논의하며 차년도 방향을 협의.",
+    detail: [
+      "자기평가와 Gap이 큰 항목·미달 KPI 중심으로 상세 논의.",
+      "차년도 목표 수립 고려사항 및 향후 개선 필요사항 협의."
+    ], src: "PM Manual p.25" },
+  { id: "pd_p4_note", group: "data", level: 3, layer: "p4", hashtags: ["#FeedbackNote", "#산출물"], label: "Feedback Note",
+    summary: "최종 평가결과와 종합 코멘트를 담아 면담 시 제공하는 산출물.",
+    detail: [
+      "재무/전략/인재 KPI 항목별 최종 점수·등급 제시.",
+      "조직성과·개인성과·성과급 지급률·향후 지원방안 작성."
+    ], src: "PM Manual p.24·60" },
+  { id: "pd_p4_ctx_recognition", group: "context", level: 3, layer: "p4", hashtags: ["#인정", "#심리안전"], label: "인정·\n심리적 안전감",
+    summary: "단순 통보가 아닌 인정·성장을 위한 대화로 수용성을 높임.",
+    detail: [
+      "우수 성과에 대한 구체적 인정(Recognition).",
+      "심리적 안전감이 보장된 건설적 피드백 환경 조성."
+    ], src: "OKR Deck p.21" },
+  { id: "pd_p4_prn_cfr", group: "principle", level: 3, layer: "p4", hashtags: ["#CFR", "#소통"], label: "CFR 원칙\n(소통·피드백·인정)",
+    summary: "OKR 운영을 뒷받침하는 Conversation·Feedback·Recognition.",
+    detail: [
+      "지속적 리뷰·개선을 가능케 하는 소통 기반.",
+      "상시 피드백과 동료 간 인정(Kudos 등)으로 몰입 제고."
+    ], src: "OKR Deck p.21" },
+  { id: "pd_p4_rule_link", group: "rule", level: 3, layer: "p4", hashtags: ["#보상연계", "#규칙"], label: "보상 연계\n규칙",
+    summary: "확정 평가결과를 성과급 지급률 산정 근거로 연계.",
+    detail: [
+      "평가결과 → 성과급 지급률 산정 근거를 면담에서 설명.",
+      "STI Payout 등 보상 일정과 연계."
+    ], src: "PM Manual p.25·60" },
+  { id: "pd_p4_op_nextcycle", group: "operation", level: 3, layer: "p4", hashtags: ["#차년도", "#순환"], label: "차년도 목표\n연계 운영",
+    summary: "개선 필요사항을 차기 목표 고려사항으로 연결해 E2E 순환 완성.",
+    detail: [
+      "차년도 목표 수립 시 고려사항 사전 정리.",
+      "IDP(개인개발계획)와 연계한 성장 포커스 설정."
+    ], src: "PM Manual p.25" }
 ];
 
 const TPL_PROCESS_DETAIL_EDGES = [
@@ -1865,7 +2172,65 @@ const TPL_PROCESS_DETAIL_EDGES = [
   { from: "pd_p4", to: "pd_p4_data" },
   { from: "pd_p4", to: "pd_p4_content" },
   { from: "pd_p4", to: "pd_p4_context" },
-  { from: "pd_p4", to: "pd_p4_activity" }
+  { from: "pd_p4", to: "pd_p4_activity" },
+
+  /* ===== HR 활동/보조 노드 연결 ===== */
+  /* 1. 목표수립 — 역할 활동 (프로세스 흐름: cascade) */
+  { from: "pd_p1", to: "hr_p1_holding", rel: "cascade" },
+  { from: "hr_p1_holding", to: "hr_p1_bghr", rel: "cascade" },
+  { from: "hr_p1_bghr", to: "hr_p1_evaluatee", rel: "cascade" },
+  { from: "hr_p1_evaluatee", to: "hr_p1_eval1", rel: "align" },
+  { from: "hr_p1_eval1", to: "hr_p1_eval2", rel: "align" },
+  /* 1. 목표수립 — 산출물/보조 */
+  { from: "hr_p1_evaluatee", to: "pd_p1_goalsheet", rel: "measure" },
+  { from: "hr_p1_eval1", to: "pd_p1_cascading", rel: "measure" },
+  { from: "hr_p1_evaluatee", to: "pd_p1_strategymbo", rel: "measure", dashes: true },
+  { from: "pd_p1_ctx_align", to: "hr_p1_evaluatee", rel: "contribute", dashes: true },
+  { from: "pd_p1_prn_fast", to: "pd_p1", rel: "contribute", dashes: true },
+  { from: "pd_p1_prn_autonomy", to: "pd_p1", rel: "contribute", dashes: true },
+  { from: "pd_p1_rule_weight", to: "pd_p1_goalsheet", dashes: true },
+  { from: "pd_p1_rule_schedule", to: "pd_p1", dashes: true },
+  { from: "pd_p1_op_monitor", to: "hr_p1_bghr", dashes: true },
+
+  /* 2. Mid-year Review */
+  { from: "pd_p2", to: "hr_p2_holding", rel: "cascade" },
+  { from: "hr_p2_holding", to: "hr_p2_bghr", rel: "cascade" },
+  { from: "hr_p2_bghr", to: "hr_p2_evaluatee", rel: "cascade" },
+  { from: "hr_p2_evaluatee", to: "hr_p2_eval1", rel: "align" },
+  { from: "hr_p2_evaluatee", to: "pd_p2_midform", rel: "measure" },
+  { from: "hr_p2_eval1", to: "pd_p2_result", rel: "measure" },
+  { from: "pd_p2_ctx_env", to: "hr_p2_eval1", rel: "contribute", dashes: true },
+  { from: "pd_p2_prn_checkin", to: "pd_p2", rel: "contribute", dashes: true },
+  { from: "pd_p2_rule_qbr", to: "pd_p2", dashes: true },
+  { from: "pd_p2_op_followup", to: "hr_p2_eval1", dashes: true },
+
+  /* 3. 평가 */
+  { from: "pd_p3", to: "hr_p3_holding", rel: "cascade" },
+  { from: "hr_p3_holding", to: "hr_p3_bghr", rel: "cascade" },
+  { from: "hr_p3_bghr", to: "hr_p3_evaluatee", rel: "cascade" },
+  { from: "hr_p3_evaluatee", to: "hr_p3_eval1", rel: "align" },
+  { from: "hr_p3_eval1", to: "hr_p3_eval2", rel: "align" },
+  { from: "hr_p3_evaluatee", to: "pd_p3_selfeval", rel: "measure" },
+  { from: "hr_p3_bghr", to: "pd_p3_review", rel: "measure" },
+  { from: "hr_p3_eval2", to: "pd_p3_dist", rel: "measure", dashes: true },
+  { from: "pd_p3_ctx_interpret", to: "hr_p3_eval1", rel: "contribute", dashes: true },
+  { from: "pd_p3_prn_absolute", to: "pd_p3", rel: "contribute", dashes: true },
+  { from: "pd_p3_rule_score", to: "pd_p3_selfeval", dashes: true },
+  { from: "pd_p3_rule_calib", to: "hr_p3_eval2", dashes: true },
+  { from: "pd_p3_op_calibmeet", to: "hr_p3_bghr", dashes: true },
+
+  /* 4. Feedback */
+  { from: "pd_p4", to: "hr_p4_holding", rel: "cascade" },
+  { from: "hr_p4_holding", to: "hr_p4_bghr", rel: "cascade" },
+  { from: "hr_p4_bghr", to: "hr_p4_eval", rel: "cascade" },
+  { from: "hr_p4_eval", to: "hr_p4_evaluatee", rel: "align" },
+  { from: "hr_p4_eval", to: "pd_p4_note", rel: "measure" },
+  { from: "pd_p4_ctx_recognition", to: "hr_p4_eval", rel: "contribute", dashes: true },
+  { from: "pd_p4_prn_cfr", to: "pd_p4", rel: "contribute", dashes: true },
+  { from: "pd_p4_rule_link", to: "pd_p4_note", dashes: true },
+  { from: "pd_p4_op_nextcycle", to: "pd_p4", dashes: true },
+  /* 순환: 차년도 연계 → 목표수립 */
+  { from: "pd_p4_op_nextcycle", to: "pd_p1", rel: "cascade", dashes: true }
 ];
 
 /* ============================================================
