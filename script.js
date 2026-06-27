@@ -99,8 +99,8 @@ function idealText(hex) {
     var f = parseInt(String(hex).slice(1), 16);
     var r = (f >> 16) & 255, g = (f >> 8) & 255, b = f & 255;
     var L = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return L > 0.6 ? "#111827" : "#ffffff";
-  } catch (e) { return "#ffffff"; }
+    return L > 0.45 ? "#000000" : "#ffffff";
+  } catch (e) { return "#000000"; }
 }
 
 var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -124,22 +124,23 @@ function makeVisNode(n) {
     hidden: false,
     color: {
       background: c,
-      border: shade(c, -10),
-      highlight: { background: c, border: "#1876f2" },
+      border: shade(c, -15),
+      highlight: { background: c, border: "#000000" },
       hover: { background: shade(c, 10), border: shade(c, -20) }
     },
     font: {
       color: textColor,
-      size: isRoot ? fontSize(18) : fontSize(14),
-      face: "'Optimistic VF', Pretendard, sans-serif",
-      strokeWidth: 0,
+      size: isRoot ? fontSize(22) : fontSize(16),
+      face: "Pretendard, -apple-system, sans-serif",
+      strokeWidth: textColor === "#ffffff" ? 1 : 0,
+      strokeColor: "rgba(0,0,0,0.3)",
       multi: false,
       bold: { color: textColor }
     },
-    shapeProperties: { borderRadius: 16 },
-    borderWidth: 1,
-    margin: 16,
-    shadow: false,
+    shapeProperties: { borderRadius: 12 },
+    borderWidth: 1.5,
+    margin: 18,
+    shadow: { enabled: true, color: 'rgba(0,0,0,0.1)', size: 5, x: 2, y: 2 },
     widthConstraint: { minimum: UNIFORM_BOX_WIDTH, maximum: UNIFORM_BOX_WIDTH },
     heightConstraint: { minimum: UNIFORM_BOX_HEIGHT },
     mass: isRoot ? 4 : 1.3
