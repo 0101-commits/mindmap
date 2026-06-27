@@ -113,7 +113,7 @@ function makeVisNode(n) {
   var grp = GROUPS[n.group] || { color: "#dee3e9" };
   var c = grp.color;
   var isRoot = n.id === "root";
-  var textColor = "#000000"; // Pure black
+  var textColor = idealText(c); // Use idealText to set white or dark text based on background color brightness
 
   var nodeObj = {
     id: n.id,
