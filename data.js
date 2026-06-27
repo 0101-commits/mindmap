@@ -48,20 +48,20 @@ const GROUPS = {
  * ============================================================ */
 const TPL_E2E_NODES = [
   {
-    id: "a_kpi_verify", group: "activity", level: 2, label: "AI KPI\n적정성 검증",
+    id: "a_kpi_verify", group: "activity", level: 2, section: 2, hashtags: ["#AI검증", "#KPI"], label: "AI KPI\n적정성 검증",
     summary: "AI가 KPI 7대 요건을 기준으로 적정성을 검증하고 피드백을 제공.",
     detail: ["o_kpi 단계에서 AI가 KPI 후보를 분석.", "적정성 기준에 부합하는지 평가."],
     src: "User Feedback"
   },
   {
-    id: "d_kpi_criteria", group: "data", level: 3, label: "KPI 7대 요건\n평가 데이터",
+    id: "d_kpi_criteria", group: "data", level: 3, section: 3, hashtags: ["#평가기준", "#데이터"], label: "KPI 7대 요건\n평가 데이터",
     summary: "KPI 선정 7대 기준(Strategic, Measurable 등)에 대한 평가 데이터.",
     detail: ["AI가 KPI 적정성을 판단하는 데 사용하는 핵심 데이터."],
     src: "User Feedback"
   },
   /* ---------- CORE ---------- */
   {
-    id: "root", group: "core", level: 0, label: "개인 E2E\n성과관리",
+    id: "root", group: "core", level: 0, section: 1, hashtags: ["#성과관리", "#E2E"], label: "개인 E2E\n성과관리",
     title: "개인 단위의 End-to-End 성과관리 체계",
     summary: "목표수립 → 체크인(중간점검) → 평가 → 피드백으로 이어지는 개인 단위 End-to-End 성과관리 전체 흐름.",
     detail: [
@@ -73,7 +73,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- PROCESS (E2E 4단계) ---------- */
   {
-    id: "p1", group: "process", level: 1, label: "1단계\n목표수립",
+    id: "p1", group: "process", level: 1, section: 1, hashtags: ["#목표수립", "#시작단계"], label: "1단계\n목표수립",
     summary: "상위 조직 목표와 개인 고유업무를 고려해 자기 목표(KPI·목표수준·가중치)를 수립하고 검토회의로 확정.",
     detail: [
       "시기: 통상 2~3월.",
@@ -83,7 +83,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.5"
   },
   {
-    id: "p2", group: "process", level: 1, label: "2단계\nMid-year Review\n(체크인)",
+    id: "p2", group: "process", level: 1, section: 1, hashtags: ["#체크인", "#중간점검"], label: "2단계\nMid-year Review\n(체크인)",
     summary: "평가자–피평가자 1:1 중간점검으로 목표 달성도를 점검하고 하반기 Catch-up 계획을 협의.",
     detail: [
       "시기: 통상 7월 (2분기 QBR과 연계).",
@@ -93,7 +93,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.5"
   },
   {
-    id: "p3", group: "process", level: 1, label: "3단계\n평가",
+    id: "p3", group: "process", level: 1, section: 1, hashtags: ["#평가", "#Calibration"], label: "3단계\n평가",
     summary: "자기평가 → 상사평가 → Calibration → 평가결과 확정·보상연계.",
     detail: [
       "시기: 통상 12~1월.",
@@ -103,7 +103,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.5"
   },
   {
-    id: "p4", group: "process", level: 1, label: "4단계\nFeedback",
+    id: "p4", group: "process", level: 1, section: 1, hashtags: ["#피드백", "#보상연계"], label: "4단계\nFeedback",
     summary: "1:1 Feedback 면담으로 평가결과·성과급 근거를 공유하고 차년도 개선점을 협의.",
     detail: [
       "시기: 통상 1월.",
@@ -115,7 +115,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- OBJECTIVE (1단계 목표수립 세부) ---------- */
   {
-    id: "o_job", group: "objective", level: 2, label: "직무내용\nReview",
+    id: "o_job", group: "objective", level: 2, section: 2, hashtags: ["#직무내용", "#R&R"], label: "직무내용\nReview",
     summary: "사업계획·상위 조직장 목표·핵심 고유업무를 먼저 검토.",
     detail: [
       "Input: 사업계획, 상위 조직장의 목표 수립 결과, 핵심 고유업무.",
@@ -124,7 +124,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10"
   },
   {
-    id: "o_role", group: "objective", level: 2, label: "역할책임\n정의",
+    id: "o_role", group: "objective", level: 2, section: 2, hashtags: ["#역할책임", "#Cascading"], label: "역할책임\n정의",
     summary: "상위 조직장 목표 달성을 지원하기 위한 본인의 역할·책임을 정의.",
     detail: [
       "Cascading Matrix로 팀 KPI 대비 개인의 역할 정도(전체/일부 책임)를 가시화.",
@@ -132,7 +132,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10"
   },
   {
-    id: "o_csf", group: "objective", level: 2, label: "CSF 도출",
+    id: "o_csf", group: "objective", level: 2, section: 2, hashtags: ["#CSF", "#핵심성공요인"], label: "CSF 도출",
     summary: "핵심 고유업무별 핵심성공요인(Critical Success Factor)을 정의.",
     detail: [
       "Main Task를 성공적으로 수행하기 위한 기본적·핵심적 요건.",
@@ -141,7 +141,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10"
   },
   {
-    id: "o_kpi", group: "objective", level: 2, label: "KPI 매칭",
+    id: "o_kpi", group: "objective", level: 2, section: 2, hashtags: ["#KPI", "#지표선정"], label: "KPI 매칭",
     summary: "CSF별 성과수준을 측정할 KPI를 KPI Pool에서 선정.",
     detail: [
       "CSF에 대해 측정 가능한 KPI Pool을 구성.",
@@ -150,7 +150,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10"
   },
   {
-    id: "o_target", group: "objective", level: 2, label: "목표수준\n설정",
+    id: "o_target", group: "objective", level: 2, section: 2, hashtags: ["#목표수준", "#SMART"], label: "목표수준\n설정",
     summary: "KPI별 계획(100)·Threshold(90)·Cap(120)과 전년도 실적을 설정.",
     detail: [
       "Target Level = (당해 Target − 전년도 실적) / 전년도 실적.",
@@ -159,7 +159,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10"
   },
   {
-    id: "o_weight", group: "objective", level: 2, label: "가중치\n부여",
+    id: "o_weight", group: "objective", level: 2, section: 2, hashtags: ["#가중치", "#우선순위"], label: "가중치\n부여",
     summary: "KPI 항목별 Impact·전략적 중요도에 따라 가중치 배분.",
     detail: [
       "변별력 유지 가능한 적정 항목 수.",
@@ -168,7 +168,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10"
   },
   {
-    id: "o_confirm", group: "objective", level: 2, label: "목표 검토회의\n· 확정",
+    id: "o_confirm", group: "objective", level: 2, section: 2, hashtags: ["#검토회의", "#Alignment"], label: "목표 검토회의\n· 확정",
     summary: "상위자와 Alignment·Target·가중치 적정성을 협의 후 서명·확정.",
     detail: [
       "목표 검토 Checklist + Cascading Matrix 활용.",
@@ -179,7 +179,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- CONTEXT (맥락: 목표수립 Input) ---------- */
   {
-    id: "c_job", group: "context", level: 3, label: "직무내용\n맥락",
+    id: "c_job", group: "context", level: 3, section: 4, hashtags: ["#맥락", "#JD"], label: "직무내용\n맥락",
     summary: "개인 Job Description·고유 업무. 'Specific'한 목표의 근거.",
     detail: [
       "개인의 역할/책임·업무 특성에 맞게 재무/전략 KPI가 도출되었는지 점검.",
@@ -187,7 +187,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10 · OKR Deck p.26"
   },
   {
-    id: "c_strategy", group: "context", level: 3, label: "전략 맥락",
+    id: "c_strategy", group: "context", level: 3, section: 4, hashtags: ["#전략", "#과제"], label: "전략 맥락",
     summary: "전사·BG 전략과제. 전략 KPI 도출의 근거.",
     detail: [
       "경영계획의 전략과제를 체계화·구체화(전략체계도).",
@@ -196,7 +196,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10 · OKR Deck p.26"
   },
   {
-    id: "c_upper", group: "context", level: 3, label: "상위지표\n맥락",
+    id: "c_upper", group: "context", level: 3, section: 4, hashtags: ["#상위목표", "#Alignment"], label: "상위지표\n맥락",
     summary: "상위 조직 KPI·목표. 개인 목표가 여기에 기여(Alignment)해야 함.",
     detail: [
       "개인 KPI가 상위자 KPI/목표와 연계성이 있는가?",
@@ -205,7 +205,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10 · OKR Deck p.26"
   },
   {
-    id: "c_personal", group: "context", level: 3, label: "개인 관점",
+    id: "c_personal", group: "context", level: 3, section: 4, hashtags: ["#개인관점", "#BottomUp"], label: "개인 관점",
     summary: "개인 R&R·고객·산출물. Bottom-up 목표 발굴 관점.",
     detail: [
       "나의 주요 업무·산출물(성과)은 무엇인가?",
@@ -214,7 +214,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10 · OKR Deck p.26"
   },
   {
-    id: "c_prev", group: "context", level: 3, label: "전년도 수준",
+    id: "c_prev", group: "context", level: 3, section: 4, hashtags: ["#전년도", "#기준선"], label: "전년도 수준",
     summary: "전년도 실적·달성도·가중치. 목표수준 산정의 기준선.",
     detail: [
       "전년도 KPI 달성도·목표수준과 올해 목표수준 비교.",
@@ -223,7 +223,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10 · OKR Deck p.26"
   },
   {
-    id: "c_collab", group: "context", level: 3, label: "협업 맥락",
+    id: "c_collab", group: "context", level: 3, section: 4, hashtags: ["#협업", "#조정"], label: "협업 맥락",
     summary: "유관부서·협력조직과의 수평적 연결. Alignment의 한 축.",
     detail: [
       "협업 관계 조직 간 OKR 설정 시 섬세한 조정 필요.",
@@ -232,7 +232,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.10 · OKR Deck p.26"
   },
   {
-    id: "c_support", group: "context", level: 3, label: "보조 맥락\n(Support)",
+    id: "c_support", group: "context", level: 3, section: 4, hashtags: ["#지원", "#정성적"], label: "보조 맥락\n(Support)",
     summary: "재무성과를 간접 지원하는 직무. Support OKR로 정렬.",
     detail: [
       "Core OKR: 재무성과 직접 창출/기여 → 직접적 Alignment.",
@@ -243,7 +243,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- INDICATOR (지표: CSF/KPI) ---------- */
   {
-    id: "i_method", group: "indicator", level: 3, label: "KPI 도출\n3대 방법",
+    id: "i_method", group: "indicator", level: 3, section: 4, hashtags: ["#방법론", "#도출"], label: "KPI 도출\n3대 방법",
     summary: "Cascading / Process·Function Charting / Customer Mapping.",
     detail: [
       "A. Cascading(Top-down): 상위 전략목표가 명확할 때.",
@@ -252,7 +252,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_cascading", group: "indicator", level: 3, label: "Cascading\nMethod",
+    id: "i_cascading", group: "indicator", level: 3, section: 4, hashtags: ["#TopDown", "#배분"], label: "Cascading\nMethod",
     summary: "전사 목표 → 하위조직 핵심성공요소 기준 목표 배분(Top-down).",
     detail: [
       "Span of Control·영향도를 감안해 목표 Cascading.",
@@ -260,7 +260,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_vdt", group: "indicator", level: 3, label: "Value\nDriver Tree",
+    id: "i_vdt", group: "indicator", level: 3, section: 4, hashtags: ["#VDT", "#인과관계"], label: "Value\nDriver Tree",
     summary: "재무성과 증감 Driver 간 인과관계로 KPI Pool 도출.",
     detail: [
       "목표 + 달성방안으로 구성, MECE하게 점차 구체화.",
@@ -269,7 +269,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_process", group: "indicator", level: 3, label: "Process/Function\nCharting",
+    id: "i_process", group: "indicator", level: 3, section: 4, hashtags: ["#프로세스", "#ValueChain"], label: "Process/Function\nCharting",
     summary: "Biz Process → Main Task → CSF → KPI Pool 순으로 도출.",
     detail: [
       "Value Chain에서 주요 Biz Process/Main Function 도출.",
@@ -278,7 +278,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_customer", group: "indicator", level: 3, label: "Customer\nMapping",
+    id: "i_customer", group: "indicator", level: 3, section: 4, hashtags: ["#고객", "#Needs"], label: "Customer\nMapping",
     summary: "고객 Needs 기준으로 활동 결과를 정의해 KPI 도출.",
     detail: [
       "고객 List-up·Category화 → 주요 역할/활동 → CSF → KPI.",
@@ -287,7 +287,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_csf", group: "indicator", level: 3, label: "핵심성공요인\nCSF",
+    id: "i_csf", group: "indicator", level: 3, section: 4, hashtags: ["#CSF", "#핵심요건"], label: "핵심성공요인\nCSF",
     summary: "Main Task를 성공시키는 핵심 요건. KPI의 직전 단계.",
     detail: [
       "예) '정확한 시장정보 조기 파악', '기존고객 유지·신규창출'.",
@@ -295,7 +295,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_pool", group: "indicator", level: 3, label: "KPI Pool",
+    id: "i_pool", group: "indicator", level: 3, section: 4, hashtags: ["#후보군", "#Pool"], label: "KPI Pool",
     summary: "CSF에서 도출된 측정지표 후보군.",
     detail: [
       "도출 후 7대 적정성 기준으로 선정·검증.",
@@ -303,7 +303,7 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_select", group: "indicator", level: 3, label: "KPI 선정\n7대 기준",
+    id: "i_select", group: "indicator", level: 3, section: 4, hashtags: ["#선정기준", "#검증"], label: "KPI 선정\n7대 기준",
     summary: "Strategic·Measurable·Controllable·Easy-target·Action·Knowable·Balanced.",
     detail: [
       "Strategic: 전략·상위 KPI와 연계되는가?",
@@ -314,24 +314,24 @@ const TPL_E2E_NODES = [
     ], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_fin", group: "indicator", level: 3, label: "재무 KPI",
+    id: "i_fin", group: "indicator", level: 3, section: 4, hashtags: ["#재무", "#매출"], label: "재무 KPI",
     summary: "매출·EBIT·DSO 등 재무 목표. Core 직무에 직접 연계.",
     detail: ["VDT로 도출. 계획(100)/Threshold(90)/Cap(120)과 전년도 실적 명시."], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_strat", group: "indicator", level: 3, label: "전략 KPI",
+    id: "i_strat", group: "indicator", level: 3, section: 4, hashtags: ["#전략과제", "#Milestone"], label: "전략 KPI",
     summary: "전략과제 달성도. 별도 전략MBO 계획서·Milestone 작성(중역).",
     detail: ["전략체계도·Key Driver 기반. 성공의 정의(중장기)·Action Plan 포함."], src: "PM Manual p.30 · OKR Deck"
   },
   {
-    id: "i_people", group: "indicator", level: 3, label: "인재 KPI",
+    id: "i_people", group: "indicator", level: 3, section: 4, hashtags: ["#인재육성", "#정성가치"], label: "인재 KPI",
     summary: "육성·조직역량 등 정성 가치. 정성가치를 KR로 정량화.",
     detail: ["개발 항목 가중치 최소 5% 이상 권장. HR이 Overall Review."], src: "PM Manual p.30 · OKR Deck"
   },
 
   /* ---------- PRINCIPLE (원칙) ---------- */
   {
-    id: "pr_okr", group: "principle", level: 2, label: "OKR 정의",
+    id: "pr_okr", group: "principle", level: 2, section: 4, hashtags: ["#OKR", "#개념"], label: "OKR 정의",
     summary: "Objective(목표) + Key Results(2~5개 핵심결과).",
     detail: [
       "Objective: 성취하고자 하는 것의 표현 — 간결·영감·도전적.",
@@ -340,7 +340,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.15~17"
   },
   {
-    id: "pr_fast", group: "principle", level: 2, label: "FAST 원칙",
+    id: "pr_fast", group: "principle", level: 2, section: 4, hashtags: ["#FAST", "#원칙"], label: "FAST 원칙",
     summary: "Focus·Align·Stretch·Track. OKR 4대 핵심원칙.",
     detail: [
       "Focus(집중과 전념): 우선순위 3~5개 목표·각 5개 이하 KR.",
@@ -350,7 +350,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.15~17"
   },
   {
-    id: "pr_smart", group: "principle", level: 2, label: "SMART 원칙",
+    id: "pr_smart", group: "principle", level: 2, section: 4, hashtags: ["#SMART", "#목표설정"], label: "SMART 원칙",
     summary: "Specific·Measurable·Achievable·Realistic·Time-bound.",
     detail: [
       "목표 검토회의 Checklist의 핵심 기준.",
@@ -359,7 +359,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.15~17"
   },
   {
-    id: "pr_bii", group: "principle", level: 2, label: "BII",
+    id: "pr_bii", group: "principle", level: 2, section: 4, hashtags: ["#BII", "#도전"], label: "BII",
     summary: "Build·Improve·Innovate. 도전적 목표의 방향.",
     detail: [
       "Build: 기존에 없던 것을 만들어내거나,",
@@ -371,7 +371,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- OPERATION (운영) ---------- */
   {
-    id: "op_checkin", group: "operation", level: 2, label: "체크인 /\nMid-year Review",
+    id: "op_checkin", group: "operation", level: 2, section: 2, hashtags: ["#체크인", "#상시점검"], label: "체크인 /\nMid-year Review",
     summary: "상시·중간 점검으로 진척을 확인하고 목표를 보완.",
     detail: [
       "공식 중간점검 면담(1:1) + 상시 체크인 병행.",
@@ -380,7 +380,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_weekly", group: "operation", level: 2, label: "Weekly\nBriefing",
+    id: "op_weekly", group: "operation", level: 2, section: 2, hashtags: ["#주간점검", "#회고"], label: "Weekly\nBriefing",
     summary: "Start Meeting(월)·Review Briefing(금)으로 주간 점검·회고.",
     detail: [
       "Start: 주간 달성계획·핵심결과를 Kanban/Scrum에 사전 공유.",
@@ -389,7 +389,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_cfr", group: "operation", level: 2, label: "CFR",
+    id: "op_cfr", group: "operation", level: 2, section: 2, hashtags: ["#소통", "#인정"], label: "CFR",
     summary: "Conversation·Feedback·Recognition. OKR을 떠받치는 소통.",
     detail: [
       "OKR 프로세스를 성공적으로 운영하기 위한 뒷받침.",
@@ -397,7 +397,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_review", group: "operation", level: 2, label: "종합리뷰\n· 회고노트",
+    id: "op_review", group: "operation", level: 2, section: 2, hashtags: ["#종합리뷰", "#회고노트"], label: "종합리뷰\n· 회고노트",
     summary: "개인 종합리뷰 → 상위관리자 리뷰 → OKR 지향노트.",
     detail: [
       "FAST 4축 체크리스트로 자가 종합리뷰.",
@@ -406,7 +406,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_eval", group: "operation", level: 2, label: "성과 해석",
+    id: "op_eval", group: "operation", level: 2, section: 2, hashtags: ["#성과해석", "#상대적판단"], label: "성과 해석",
     summary: "최종 결과가 아닌 난이도·이슈를 고려한 상대적 판단.",
     detail: [
       "목표 난이도(영향력·혁신성·복잡성·불확실성).",
@@ -415,7 +415,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_talent", group: "operation", level: 2, label: "인재 스냅샷\n· Talent Session",
+    id: "op_talent", group: "operation", level: 2, section: 2, hashtags: ["#인재논의", "#공정성"], label: "인재 스냅샷\n· Talent Session",
     summary: "성과·역량·종합 정보로 다각적 인재 논의(평가 오류 점검).",
     detail: [
       "성과곡선은 정규분포가 아닌 '멱함수' — 핵심인재 소수.",
@@ -424,7 +424,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_change", group: "operation", level: 2, label: "변화관리\n3단계",
+    id: "op_change", group: "operation", level: 2, section: 2, hashtags: ["#변화관리", "#정착"], label: "변화관리\n3단계",
     summary: "가치 정의 → 적용·촉진(Pioneer) → 전파·확장.",
     detail: [
       "Step1: 임원/CEO 변화의지·도전적 변화목표·장기투자.",
@@ -433,7 +433,7 @@ const TPL_E2E_NODES = [
     ], src: "OKR Deck p.20~21"
   },
   {
-    id: "op_action", group: "operation", level: 2, label: "OKR 행동강령\n6가지",
+    id: "op_action", group: "operation", level: 2, section: 2, hashtags: ["#행동강령", "#성장마인드"], label: "OKR 행동강령\n6가지",
     summary: "성장마인드·좋은질문·OKR공유·Alignment·책임주기·AD-FIT 코칭.",
     detail: [
       "① 성장 마인드 기르기(Growth Mindset 콘테스트).",
@@ -451,7 +451,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- LAYER 1 · HR INTERFACE ---------- */
   {
-    id: "l1_users", group: "layer1", level: 3, label: "👤 임직원 · 리더\nHR 담당자",
+    id: "l1_users", group: "layer1", level: 3, section: 5, hashtags: ["#사용자", "#인터페이스"], label: "👤 임직원 · 리더\nHR 담당자",
     summary: "평가 대상자(임직원)·평가자(리더)·HR 인사 담당자 — 시스템 사용 주체.",
     detail: [
       "임직원: 평가 대상자.",
@@ -461,7 +461,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l1_agent", group: "layer1", level: 3, label: "💬 HR AI Agent\n(UI/UX)",
+    id: "l1_agent", group: "layer1", level: 3, section: 5, hashtags: ["#AIAgent", "#챗봇"], label: "💬 HR AI Agent\n(UI/UX)",
     summary: "권한별 맞춤형 화면 및 챗봇 인터페이스 제공.",
     detail: [
       "사용자의 사번·직급 권한 정보와 함께 명령 전달.",
@@ -472,7 +472,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- LAYER 2 · ORCHESTRATION & SUB-AGENT ---------- */
   {
-    id: "l2_manager", group: "layer2", level: 4, label: "🤖 HR AI Manager",
+    id: "l2_manager", group: "layer2", level: 4, section: 5, hashtags: ["#Manager", "#오케스트레이션"], label: "🤖 HR AI Manager",
     summary: "인사 거버넌스 및 데이터 권한 통제관.",
     detail: [
       "Interface Layer의 명령을 받아 실무 에이전트로 분배.",
@@ -481,7 +481,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l2_security", group: "layer2", level: 4, label: "🛡️ Security Filter",
+    id: "l2_security", group: "layer2", level: 4, section: 5, hashtags: ["#Security", "#권한검증"], label: "🛡️ Security Filter",
     summary: "사용자 권한(Role)별 데이터 접근 한도 최종 검증.",
     detail: [
       "Role 기반으로 접근 가능한 데이터 범위를 최종 게이트.",
@@ -490,7 +490,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l2_mas", group: "layer2", level: 4, label: "⚙️ Multi-Agent\nSystem",
+    id: "l2_mas", group: "layer2", level: 4, section: 5, hashtags: ["#MultiAgent", "#역할분담"], label: "⚙️ Multi-Agent\nSystem",
     summary: "역할 분담형 실무 에이전트 집합.",
     detail: [
       "업무별로 독립된 sub-Agent로 작업 분담.",
@@ -498,7 +498,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l2_perf", group: "layer2", level: 4, label: "[실무1] Performance\nEvaluation Agent",
+    id: "l2_perf", group: "layer2", level: 4, section: 5, hashtags: ["#평가Agent", "#성과분석"], label: "[실무1] Performance\nEvaluation Agent",
     summary: "정량/정성 성과 분석 실무 에이전트.",
     detail: [
       "KPI 달성도·정성평가 데이터 분석.",
@@ -507,7 +507,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l2_comp", group: "layer2", level: 4, label: "[실무2] Compensation\nCalibration Agent",
+    id: "l2_comp", group: "layer2", level: 4, section: 5, hashtags: ["#보상Agent", "#시뮬레이션"], label: "[실무2] Compensation\nCalibration Agent",
     summary: "보상 및 연봉 조정 시뮬레이션 실무 에이전트.",
     detail: [
       "성과 결과 기반 보상·연봉 조정 시뮬레이션.",
@@ -518,7 +518,7 @@ const TPL_E2E_NODES = [
 
   /* ---------- LAYER 3 · SECURITY & API INTEGRATION ---------- */
   {
-    id: "l3_gw", group: "layer3", level: 5, label: "🔒 HR API Gateway\n& IAM",
+    id: "l3_gw", group: "layer3", level: 5, section: 5, hashtags: ["#Gateway", "#IAM"], label: "🔒 HR API Gateway\n& IAM",
     summary: "HR 데이터 권한 독립성 게이트웨이 — 권한 격리의 핵심.",
     detail: [
       "각 데이터망에 대한 독립 인증·권한 격리 수행.",
@@ -527,7 +527,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l3_saas", group: "layer3", level: 5, label: "🌐 SaaS 전용 API",
+    id: "l3_saas", group: "layer3", level: 5, section: 5, hashtags: ["#SaaSAPI", "#OAuth"], label: "🌐 SaaS 전용 API",
     summary: "개별 테넌트 인증 (OAuth 2.0 토큰 기반, 사외 클라우드 보안).",
     detail: [
       "테넌트별 OAuth 2.0 토큰 인증.",
@@ -536,7 +536,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l3_onprem", group: "layer3", level: 5, label: "🧱 On-Prem 전용 API",
+    id: "l3_onprem", group: "layer3", level: 5, section: 5, hashtags: ["#OnPremAPI", "#망분리"], label: "🧱 On-Prem 전용 API",
     summary: "사내 망분리 연동 (VPN/전용선, DB 접근 제어 솔루션).",
     detail: [
       "VPN/전용선 기반 사내 망분리 연동.",
@@ -545,7 +545,7 @@ const TPL_E2E_NODES = [
     ], src: "기획회의 (HR AI 아키텍처)"
   },
   {
-    id: "l3_mask", group: "layer3", level: 5, label: "👁️ Data Masking\nTool",
+    id: "l3_mask", group: "layer3", level: 5, section: 5, hashtags: ["#DataMasking", "#비식별화"], label: "👁️ Data Masking\nTool",
     summary: "주민번호·사번 등 민감정보 실시간 비식별화 처리.",
     detail: [
       "민감정보(주민번호·사번 등) 실시간 비식별화.",
@@ -556,47 +556,47 @@ const TPL_E2E_NODES = [
 
   /* ---------- LAYER 4 · FEDERATED HR DATA ---------- */
   {
-    id: "l4_saas", group: "layer4", level: 6, label: "[4-A] SaaS Platform\nData Layer",
+    id: "l4_saas", group: "layer4", level: 6, section: 3, hashtags: ["#SaaSData", "#협업데이터"], label: "[4-A] SaaS Platform\nData Layer",
     summary: "외부 클라우드 기반 협업/활동 데이터.",
     detail: ["HRIS·소통·협업/산출물 데이터를 SaaS 형태로 보관."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4a_1", group: "layer4", level: 6, label: "Workday /\nSuccessFactors",
+  { id: "l4a_1", group: "layer4", level: 6, section: 3, hashtags: ["#HRIS", "#Workday"], label: "Workday /\nSuccessFactors",
     summary: "HRIS (인사정보 시스템).", detail: ["클라우드 기반 핵심 인사정보 관리."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4a_2", group: "layer4", level: 6, label: "Slack / MS Teams",
+  { id: "l4a_2", group: "layer4", level: 6, section: 3, hashtags: ["#소통", "#Teams"], label: "Slack / MS Teams",
     summary: "소통 데이터.", detail: ["협업 메신저 기반 커뮤니케이션 활동 데이터."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4a_3", group: "layer4", level: 6, label: "Jira / Confluence",
+  { id: "l4a_3", group: "layer4", level: 6, section: 3, hashtags: ["#산출물", "#Jira"], label: "Jira / Confluence",
     summary: "협업/산출물 데이터.", detail: ["과제·문서 산출물 및 협업 이력."], src: "기획회의 (HR AI 아키텍처)"
   },
 
   {
-    id: "l4_onprem", group: "layer4", level: 6, label: "[4-B] On-Premise\nCore Systems",
+    id: "l4_onprem", group: "layer4", level: 6, section: 3, hashtags: ["#OnPremData", "#코어인사"], label: "[4-B] On-Premise\nCore Systems",
     summary: "사내 폐쇄망 기반 코어 인사.",
     detail: ["구축형 ERP·급여·징계 등 민감 코어 데이터를 폐쇄망에 보관."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4b_1", group: "layer4", level: 6, label: "SAP / Oracle ERP",
+  { id: "l4b_1", group: "layer4", level: 6, section: 3, hashtags: ["#ERP", "#SAP"], label: "SAP / Oracle ERP",
     summary: "구축형 ERP.", detail: ["온프레미스 전사 자원관리 시스템."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4b_2", group: "layer4", level: 6, label: "급여/보상\n레거시",
+  { id: "l4b_2", group: "layer4", level: 6, section: 3, hashtags: ["#급여", "#보상"], label: "급여/보상\n레거시",
     summary: "사내 급여·보상 레거시 시스템.", detail: ["민감 보상 데이터 — 강한 접근통제 필요."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4b_3", group: "layer4", level: 6, label: "징계·인사위\n문서",
+  { id: "l4b_3", group: "layer4", level: 6, section: 3, hashtags: ["#징계", "#인사위"], label: "징계·인사위\n문서",
     summary: "징계 기록 및 인사위원회 문서.", detail: ["최고 민감 등급 — 마스킹·권한 격리 필수."], src: "기획회의 (HR AI 아키텍처)"
   },
 
   {
-    id: "l4_llm", group: "layer4", level: 6, label: "[4-C] LLM Context\nData Layer",
+    id: "l4_llm", group: "layer4", level: 6, section: 3, hashtags: ["#LLM", "#맥락데이터"], label: "[4-C] LLM Context\nData Layer",
     summary: "특정 회사 고유 맥락 지식 DB.",
     detail: ["의미적 탐색(semantic search)용 사내 고유 맥락 지식."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4c_1", group: "layer4", level: 6, label: "Vector DB",
+  { id: "l4c_1", group: "layer4", level: 6, section: 3, hashtags: ["#VectorDB", "#임베딩"], label: "Vector DB",
     summary: "사내 규정·평가기준 임베딩.", detail: ["규정/평가기준 문서를 벡터화하여 의미 검색."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4c_2", group: "layer4", level: 6, label: "지식 그래프",
+  { id: "l4c_2", group: "layer4", level: 6, section: 3, hashtags: ["#지식그래프", "#조직도"], label: "지식 그래프",
     summary: "조직도·업무 관계.", detail: ["조직도·업무 관계를 그래프로 구조화."], src: "기획회의 (HR AI 아키텍처)"
   },
-  { id: "l4c_3", group: "layer4", level: 6, label: "신년사 ·\n인재상",
+  { id: "l4c_3", group: "layer4", level: 6, section: 3, hashtags: ["#신년사", "#인재상"], label: "신년사 ·\n인재상",
     summary: "경영진 신년사 및 인재상 텍스트.", detail: ["회사 고유 가치·인재상 맥락 텍스트."], src: "기획회의 (HR AI 아키텍처)"
   }
 ];

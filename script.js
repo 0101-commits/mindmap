@@ -198,7 +198,7 @@ var freePhysics = {
 
 var options = {
   layout: {
-    hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 250, nodeSpacing: 250, treeSpacing: 350 }
+    hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 250, nodeSpacing: 400, treeSpacing: 500 }
   },
   interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
   physics: false,
@@ -219,6 +219,75 @@ network.on("zoom", function () {
 var resizeTimer = null;
 window.addEventListener("resize", function () {
   clearTimeout(resizeTimer); resizeTimer = setTimeout(refreshDprAndRedraw, 120);
+});
+
+network.on("beforeDrawing", function (ctx) {
+  var btn = document.getElementById("btnProcessHier");
+  if (!btn || !btn.classList.contains("active")) return;
+
+  var positions = network.getPositions();
+  var minX = Infinity, maxX = -Infinity;
+  var levelY = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+
+  for (var id in positions) {
+    var p = positions[id];
+    var n = nodeMap[id];
+    if (!n || !isVisibleNode(n)) continue;
+    
+    if (p.x < minX) minX = p.x;
+    if (p.x > maxX) maxX = p.x;
+    
+    var lvl = getProcessLevel(n);
+    if (lvl >= 1 && lvl <= 5) {
+      levelY[lvl].push(p.y);
+    }
+  }
+
+  if (minX > maxX) return;
+  
+  var padX = 3000; 
+  var left = minX - padX;
+  var right = maxX + padX;
+  var width = right - left;
+
+  var laneColors = {
+    1: "rgba(0, 100, 224, 0.03)",
+    2: "rgba(49, 162, 76, 0.03)",
+    3: "rgba(242, 169, 24, 0.03)",
+    4: "rgba(161, 33, 206, 0.03)",
+    5: "rgba(228, 30, 63, 0.03)"
+  };
+
+  SECTIONS.forEach(function(sec) {
+    var ys = levelY[sec.level];
+    if (!ys || ys.length === 0) return;
+    
+    var minL = Math.min.apply(null, ys);
+    var maxL = Math.max.apply(null, ys);
+    
+    var padY = 125;
+    var top = minL - padY;
+    var bottom = maxL + padY;
+    var height = bottom - top;
+    
+    ctx.fillStyle = laneColors[sec.level] || "rgba(0,0,0,0.02)";
+    ctx.fillRect(left, top, width, height);
+    
+    ctx.strokeStyle = "rgba(0,0,0,0.04)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(left, top);
+    ctx.lineTo(right, top);
+    ctx.moveTo(left, bottom);
+    ctx.lineTo(right, bottom);
+    ctx.stroke();
+    
+    ctx.font = "bold " + fontSize(28) + "px 'Optimistic VF', Pretendard, sans-serif";
+    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(sec.title, minX - 100, (top + bottom) / 2);
+  });
 });
 
 /* 헤더 메뉴 토글 이벤트 연결 */
@@ -362,6 +431,49 @@ network.on("doubleClick", function (params) {
 /* ============================================================
    7. 필터 — 그룹(기능) 축 + Layer 축 
    ============================================================ */
+var SECTIONS = [
+  { level: 1, title: "1단계: 프로세스", groups: ["process"] },
+  { level: 2, title: "2단계: HR 활동", groups: ["activity", "objective", "evaluate", "develop", "core"] },
+  { level: 3, title: "3단계: 데이터/내용", groups: ["data", "content"] },
+  { level: 4, title: "4단계: 맥락/지표", groups: ["context", "principle", "operation", "indicator"] },
+  { level: 5, title: "5단계: 아키텍처/시스템", groups: ["layer1", "layer2", "layer3", "layer4"] }
+];
+var sectionState = { 1: true, 2: true, 3: true, 4: true, 5: true };
+
+function renderSectionPanel() {
+  var list = document.getElementById("sectionList");
+  if (!list) return;
+  list.innerHTML = "";
+  SECTIONS.forEach(function(sec) {
+    var item = document.createElement("div");
+    item.className = "sp-item" + (sectionState[sec.level] ? "" : " off");
+    
+    var title = document.createElement("div");
+    title.className = "sp-item-title";
+    title.textContent = sec.title;
+    
+    var tags = document.createElement("div");
+    tags.className = "sp-item-tags";
+    var hashtagsHTML = sec.groups.map(function(g) {
+      if (!GROUPS[g]) return "";
+      var label = GROUPS[g].label.replace(/ /g, "_").replace(/·/g, "");
+      return "<span class='sp-tag'>#" + label + "</span>";
+    }).join(" ");
+    tags.innerHTML = hashtagsHTML;
+    
+    item.appendChild(title);
+    item.appendChild(tags);
+    
+    item.onclick = function() {
+      sectionState[sec.level] = !sectionState[sec.level];
+      item.className = "sp-item" + (sectionState[sec.level] ? "" : " off");
+      applyVisibility();
+    };
+    
+    list.appendChild(item);
+  });
+}
+
 var activeGroups = {};
 var activeLayers = {};
 function groupsInTemplate() {
@@ -439,6 +551,10 @@ function buildChips() {
 function isVisibleNode(n) {
   if (n.hiddenByCollapse) return false;
   if (isolateSet) return isolateSet.has(n.id);
+  
+  var lvl = getProcessLevel(n);
+  if (lvl >= 1 && lvl <= 5 && !sectionState[lvl]) return false;
+
   return activeGroups[n.group] !== false && activeLayers[nodeLayer(n)] !== false;
 }
 
@@ -629,7 +745,7 @@ function buildProcessActivityMap() {
 
 function layoutProcessCentric() {
   setActiveLayout("btnProcessHier");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 150, nodeSpacing: 180, treeSpacing: 250 } } });
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 250, nodeSpacing: 400, treeSpacing: 500 } } });
   setTimeout(fitAll, 80);
   toast("🏢 5단계 계층형 배치 (Level 1~5)");
 }
@@ -934,6 +1050,7 @@ function applyUrlState() {
 initFilters();
 buildTemplateSelect();
 buildChips();
+renderSectionPanel();
 applyVisibility();
 applyUrlState(); 
 setTab("info");
