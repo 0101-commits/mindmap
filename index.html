@@ -61,30 +61,32 @@
   </header>
 
   <main id="stage">
-    <div class="floating-toolbar">
-      <button id="btnAdd"        class="tool primary">＋ 노드 추가</button>
-      <button id="btnSave"       class="tool">💾 저장</button>
-      <button id="btnHistory"    class="tool">🕘 History</button>
-      <button id="btnColor"      class="tool">🎨 색상</button>
-      <button id="btnFit"        class="tool">⤢ 전체 보기</button>
-      <button id="btnExport"     class="tool">⭳ 내보내기</button>
-      <button id="btnExportJson" class="tool">⬇ JSON</button>
-      <button id="btnImport"     class="tool">⬆ 가져오기</button>
-      <button id="btnPng"        class="tool">🖼 PNG</button>
-      <button id="btnRestore"    class="tool ghost2">↺ 기본값</button>
-      <button id="btnIsolateOff" class="tool danger-tool" style="display:none">✕ 단독 해제</button>
+    <div class="toolbar-wrapper">
+      <div class="floating-toolbar">
+        <button id="btnAdd"        class="tool primary">＋ 노드 추가</button>
+        <button id="btnSave"       class="tool">💾 저장</button>
+        <button id="btnHistory"    class="tool">🕘 History</button>
+        <button id="btnColor"      class="tool">🎨 색상</button>
+        <button id="btnFit"        class="tool">⤢ 전체 보기</button>
+        <button id="btnExport"     class="tool">⭳ 내보내기</button>
+        <button id="btnExportJson" class="tool">⬇ JSON</button>
+        <button id="btnImport"     class="tool">⬆ 가져오기</button>
+        <button id="btnPng"        class="tool">🖼 PNG</button>
+        <button id="btnRestore"    class="tool ghost2">↺ 기본값</button>
+        <button id="btnIsolateOff" class="tool danger-tool" style="display:none">✕ 단독 해제</button>
+      </div>
+
+      <div class="layout-toolbar">
+        <span class="lt-label">정렬</span>
+        <button id="btnProcessHier" class="tool active">🏢 프로세스 중심</button>
+        <button id="btnFree"    class="tool">⟳ 자유</button>
+        <button id="btnVert"    class="tool">⌗ 수직계층</button>
+        <button id="btnHorz"    class="tool">⌗ 수평계층</button>
+        <button id="btnLayer"   class="tool">▥ Layer그룹</button>
+        <button id="btnCluster" class="tool">❉ 기능군집</button>
+      </div>
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
-
-    <div class="layout-toolbar">
-      <span class="lt-label">정렬</span>
-      <button id="btnProcessHier" class="tool active">🏢 프로세스 중심</button>
-      <button id="btnFree"    class="tool">⟳ 자유</button>
-      <button id="btnVert"    class="tool">⌗ 수직계층</button>
-      <button id="btnHorz"    class="tool">⌗ 수평계층</button>
-      <button id="btnLayer"   class="tool">▥ Layer그룹</button>
-      <button id="btnCluster" class="tool">❉ 기능군집</button>
-    </div>
 
     <div id="network" role="application" aria-label="성과관리 마인드맵 시각화. 캔버스 탐색이 어려우면 상단의 그룹·Layer 필터와 검색으로 노드를 찾으세요."></div>
     <p class="sr-only">마인드맵은 캔버스로 렌더링됩니다. 키보드 사용자는 상단 그룹 필터·Layer 필터(Tab 이동, Enter/Space 토글, Shift+Enter 단독 보기)와 검색창을 이용해 탐색할 수 있습니다.</p>

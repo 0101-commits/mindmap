@@ -24,22 +24,22 @@
 
 /* ---------- 기능(그룹) 분류 : 색상 기준 ---------- */
 const GROUPS = {
-  core:      { label: "중심",     color: "#1f2937" },
-  process:   { label: "프로세스", color: "#356CB5" },
-  objective: { label: "목표",     color: "#2563eb" },
-  context:   { label: "맥락",     color: "#0891b2" },
-  indicator: { label: "지표",     color: "#059669" },
-  principle: { label: "원칙",     color: "#d97706" },
-  operation: { label: "운영",     color: "#7c3aed" },
-  develop:   { label: "육성",     color: "#16a34a" },
-  evaluate:  { label: "평가",     color: "#e11d48" },
-  data:      { label: "데이터",   color: "#0284c7" },
-  content:   { label: "내용",     color: "#ca8a04" },
-  activity:  { label: "액티비티", color: "#9333ea" },
-  layer1:    { label: "Layer 1 · 인터페이스",     color: "#14b8a6" },
-  layer2:    { label: "Layer 2 · 오케스트레이션", color: "#ef4444" },
-  layer3:    { label: "Layer 3 · 보안·API",       color: "#64748b" },
-  layer4:    { label: "Layer 4 · 분산 데이터",     color: "#db2777" }
+  core:      { label: "중심",     color: "#1c1e21" },
+  process:   { label: "프로세스", color: "#0064e0" },
+  objective: { label: "목표",     color: "#1876f2" },
+  context:   { label: "맥락",     color: "#385898" },
+  indicator: { label: "지표",     color: "#31a24c" },
+  principle: { label: "원칙",     color: "#f2a918" },
+  operation: { label: "운영",     color: "#a121ce" },
+  develop:   { label: "육성",     color: "#e41e3f" },
+  evaluate:  { label: "평가",     color: "#0457cb" },
+  data:      { label: "데이터",   color: "#f7b928" },
+  content:   { label: "내용",     color: "#1876f2" },
+  activity:  { label: "액티비티", color: "#0064e0" },
+  layer1:    { label: "Layer 1 · 인터페이스",     color: "#385898" },
+  layer2:    { label: "Layer 2 · 오케스트레이션", color: "#e41e3f" },
+  layer3:    { label: "Layer 3 · 보안·API",       color: "#1c1e21" },
+  layer4:    { label: "Layer 4 · 분산 데이터",     color: "#a121ce" }
 };
 
 /* ============================================================
