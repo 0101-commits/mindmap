@@ -113,7 +113,7 @@ function makeVisNode(n) {
   var grp = GROUPS[n.group] || { color: "#dee3e9" };
   var c = grp.color;
   var isRoot = n.id === "root";
-  var textColor = idealText(c); // Dark or Light text
+  var textColor = "#000000"; // Pure black
 
   var nodeObj = {
     id: n.id,
@@ -144,8 +144,7 @@ function makeVisNode(n) {
     heightConstraint: { minimum: UNIFORM_BOX_HEIGHT },
     mass: isRoot ? 4 : 1.3
   };
-  // 레이아웃 엔진이 level 속성을 참조할 수 있도록 유지
-  if (n.level !== undefined) nodeObj.level = n.level;
+  nodeObj.level = getProcessLevel(n);
   return nodeObj;
 }
 
@@ -170,7 +169,7 @@ function makeVisEdge(e) {
     id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
     width: e.dashes ? 1.5 : 2.5,
     color: edgeColor(e),
-    smooth: { enabled: true, type: "cubicBezier", roundness: 0.55 },
+    smooth: false,
     shadow: false
   };
   if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.6 } };
@@ -192,7 +191,7 @@ var container = document.getElementById("network");
 var freePhysics = {
   enabled: true,
   solver: "forceAtlas2Based",
-  forceAtlas2Based: { gravitationalConstant: -55, centralGravity: 0.012, springLength: 130, springConstant: 0.09, avoidOverlap: 0.6 },
+  forceAtlas2Based: { gravitationalConstant: -55, centralGravity: 0.012, springLength: 130, springConstant: 0.09, avoidOverlap: 1.0 },
   stabilization: { iterations: 220 },
   minVelocity: 0.6
 };
@@ -358,7 +357,7 @@ network.on("click", function (params) {
   var sr = document.getElementById("searchResults"); if (sr) sr.classList.add("hidden");
 });
 network.on("doubleClick", function (params) {
-  if (params.nodes.length) openModalEdit(params.nodes[0]);
+  if (params.nodes.length) toggleCollapse(params.nodes[0]);
   else if (params.edges.length) toggleEdgeDash(params.edges[0]);
 });
 
@@ -423,8 +422,33 @@ function buildChips() {
 }
 
 function isVisibleNode(n) {
+  if (n.hiddenByCollapse) return false;
   if (isolateSet) return isolateSet.has(n.id);
   return activeGroups[n.group] !== false && activeLayers[nodeLayer(n)] !== false;
+}
+
+function toggleCollapse(nodeId) {
+  var isCollapsed = !nodeMap[nodeId].collapsed;
+  nodeMap[nodeId].collapsed = isCollapsed;
+  var desc = new Set();
+  function getDesc(id) {
+    rawEdges.forEach(function(e) {
+      if (e.from === id && !desc.has(e.to)) {
+        desc.add(e.to);
+        getDesc(e.to);
+      }
+    });
+  }
+  getDesc(nodeId);
+  desc.forEach(function(cid) {
+    var n = nodeMap[cid];
+    if (n) {
+      n.hiddenByCollapse = (n.hiddenByCollapse || 0) + (isCollapsed ? 1 : -1);
+      if (n.hiddenByCollapse < 0) n.hiddenByCollapse = 0;
+    }
+  });
+  applyVisibility();
+  toast(isCollapsed ? "하위 노드 접힘" : "하위 노드 펼쳐짐");
 }
 
 function applyVisibility() {
@@ -515,21 +539,18 @@ function fitAll() { clearDim(); network.fit({ animation: animOpt(600) }); }
 
 // 다른 정렬 클릭 시 강제 지정된 Level 값을 제거하는 헬퍼 함수
 function clearLevels() {
-  visNodes.update(rawNodes.map(function (n) { return { id: n.id, level: undefined }; }));
+  // 계층 구조를 유지하기 위해 level 초기화 안 함
 }
 
 // 🏢 프로세스 중심: 상단 프로세스 + 하단 Activity 컬럼 배치
 function getProcessLevel(n) {
+  var g = n.group;
   if (n.id === "root") return 0;
-  if (n.group === "process") return 1;
-  if (n.group === "objective" || n.group === "operation" || n.group === "develop" || n.group === "evaluate") return 2;
-  if (n.group === "indicator" || n.group === "context" || n.group === "principle") return 3;
-  if (n.group.indexOf("layer") === 0) {
-    if (n.group === "layer1") return 4;
-    if (n.group === "layer2") return 5;
-    if (n.group === "layer3") return 6;
-    if (n.group === "layer4") return 7;
-  }
+  if (g === "process") return 1;
+  if (g === "activity" || g === "objective" || g === "evaluate" || g === "develop" || g === "core") return 2;
+  if (g === "data" || g === "content") return 3;
+  if (g === "context" || g === "principle" || g === "operation" || g === "indicator") return 4;
+  if (g && g.indexOf("layer") === 0) return 5;
   return 4;
 }
 
@@ -593,54 +614,9 @@ function buildProcessActivityMap() {
 
 function layoutProcessCentric() {
   setActiveLayout("btnProcessHier");
-
-  // 계층형 레이아웃 비활성화 — 수동 좌표 배치
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: false } } });
-  clearLevels();
-
-  var map = buildProcessActivityMap();
-  var processNodes = map.processNodes;
-  var procActivities = map.procActivities;
-  var unassigned = map.unassigned;
-
-  var COL_GAP = 220;    // 컬럼 간 수평 간격
-  var ROW_GAP = 90;     // Activity 간 수직 간격
-  var PROC_Y = 0;       // 프로세스 행 Y 좌표
-  var ACT_START_Y = 120; // Activity 시작 Y 좌표
-  var ROOT_Y = -120;     // Root 노드 Y 좌표
-
-  // 전체 컬럼 수 (프로세스 + 기타)
-  var totalCols = processNodes.length + (unassigned.length > 0 ? 1 : 0);
-  var totalWidth = (totalCols - 1) * COL_GAP;
-  var startX = -totalWidth / 2;
-
-  // Root 노드 배치 (중앙 상단)
-  try { network.moveNode("root", 0, ROOT_Y); } catch (e) {}
-
-  // 프로세스 노드 배치 (상단 행, 균등 간격)
-  processNodes.forEach(function (p, ci) {
-    var x = startX + ci * COL_GAP;
-    try { network.moveNode(p.id, x, PROC_Y); } catch (e) {}
-
-    // 해당 프로세스의 Activity 노드를 아래 컬럼에 배치
-    var activities = procActivities[p.id];
-    activities.forEach(function (aid, ri) {
-      var y = ACT_START_Y + ri * ROW_GAP;
-      try { network.moveNode(aid, x, y); } catch (e) {}
-    });
-  });
-
-  // 미할당 노드 → 마지막 컬럼에 배치
-  if (unassigned.length > 0) {
-    var extraX = startX + processNodes.length * COL_GAP;
-    unassigned.forEach(function (nid, ri) {
-      var y = ACT_START_Y + ri * ROW_GAP;
-      try { network.moveNode(nid, extraX, y); } catch (e) {}
-    });
-  }
-
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 150, nodeSpacing: 180, treeSpacing: 250 } } });
   setTimeout(fitAll, 80);
-  toast("🏢 프로세스 상단 · Activity 하단 배치");
+  toast("🏢 5단계 계층형 배치 (Level 1~5)");
 }
 
 function layoutFree() {
