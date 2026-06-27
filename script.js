@@ -121,8 +121,8 @@ function idealText(hex) {
 var REDUCE_MOTION = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 function animOpt(d) { return REDUCE_MOTION ? false : { duration: d, easingFunction: "easeInOutQuad" }; }
 
-var UNIFORM_BOX_WIDTH = 150;
-var UNIFORM_BOX_HEIGHT = 60;
+var UNIFORM_BOX_WIDTH = 190;
+var UNIFORM_BOX_HEIGHT = 64;
 
 function makeVisNode(n) {
   var grp = GROUPS[n.group] || { color: "#dee3e9" };
@@ -220,7 +220,7 @@ var container = document.getElementById("network");
 var freePhysics = {
   enabled: true,
   solver: "forceAtlas2Based",
-  forceAtlas2Based: { gravitationalConstant: -55, centralGravity: 0.012, springLength: 130, springConstant: 0.09, avoidOverlap: 1.0 },
+  forceAtlas2Based: { gravitationalConstant: -85, centralGravity: 0.012, springLength: 210, springConstant: 0.08, avoidOverlap: 1.0 },
   stabilization: { iterations: 220 },
   minVelocity: 0.6
 };
@@ -793,16 +793,9 @@ function layoutProcessCentric() {
   var map = buildProcessActivityMap();
   var procNodes = map.processNodes.sort(function(a, b) { return a.id.localeCompare(b.id); });
   
-  var sectionY = {
-    0: -350,
-    1: 0,
-    2: 350,
-    3: 700,
-    4: 1050,
-    5: 1400
-  };
-  
-  var colSpacing = 600; 
+  var colStep = 225, rowStep = 135, cellCols = 3;
+  var colSpacing = 800;
+  var vGap = 200;
   var startX = -((procNodes.length - 1) * colSpacing) / 2;
   
   var updates = [];
@@ -833,38 +826,45 @@ function layoutProcessCentric() {
     grid[key].push(n.id);
   });
   
+  // 레벨별 최대 행수 → 동적 Y 좌표(셀에 노드가 많아도 인접 레벨과 세로로 겹치지 않게)
+  var levelRows = {};
+  Object.keys(grid).forEach(function(key) {
+    var lvl = parseInt(key.split("_")[1]);
+    var rows = Math.ceil(grid[key].length / cellCols);
+    levelRows[lvl] = Math.max(levelRows[lvl] || 1, rows);
+  });
+  var sortedLvls = Object.keys(levelRows).map(Number).sort(function(a, b) { return a - b; });
+  var levelY = {}, runY = 0;
+  sortedLvls.forEach(function(lvl) {
+    var h = levelRows[lvl] * rowStep;
+    levelY[lvl] = runY + h / 2;
+    runY += h + vGap;
+  });
+
   Object.keys(grid).forEach(function(key) {
     var nodesInCell = grid[key];
     var parts = key.split("_");
     var col = parseFloat(parts[0]);
     var lvl = parseInt(parts[1]);
-    
+
     var baseX = startX + (col * colSpacing);
-    var baseY = sectionY[lvl];
-    if (baseY === undefined) baseY = lvl * 350;
-    
+    var baseY = levelY[lvl] !== undefined ? levelY[lvl] : lvl * 350;
+
+    // 셀 내부: 최대 3열 그리드 — 셀 안에서도 겹치지 않게
+    var cols = Math.min(cellCols, nodesInCell.length);
+    var totalRows = Math.ceil(nodesInCell.length / cols);
+    var startC = -((cols - 1) * colStep) / 2;
+    var startR = -((totalRows - 1) * rowStep) / 2;
+
     nodesInCell.forEach(function(nid, idx) {
-       var offsetX = 0, offsetY = 0;
-       if (nodesInCell.length > 1) {
-         // 무한 확장형 다이나믹 그리드 (최대 3열) - 겹침 완벽 방지
-         var cols = Math.min(3, nodesInCell.length);
-         var r = Math.floor(idx / cols);
-         var c = idx % cols;
-         
-         var startC = -((cols - 1) * 220) / 2;
-         offsetX = startC + (c * 220);
-         
-         var totalRows = Math.ceil(nodesInCell.length / cols);
-         var startR = -((totalRows - 1) * 120) / 2;
-         offsetY = startR + (r * 120);
-       }
-       
-       updates.push({
-         id: nid,
-         x: baseX + offsetX,
-         y: baseY + offsetY,
-         fixed: { x: false, y: false } // 사용자가 드래그할 수 있도록 자유 부여
-       });
+      var r = Math.floor(idx / cols);
+      var c = idx % cols;
+      updates.push({
+        id: nid,
+        x: baseX + startC + (c * colStep),
+        y: baseY + startR + (r * rowStep),
+        fixed: { x: false, y: false } // 사용자가 드래그할 수 있도록 자유 부여
+      });
     });
   });
   
@@ -881,12 +881,12 @@ function layoutFree() {
 }
 function layoutVertical() {
   clearLevels(); setActiveLayout("btnVert");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 130, nodeSpacing: 150, treeSpacing: 210, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 180, nodeSpacing: 230, treeSpacing: 260, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
   setTimeout(fitAll, 80); toast("계층형 · 수직 (Top-Down)");
 }
 function layoutHorizontal() {
   clearLevels(); setActiveLayout("btnHorz");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "LR", sortMethod: "directed", levelSeparation: 170, nodeSpacing: 110, treeSpacing: 200, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "LR", sortMethod: "directed", levelSeparation: 280, nodeSpacing: 130, treeSpacing: 220, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
   setTimeout(fitAll, 80); toast("계층형 · 수평 (Left-Right)");
 }
 function layoutByLayer() {
