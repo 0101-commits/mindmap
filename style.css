@@ -467,6 +467,20 @@ body {
   color: var(--primary);
 }
 
+.section-panel.collapsed #sectionList {
+  display: none;
+}
+
+.vis-manipulation {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-top: none !important;
+  font-family: 'Optimistic VF', Pretendard, sans-serif !important;
+  font-size: 13px !important;
+  padding: 8px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .topbar-header { align-items: flex-start; }

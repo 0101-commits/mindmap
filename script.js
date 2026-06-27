@@ -169,7 +169,7 @@ function makeVisEdge(e) {
     id: e.id, from: e.from, to: e.to, dashes: !!e.dashes, hidden: false,
     width: e.dashes ? 1.5 : 2.5,
     color: edgeColor(e),
-    smooth: { type: 'cubicBezier', forceDirection: 'vertical', roundness: 0.4 },
+    smooth: false, // 직선 (꺾은선 느낌)으로 연결
     shadow: false
   };
   if (rel) o.arrows = { to: { enabled: true, scaleFactor: 0.6 } };
@@ -201,6 +201,14 @@ var options = {
     hierarchical: { enabled: true, direction: 'UD', sortMethod: 'directed', levelSeparation: 250, nodeSpacing: 400, treeSpacing: 500 }
   },
   interaction: { hover: true, tooltipDelay: 150, navigationButtons: true, keyboard: false, hideEdgesOnZoom: false },
+  manipulation: {
+    enabled: true,
+    addEdge: true,
+    editEdge: true,
+    deleteEdge: true,
+    addNode: false,
+    deleteNode: false
+  },
   physics: false,
   nodes: { shadow: false },
   edges: { arrows: { to: { enabled: false } }, shadow: false }
@@ -251,11 +259,11 @@ network.on("beforeDrawing", function (ctx) {
   var width = right - left;
 
   var laneColors = {
-    1: "rgba(0, 100, 224, 0.03)",
-    2: "rgba(49, 162, 76, 0.03)",
-    3: "rgba(242, 169, 24, 0.03)",
-    4: "rgba(161, 33, 206, 0.03)",
-    5: "rgba(228, 30, 63, 0.03)"
+    1: "rgba(0, 100, 224, 0.08)",
+    2: "rgba(49, 162, 76, 0.08)",
+    3: "rgba(242, 169, 24, 0.08)",
+    4: "rgba(161, 33, 206, 0.08)",
+    5: "rgba(228, 30, 63, 0.08)"
   };
 
   SECTIONS.forEach(function(sec) {
@@ -744,8 +752,10 @@ function buildProcessActivityMap() {
 }
 
 function layoutProcessCentric() {
+  isLayoutFrozen = false;
   setActiveLayout("btnProcessHier");
   network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 250, nodeSpacing: 400, treeSpacing: 500 } } });
+  network.once("afterDrawing", freezeHierarchicalLayout);
   setTimeout(fitAll, 80);
   toast("🏢 5단계 계층형 배치 (Level 1~5)");
 }
@@ -1051,9 +1061,43 @@ initFilters();
 buildTemplateSelect();
 buildChips();
 renderSectionPanel();
+
+var isLayoutFrozen = false;
+function freezeHierarchicalLayout() {
+  if (isLayoutFrozen) return;
+  var pos = network.getPositions();
+  var updates = [];
+  visNodes.get().forEach(function(n) {
+     if (pos[n.id]) {
+       var lvl = getProcessLevel(n);
+       var spreadY = pos[n.id].y;
+       if (lvl >= 2 && lvl <= 4) {
+         spreadY += (Math.random() * 160 - 80); // 동일 섹션 내 높낮이 분산
+       }
+       updates.push({ id: n.id, x: pos[n.id].x, y: spreadY });
+     }
+  });
+  visNodes.update(updates);
+  network.setOptions({ layout: { hierarchical: { enabled: false } } }); // 위치를 절대 고정
+  isLayoutFrozen = true;
+}
+
+if (options.layout.hierarchical.enabled) {
+  network.once("afterDrawing", freezeHierarchicalLayout);
+}
+
 applyVisibility();
 applyUrlState(); 
 setTab("info");
+
+var btnToggleSection = document.getElementById("btnToggleSection");
+if (btnToggleSection) {
+  btnToggleSection.onclick = function() {
+    var sp = document.getElementById("sectionPanel");
+    sp.classList.toggle("collapsed");
+    btnToggleSection.textContent = sp.classList.contains("collapsed") ? "▲" : "▼";
+  };
+}
 
 // 페이지 로드 시 '프로세스 중심' 정렬을 기본값으로 강제 실행
 window.addEventListener("load", function () {

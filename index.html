@@ -89,7 +89,10 @@
     <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
 
     <aside id="sectionPanel" class="section-panel">
-      <div class="sp-header">섹션 관리</div>
+      <div class="sp-header">
+        <span>섹션 관리</span>
+        <button id="btnToggleSection" aria-label="접기/펼치기" style="background:none;border:none;cursor:pointer;color:inherit;font-size:16px;">▼</button>
+      </div>
       <div id="sectionList" class="sp-list"></div>
     </aside>
 
