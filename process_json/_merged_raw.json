@@ -1,0 +1,7261 @@
+[
+  {
+    "id": "okr.concept.definition",
+    "type": "concept",
+    "parent": null,
+    "label": "OKR 정의",
+    "summary": "명확한 목표(Objective)와 그 달성을 측정하는 핵심결과(Key Result)를 설정하고 과정을 지속적으로 점검·확인하는 성과관리 체계",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "OKR",
+      "목표",
+      "핵심결과",
+      "측정",
+      "점검",
+      "성과관리"
+    ],
+    "rel": [
+      {
+        "to": "okr.concept.objective",
+        "type": "contain"
+      },
+      {
+        "to": "okr.concept.keyresult",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.15",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.history",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "성과관리 History",
+    "summary": "테일러리즘·포디즘의 생산성 관리에서 MBO(목표에 의한 경영)로 진화한 성과관리 개념의 역사",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "성과관리",
+      "테일러리즘",
+      "포디즘",
+      "MBO",
+      "생산성",
+      "진화"
+    ],
+    "rel": [],
+    "src": "OKR p.3",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.mbo-limit",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "MBO 성과관리의 한계점",
+    "summary": "Top-down 목표관리, 연단위 경직 목표, 과거·결과 중심, 형식적 프로세스, 평가보상 도구화로 성과 향상에 기여하지 못하는 기존 성과관리의 문제",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "MBO",
+      "한계",
+      "Top-down",
+      "연단위",
+      "형식",
+      "평가보상",
+      "도구화"
+    ],
+    "rel": [
+      {
+        "to": "okr.concept.definition",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.4",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.true-objective",
+    "type": "concept",
+    "parent": "okr.concept.objective",
+    "label": "진정한 의미의 목표(Build/Improve/Innovate)",
+    "summary": "일상·안정 목표가 아닌 새로 만들고(Build) 발전시키고(Improve) 재창조(Innovate)하는 더 높은 지향점의 목표",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목표",
+      "Build",
+      "Improve",
+      "Innovate",
+      "도전",
+      "지향"
+    ],
+    "rel": [],
+    "src": "OKR p.16",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.objective",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "Objective(목표)",
+    "summary": "성취하고자 하는 것의 표현으로 간결하고 영감을 주며 도전적이어야 함",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목표",
+      "성취",
+      "영감",
+      "도전",
+      "간결"
+    ],
+    "rel": [],
+    "src": "OKR p.15",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.keyresult",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "Key Result(핵심결과)",
+    "summary": "목표의 진행 과정을 측정하는 결과 지표 묶음, 목표별 2~5개, 양적·측정 가능",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "핵심결과",
+      "측정",
+      "지표",
+      "정량",
+      "진행"
+    ],
+    "rel": [
+      {
+        "to": "okr.concept.objective",
+        "type": "measure"
+      }
+    ],
+    "src": "OKR p.15",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.kr-type",
+    "type": "concept",
+    "parent": "okr.concept.keyresult",
+    "label": "핵심결과 Type",
+    "summary": "Baseline/Positive Metric/Negative Metric/Milestone/Threshold·Target Metric 등 KR 측정 지표 유형",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "핵심결과",
+      "지표",
+      "Baseline",
+      "Milestone",
+      "Threshold",
+      "Target"
+    ],
+    "rel": [],
+    "src": "OKR p.30",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.initiative",
+    "type": "concept",
+    "parent": "okr.concept.keyresult",
+    "label": "Initiative",
+    "summary": "핵심결과 달성을 위한 통제 가능한 행동 지표 성격의 실행 단위, 가설을 세우고 바로 실행",
+    "actor": "팀원",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Initiative",
+      "실행",
+      "행동",
+      "가설",
+      "통제",
+      "구체화"
+    ],
+    "rel": [
+      {
+        "to": "okr.concept.keyresult",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.37",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.principle.fast",
+    "type": "principle",
+    "parent": "okr.concept.definition",
+    "label": "OKR 핵심원칙 FAST",
+    "summary": "Focus(집중과 전념)·Align(정렬과 연결)·Stretch(도전적 목표)·Track&Update(추적과 변용)의 네 가지 핵심 원칙",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "FAST",
+      "Focus",
+      "Align",
+      "Stretch",
+      "Track",
+      "원칙"
+    ],
+    "rel": [
+      {
+        "to": "okr.principle.focus",
+        "type": "contain"
+      },
+      {
+        "to": "okr.principle.align",
+        "type": "contain"
+      },
+      {
+        "to": "okr.principle.stretch",
+        "type": "contain"
+      },
+      {
+        "to": "okr.principle.track",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.17",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.principle.focus",
+    "type": "principle",
+    "parent": "okr.principle.fast",
+    "label": "Focus(집중과 전념)",
+    "summary": "우선순위 높은 3-5개 목표에 집중하고 각 목표에 5개 이하 핵심결과를 정의",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "집중",
+      "전념",
+      "우선순위",
+      "목표",
+      "선택"
+    ],
+    "rel": [],
+    "src": "OKR p.17",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.principle.align",
+    "type": "principle",
+    "parent": "okr.principle.fast",
+    "label": "Align(정렬과 연결)",
+    "summary": "개인 업무와 조직 비전을 정렬하는 수직적 정렬과 조직 경계를 넘는 수평적 연결, 투명함이 전제",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "정렬",
+      "연결",
+      "수직",
+      "수평",
+      "투명",
+      "비전"
+    ],
+    "rel": [
+      {
+        "to": "okr.align",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.17",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.principle.stretch",
+    "type": "principle",
+    "parent": "okr.principle.fast",
+    "label": "Stretch(도전적 목표)",
+    "summary": "능력의 한계를 뛰어넘는 높은 목표를 구체적으로 설정하여 최고의 성과를 창출",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "도전",
+      "목표",
+      "한계",
+      "성과",
+      "도약"
+    ],
+    "rel": [],
+    "src": "OKR p.17",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.principle.track",
+    "type": "principle",
+    "parent": "okr.principle.fast",
+    "label": "Track & Update(추적과 변용)",
+    "summary": "목표·핵심결과를 지속 추적하며 환경 변화에 따라 지속/보완/시작/중단으로 유기적으로 변용",
+    "actor": null,
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "추적",
+      "변용",
+      "지속",
+      "보완",
+      "시작",
+      "중단"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.track",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.17",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.new-old-rules",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "New Rules vs Old Rules",
+    "summary": "MBO의 연1회·개인성과·비공개·Top-down·평가연계 규칙이 OKR에서 상시·조직성과·공개·Bottom-up·간접연계로 변화",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "규칙",
+      "MBO",
+      "OKR",
+      "공개",
+      "상시",
+      "Bottom-up"
+    ],
+    "rel": [],
+    "src": "OKR p.18",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.concept.cfr",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "CFR(Conversation·Feedback·Recognition)",
+    "summary": "OKR 운영을 뒷받침하는 소통(대화)·피드백·인정의 세 요소",
+    "actor": null,
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "CFR",
+      "소통",
+      "피드백",
+      "인정",
+      "대화"
+    ],
+    "rel": [
+      {
+        "to": "okr.cfr.conversation",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cfr.feedback",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cfr.recognition",
+        "type": "contain"
+      },
+      {
+        "to": "okr.process.reviewing",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.21",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cfr.conversation",
+    "type": "concept",
+    "parent": "okr.concept.cfr",
+    "label": "Conversation(구성원 간 대화)",
+    "summary": "목표 공감을 위해 설정 단계부터 필요한 소통, 개인 OKR을 리더와 공유·정렬",
+    "actor": "팀원/팀장",
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "대화",
+      "소통",
+      "공감",
+      "공유",
+      "정렬"
+    ],
+    "rel": [],
+    "src": "OKR p.21",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cfr.feedback",
+    "type": "concept",
+    "parent": "okr.concept.cfr",
+    "label": "Feedback(결과·과정 피드백)",
+    "summary": "양방향 혹은 네트워크 형태의 결과·과정 피드백으로 지속적 개선과 발전",
+    "actor": null,
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "피드백",
+      "결과",
+      "과정",
+      "개선",
+      "양방향"
+    ],
+    "rel": [],
+    "src": "OKR p.21",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cfr.recognition",
+    "type": "concept",
+    "parent": "okr.concept.cfr",
+    "label": "Recognition(성취에 대한 인정)",
+    "summary": "작은 성취를 공유·북돋우는 인정 과정, 정례화·반복되어야 성취까지 힘 유지",
+    "actor": null,
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "인정",
+      "성취",
+      "공유",
+      "정례화",
+      "동기"
+    ],
+    "rel": [],
+    "src": "OKR p.21",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.process",
+    "type": "phase",
+    "parent": null,
+    "label": "OKR 프로세스",
+    "summary": "목표수립(Define)·측정(Measuring)·리뷰(Reviewing)·추적개선(Track&Update)으로 이뤄지며 짧은 주기로 상시 진행",
+    "actor": null,
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "프로세스",
+      "수립",
+      "측정",
+      "리뷰",
+      "추적",
+      "개선",
+      "상시"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.define",
+        "type": "contain"
+      },
+      {
+        "to": "okr.process.measuring",
+        "type": "contain"
+      },
+      {
+        "to": "okr.process.reviewing",
+        "type": "contain"
+      },
+      {
+        "to": "okr.process.track",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.20",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.process.define",
+    "type": "phase",
+    "parent": "okr.process",
+    "label": "목표 수립 Define",
+    "summary": "목표 및 핵심결과를 설정하고 수직·수평으로 공유·정렬하는 단계",
+    "actor": "팀원/팀장",
+    "timing": "주기 시작",
+    "inputs": [
+      "전사 및 조직 OKR"
+    ],
+    "outputs": [
+      "개인 OKR"
+    ],
+    "keywords": [
+      "목표",
+      "수립",
+      "핵심결과",
+      "공유",
+      "정렬"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.measuring",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.20",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.process.measuring",
+    "type": "phase",
+    "parent": "okr.process",
+    "label": "측정 Measuring",
+    "summary": "OKR 진행 과정을 기록·측정하고 각 KR로 목표 진행 수준 산출, 자기 점검 및 승인",
+    "actor": "팀원/팀장",
+    "timing": "상시/주간",
+    "inputs": [
+      "개인 OKR"
+    ],
+    "outputs": [
+      "진행률",
+      "진행 수준"
+    ],
+    "keywords": [
+      "측정",
+      "기록",
+      "진행",
+      "점검",
+      "승인"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.reviewing",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.20",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.process.reviewing",
+    "type": "phase",
+    "parent": "okr.process",
+    "label": "리뷰 Reviewing",
+    "summary": "개인 및 조직 단위 OKR을 점검·리뷰하여 진척도·정렬·이슈·지원사항을 확인",
+    "actor": "팀원/팀장",
+    "timing": "주간/분기",
+    "inputs": [
+      "진행률"
+    ],
+    "outputs": [
+      "리뷰 결과",
+      "지원사항"
+    ],
+    "keywords": [
+      "리뷰",
+      "점검",
+      "진척도",
+      "정렬",
+      "이슈",
+      "지원"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.track",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.20",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.process.track",
+    "type": "phase",
+    "parent": "okr.process",
+    "label": "추적/개선 Track & Update",
+    "summary": "Next OKR에 대한 회고·개선방안 논의, 목표 수준·우선순위 재논의, 지속/보완/시작/중단 결정",
+    "actor": "팀원/팀장",
+    "timing": "주기 말/상시",
+    "inputs": [
+      "리뷰 결과"
+    ],
+    "outputs": [
+      "Next OKR 방향"
+    ],
+    "keywords": [
+      "추적",
+      "개선",
+      "회고",
+      "재논의",
+      "지속",
+      "중단"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.define",
+        "type": "feedback"
+      }
+    ],
+    "src": "OKR p.20",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.personal",
+    "type": "activity",
+    "parent": "okr.process.define",
+    "label": "개인 OKR 수립",
+    "summary": "OKR Canvas 기반으로 팀원·팀장이 논의하여 목표 3~5개와 목표별 핵심결과 3~5개를 수립",
+    "actor": "팀원(담당자)/팀장(관리자)",
+    "timing": "1시간 이내",
+    "inputs": [
+      "전사 및 조직 OKR",
+      "OKR Canvas"
+    ],
+    "outputs": [
+      "개인 OKR"
+    ],
+    "keywords": [
+      "개인",
+      "OKR",
+      "수립",
+      "목표",
+      "핵심결과",
+      "논의"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.canvas",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.24",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.canvas",
+    "type": "output",
+    "parent": "okr.define.personal",
+    "label": "OKR Canvas",
+    "summary": "목표·핵심결과를 Brainstorming하고 우선순위화하여 확정하는 개인 OKR 수립 Tool",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Canvas",
+      "Brainstorming",
+      "우선순위",
+      "확정",
+      "Tool"
+    ],
+    "rel": [],
+    "src": "OKR p.25",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.obj-brainstorm",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "목표 Brainstorming",
+    "summary": "전사·조직 OKR, 개인 R&R, 과거목표를 고려해 OKR 원칙과 목표 의미를 반영한 5~7개 목표 Pool 작성",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "전사 Mission",
+      "전사 OKR",
+      "조직 OKR",
+      "개인 R&R",
+      "과거 목표"
+    ],
+    "outputs": [
+      "목표 Pool"
+    ],
+    "keywords": [
+      "목표",
+      "Brainstorming",
+      "Pool",
+      "전사",
+      "조직",
+      "R&R"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.obj-priority",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.26",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.obj-priority",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "목표 우선순위화",
+    "summary": "상위·협력 조직 OKR 연계를 최우선으로 중요성·시급성을 고려해 목표 Pool에서 3~5개 최종 선정",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "목표 Pool"
+    ],
+    "outputs": [
+      "최종 목표 3~5개"
+    ],
+    "keywords": [
+      "우선순위",
+      "중요",
+      "시급",
+      "연계",
+      "선정"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.kr-brainstorm",
+        "type": "precede"
+      },
+      {
+        "to": "okr.align",
+        "type": "align"
+      }
+    ],
+    "src": "OKR p.28",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.kr-brainstorm",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "핵심결과 Brainstorming",
+    "summary": "목표별 달성 검증·추적 지표 Type과 최선을 다했을 때 60~70% 달성 가능한 도전적 목표값을 연결해 핵심결과 Pool 작성",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "최종 목표 3~5개"
+    ],
+    "outputs": [
+      "핵심결과 Pool"
+    ],
+    "keywords": [
+      "핵심결과",
+      "Brainstorming",
+      "지표",
+      "목표값",
+      "도전",
+      "60~70%"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.kr-priority",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.30",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.kr-priority",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "핵심결과 우선순위화",
+    "summary": "영향력과 실현가능성 기준으로 Easy Wins/Big Bets/Incremental/Money Pits 유형화하여 목표별 3~5개 핵심결과 도출",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "핵심결과 Pool"
+    ],
+    "outputs": [
+      "목표별 핵심결과 3~5개"
+    ],
+    "keywords": [
+      "핵심결과",
+      "우선순위",
+      "영향력",
+      "실현가능성",
+      "Big Bets",
+      "Easy Wins"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.confirm",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.32",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.confirm",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "개인 OKR 확정",
+    "summary": "목표·핵심결과를 확정하고 목표주기(Target Date)·공개범위(Visibility)·목표연계(Alignment)·측정(Measurement)을 결정",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "목표별 핵심결과 3~5개"
+    ],
+    "outputs": [
+      "확정된 개인 OKR"
+    ],
+    "keywords": [
+      "확정",
+      "주기",
+      "공개범위",
+      "연계",
+      "측정"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.target-date",
+        "type": "contain"
+      },
+      {
+        "to": "okr.define.visibility",
+        "type": "contain"
+      },
+      {
+        "to": "okr.define.measurement",
+        "type": "contain"
+      },
+      {
+        "to": "okr.define.checklist",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.34",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.target-date",
+    "type": "data",
+    "parent": "okr.define.confirm",
+    "label": "목표 주기(Target Date)",
+    "summary": "시작일·마감일로 일반적으로 3개월(분기) 주기, 장기 목표는 1~3년 주기 설정",
+    "actor": null,
+    "timing": "분기/1~3년",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "주기",
+      "시작일",
+      "마감일",
+      "분기",
+      "장기"
+    ],
+    "rel": [],
+    "src": "OKR p.34",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.visibility",
+    "type": "data",
+    "parent": "okr.define.confirm",
+    "label": "공개 범위(Visibility)",
+    "summary": "전사 공유 또는 조직 내 공유 설정으로 목표 연계·업무 협력 보완",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "공개",
+      "범위",
+      "전사",
+      "공유",
+      "협력"
+    ],
+    "rel": [],
+    "src": "OKR p.34",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.measurement",
+    "type": "data",
+    "parent": "okr.define.confirm",
+    "label": "OKR 측정 방법(Measurement)",
+    "summary": "진행률을 지속 측정할 지표 설정, 절대값/달성률/달성여부로 핵심결과 측정",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "측정",
+      "진행률",
+      "절대값",
+      "달성률",
+      "달성여부"
+    ],
+    "rel": [],
+    "src": "OKR p.34",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.checklist",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "개인 OKR 수립 점검",
+    "summary": "FAST 원칙별 점검 항목 체크리스트로 OKR이 잘 수립되었는지 점수화하여 재수립·수정 여부 판단",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "확정된 개인 OKR"
+    ],
+    "outputs": [
+      "점검 결과"
+    ],
+    "keywords": [
+      "점검",
+      "체크리스트",
+      "원칙",
+      "점수",
+      "수정"
+    ],
+    "rel": [
+      {
+        "to": "okr.principle.fast",
+        "type": "align"
+      }
+    ],
+    "src": "OKR p.36",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.initiative-set",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "Initiative 설정",
+    "summary": "목표·핵심결과 달성을 위한 행동 지표 성격의 Initiative를 추가하여 실행 과정을 구체화",
+    "actor": "팀원",
+    "timing": null,
+    "inputs": [
+      "확정된 개인 OKR"
+    ],
+    "outputs": [
+      "Initiative"
+    ],
+    "keywords": [
+      "Initiative",
+      "설정",
+      "행동",
+      "실행",
+      "구체화"
+    ],
+    "rel": [
+      {
+        "to": "okr.concept.initiative",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.37",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.define.system-register",
+    "type": "task",
+    "parent": "okr.define.personal",
+    "label": "Performance Plus OKR 등록·확정",
+    "summary": "성과관리 시스템에 목표·핵심결과·주기·연계목표·공개범위·Initiative·담당자/관리자를 등록하여 OKR 확정",
+    "actor": "팀원/팀장",
+    "timing": null,
+    "inputs": [
+      "확정된 개인 OKR",
+      "Initiative"
+    ],
+    "outputs": [
+      "시스템 등록 OKR"
+    ],
+    "keywords": [
+      "등록",
+      "시스템",
+      "확정",
+      "담당자",
+      "관리자",
+      "공개"
+    ],
+    "rel": [],
+    "src": "OKR p.38",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align",
+    "type": "phase",
+    "parent": "okr.process",
+    "label": "OKR Alignment",
+    "summary": "상위 목표에 기여하는 자율적·비정형적 목표 연계로 어떤 OKR이 어떤 OKR에 기여하는지 연결성 자체에 초점",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Alignment",
+      "정렬",
+      "연계",
+      "기여",
+      "연결성",
+      "자율"
+    ],
+    "rel": [
+      {
+        "to": "okr.align.vertical",
+        "type": "contain"
+      },
+      {
+        "to": "okr.align.horizontal",
+        "type": "contain"
+      },
+      {
+        "to": "okr.process.define",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.42",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.vs-mbo",
+    "type": "concept",
+    "parent": "okr.align",
+    "label": "OKR vs MBO Alignment",
+    "summary": "MBO는 상위 목표를 하위로 기계적 Cascading·할당하나 OKR은 상위 목표 기여 기반 직·간접적 유연한 목표 연계 추구",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Alignment",
+      "MBO",
+      "Cascading",
+      "할당",
+      "유연",
+      "연계"
+    ],
+    "rel": [],
+    "src": "OKR p.43",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.vertical",
+    "type": "activity",
+    "parent": "okr.align",
+    "label": "수직적 Alignment",
+    "summary": "하향식(Top-Down) 방향성·의미 정렬과 상향식(Bottom-Up) 기여 기반 자율 수립의 상하 균형 정렬",
+    "actor": "상위조직/하위조직",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "수직",
+      "정렬",
+      "Top-Down",
+      "Bottom-Up",
+      "기여",
+      "방향성"
+    ],
+    "rel": [
+      {
+        "to": "okr.align.horizontal",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.44",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.horizontal",
+    "type": "activity",
+    "parent": "okr.align",
+    "label": "수평적 Alignment",
+    "summary": "수평 조직 간 OKR 우선순위 논의 및 기능적 연결·협업을 통해 상위조직 OKR 달성에 기여",
+    "actor": "수평 조직",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "수평",
+      "정렬",
+      "협업",
+      "기능",
+      "연결",
+      "우선순위"
+    ],
+    "rel": [],
+    "src": "OKR p.44",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.core-support",
+    "type": "concept",
+    "parent": "okr.align",
+    "label": "Core OKR / Support OKR 구분",
+    "summary": "재무 성과를 직접 창출·기여하는 Core OKR과 간접 기여·지원하는 Support OKR로 구분되며 Alignment 형태가 달라짐",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Core",
+      "Support",
+      "OKR",
+      "재무",
+      "직접",
+      "간접"
+    ],
+    "rel": [
+      {
+        "to": "okr.align.option",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.46",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.option",
+    "type": "concept",
+    "parent": "okr.align",
+    "label": "Alignment Option(직접/간접)",
+    "summary": "Core OKR은 직접적 Alignment, Support OKR은 간접적 Alignment로 연계하는 것이 바람직",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "직접",
+      "간접",
+      "Alignment",
+      "Core",
+      "Support",
+      "연계"
+    ],
+    "rel": [],
+    "src": "OKR p.47",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.core-review",
+    "type": "task",
+    "parent": "okr.align.vertical",
+    "label": "Core OKR Alignment 검토",
+    "summary": "상위 성과지표에 직접 기여하는지(수직)와 조직 간 균형 배분 여부(수평 Core-Core)를 검토",
+    "actor": "상위조직/하위조직",
+    "timing": null,
+    "inputs": [
+      "조직별 OKR"
+    ],
+    "outputs": [
+      "검토 결과"
+    ],
+    "keywords": [
+      "Core",
+      "검토",
+      "수직",
+      "수평",
+      "기여",
+      "균형"
+    ],
+    "rel": [],
+    "src": "OKR p.48",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.support-review",
+    "type": "task",
+    "parent": "okr.align.vertical",
+    "label": "Support OKR Alignment 검토",
+    "summary": "상위 OKR에 어떻게 간접 기여하는지, Core OKR 및 타 Support OKR과 충돌하지 않는지 검토",
+    "actor": "지원 조직",
+    "timing": null,
+    "inputs": [
+      "조직별 OKR"
+    ],
+    "outputs": [
+      "검토 결과"
+    ],
+    "keywords": [
+      "Support",
+      "검토",
+      "간접",
+      "기여",
+      "충돌"
+    ],
+    "rel": [],
+    "src": "OKR p.49",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.workshop",
+    "type": "activity",
+    "parent": "okr.align",
+    "label": "Alignment Workshop",
+    "summary": "조직별 Alignment 검증 후 조직 간 OKR 적합성·연계성 검토, 우선순위 수립, 인적·물적 자원 배분 결정",
+    "actor": "경영진/OKR Champion/상위조직장",
+    "timing": null,
+    "inputs": [
+      "조직별 OKR 수립 내용",
+      "자원 조달 문서"
+    ],
+    "outputs": [
+      "조직 OKR 종합 피드백",
+      "조직 OKR 우선순위",
+      "자원 조달 비중"
+    ],
+    "keywords": [
+      "Workshop",
+      "정렬",
+      "우선순위",
+      "자원",
+      "배분",
+      "Consensus"
+    ],
+    "rel": [
+      {
+        "to": "okr.align.vertical",
+        "type": "support"
+      },
+      {
+        "to": "okr.align.horizontal",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.51",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.align.guideline",
+    "type": "principle",
+    "parent": "okr.align",
+    "label": "Alignment 유의사항",
+    "summary": "상위 KR을 하위 Objective로 설정 금지, 상위 Objective를 그대로 적용 금지, 루틴업무도 기여 시 OKR 수립 가능, Core·Support 동시 수립 가능",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "유의",
+      "KR",
+      "Objective",
+      "루틴",
+      "기여",
+      "금지"
+    ],
+    "rel": [],
+    "src": "OKR p.52",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.weekly-briefing",
+    "type": "activity",
+    "parent": "okr.process.reviewing",
+    "label": "주간 브리핑(목표 점검 및 회고)",
+    "summary": "월요일 Start Meeting과 금요일 Review Briefing으로 진행 업무를 점검·회고하여 목표 지속/중단/보완 결정",
+    "actor": "팀원/팀장",
+    "timing": "주간",
+    "inputs": [
+      "개인 OKR",
+      "주간 진행 업무"
+    ],
+    "outputs": [
+      "목표 점검 결과",
+      "Next Step"
+    ],
+    "keywords": [
+      "주간",
+      "브리핑",
+      "점검",
+      "회고",
+      "지속",
+      "중단",
+      "보완"
+    ],
+    "rel": [
+      {
+        "to": "okr.review.meeting-prep",
+        "type": "contain"
+      },
+      {
+        "to": "okr.review.agenda",
+        "type": "contain"
+      },
+      {
+        "to": "okr.concept.cfr",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.54",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.meeting-prep",
+    "type": "task",
+    "parent": "okr.review.weekly-briefing",
+    "label": "미팅 사전 준비(Scrum)",
+    "summary": "Off-line 미팅 전 Scrum/Kanban으로 전 주차 점검 내용 리뷰, 우선순위·이번주 핵심결과를 사전 공유",
+    "actor": "팀원",
+    "timing": "주간(월요일 전)",
+    "inputs": [
+      "전 주차 점검 내용"
+    ],
+    "outputs": [
+      "사전 공유 업무"
+    ],
+    "keywords": [
+      "사전",
+      "준비",
+      "Scrum",
+      "Kanban",
+      "공유",
+      "우선순위"
+    ],
+    "rel": [
+      {
+        "to": "okr.review.agenda",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.54",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.agenda",
+    "type": "task",
+    "parent": "okr.review.weekly-briefing",
+    "label": "목표점검 Agenda",
+    "summary": "업무 진척도(Work Progress)·달성 핵심결과(Key Achievements)·지원요청(Critical Issues) 세 척도를 다각도로 리뷰",
+    "actor": "팀원/팀장",
+    "timing": "주간(금요일)",
+    "inputs": [
+      "주간 진행 결과"
+    ],
+    "outputs": [
+      "리뷰 결과"
+    ],
+    "keywords": [
+      "점검",
+      "진척도",
+      "핵심결과",
+      "지원요청",
+      "Agenda"
+    ],
+    "rel": [
+      {
+        "to": "okr.review.retro-question",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.55",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.retro-question",
+    "type": "task",
+    "parent": "okr.review.weekly-briefing",
+    "label": "회고 문항(Follow Up)",
+    "summary": "성취 또는 장애 발생 시 회고 문항으로 논의하여 목표의 보완·중단·지속을 결정",
+    "actor": "팀원/팀장",
+    "timing": "주간",
+    "inputs": [
+      "목표 점검 결과"
+    ],
+    "outputs": [
+      "지속/보완/중단 결정"
+    ],
+    "keywords": [
+      "회고",
+      "문항",
+      "장애",
+      "보완",
+      "중단",
+      "지속"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.track",
+        "type": "feedback"
+      }
+    ],
+    "src": "OKR p.56",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.tool.kpta",
+    "type": "output",
+    "parent": "okr.process.reviewing",
+    "label": "KPTA 검토법",
+    "summary": "Keep/Try/Problem/Action으로 개인 업무 진척을 Self-Check하고 지속 희망 업무·문제점·개선·실행방안을 구조화하는 실행관리 도구",
+    "actor": "팀원",
+    "timing": "주간",
+    "inputs": [
+      "업무 진척 상황"
+    ],
+    "outputs": [
+      "개선책",
+      "실행방안"
+    ],
+    "keywords": [
+      "KPTA",
+      "Keep",
+      "Try",
+      "Problem",
+      "Action",
+      "검토"
+    ],
+    "rel": [],
+    "src": "OKR p.63",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.tool.kanban",
+    "type": "output",
+    "parent": "okr.process.reviewing",
+    "label": "Kanban 운영",
+    "summary": "진행 상황(To Do/Doing/Done/협력/제외 등)에 따라 보드를 자유롭게 이동하며 업무를 관리·공유하는 도구",
+    "actor": "팀원",
+    "timing": "상시",
+    "inputs": [
+      "업무 리스트"
+    ],
+    "outputs": [
+      "진행 상황 보드"
+    ],
+    "keywords": [
+      "Kanban",
+      "보드",
+      "진행",
+      "관리",
+      "우선순위",
+      "공유"
+    ],
+    "rel": [],
+    "src": "OKR p.64",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.annual-review",
+    "type": "activity",
+    "parent": "okr.process.track",
+    "label": "OKR 달성도 종합리뷰",
+    "summary": "연말 일괄 실시하는 개인 종합리뷰·상위관리자 리뷰·OKR 지향노트 작성으로 차기 OKR 정교화",
+    "actor": "팀원/상위관리자",
+    "timing": "연말(연1회)",
+    "inputs": [
+      "OKR 회고노트",
+      "주간 CFR 내용"
+    ],
+    "outputs": [
+      "OKR 회고노트",
+      "종합 피드백",
+      "OKR 지향노트"
+    ],
+    "keywords": [
+      "종합리뷰",
+      "연말",
+      "회고노트",
+      "지향노트",
+      "정교화"
+    ],
+    "rel": [
+      {
+        "to": "okr.review.self-review",
+        "type": "contain"
+      },
+      {
+        "to": "okr.review.manager-review",
+        "type": "contain"
+      },
+      {
+        "to": "okr.review.aim-note",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.65",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.self-review",
+    "type": "task",
+    "parent": "okr.review.annual-review",
+    "label": "개인 종합 리뷰",
+    "summary": "FAST 원칙별 검증 Point로 본인의 연간 목표 달성·성장을 노트 작성 및 구두 커뮤니케이션으로 리뷰",
+    "actor": "팀원",
+    "timing": "연말",
+    "inputs": [
+      "수행업무 과정·결과"
+    ],
+    "outputs": [
+      "개인 종합 리뷰 결과"
+    ],
+    "keywords": [
+      "개인",
+      "종합",
+      "리뷰",
+      "원칙",
+      "검증",
+      "성장"
+    ],
+    "rel": [
+      {
+        "to": "okr.review.manager-review",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.66",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.manager-review",
+    "type": "task",
+    "parent": "okr.review.annual-review",
+    "label": "상위관리자 리뷰",
+    "summary": "주간 CFR과 개인 종합리뷰를 종합해 연간 퍼포먼스 리뷰·Feedback·Recognition을 공유하고 차기 OKR 방향 논의",
+    "actor": "상위관리자",
+    "timing": "연말",
+    "inputs": [
+      "개인 종합 리뷰 결과",
+      "주간 CFR"
+    ],
+    "outputs": [
+      "종합 피드백"
+    ],
+    "keywords": [
+      "관리자",
+      "리뷰",
+      "Feedback",
+      "Recognition",
+      "방향"
+    ],
+    "rel": [
+      {
+        "to": "okr.review.aim-note",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.66",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.review.aim-note",
+    "type": "output",
+    "parent": "okr.review.annual-review",
+    "label": "OKR 지향노트",
+    "summary": "개인·상위관리자 리뷰를 참고하여 차기 OKR 설정 시 지향하고자 하는 부분을 상세 기입",
+    "actor": "팀원",
+    "timing": "연말",
+    "inputs": [
+      "개인 종합 리뷰 결과",
+      "종합 피드백"
+    ],
+    "outputs": [
+      "OKR 지향노트"
+    ],
+    "keywords": [
+      "지향노트",
+      "차기",
+      "설정",
+      "방향성",
+      "성장"
+    ],
+    "rel": [],
+    "src": "OKR p.66",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.track.next-okr",
+    "type": "task",
+    "parent": "okr.process.track",
+    "label": "Next OKR 개선방안",
+    "summary": "회고 결과별 고려 Point를 논의해 목표 수준·우선순위를 정하고 목표 지속/보완/중단을 결정",
+    "actor": "팀원/팀장",
+    "timing": "주기 말",
+    "inputs": [
+      "OKR 회고 결과"
+    ],
+    "outputs": [
+      "목표 지속/보완/중단 결정",
+      "Next OKR"
+    ],
+    "keywords": [
+      "Next",
+      "개선",
+      "회고",
+      "지속",
+      "보완",
+      "중단"
+    ],
+    "rel": [
+      {
+        "to": "okr.process.define",
+        "type": "feedback"
+      }
+    ],
+    "src": "OKR p.67",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval",
+    "type": "phase",
+    "parent": null,
+    "label": "OKR 활용(성과 평가)",
+    "summary": "결과 직접 평가·상대화에서 벗어나 목표 의미와 과정을 종합 판단·해석하고 다각적 논의로 평가·보상과 연계",
+    "actor": "팀장/관리자",
+    "timing": "연1회",
+    "inputs": [
+      "OKR 수집 정보"
+    ],
+    "outputs": [
+      "인재 스냅샷",
+      "평가 결과"
+    ],
+    "keywords": [
+      "평가",
+      "활용",
+      "해석",
+      "과정",
+      "논의",
+      "보상"
+    ],
+    "rel": [
+      {
+        "to": "okr.eval.process",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.69",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.change",
+    "type": "concept",
+    "parent": "okr.eval",
+    "label": "성과 평가의 변화",
+    "summary": "결과 등급 생성이 아닌 개선·발전 리뷰, 목표 의미와 과정 평가, 제도 직접연계보다 정보 제공, 상대비교 대신 종합 피드백",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "평가",
+      "변화",
+      "개선",
+      "과정",
+      "피드백",
+      "비교"
+    ],
+    "rel": [],
+    "src": "OKR p.69",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.process",
+    "type": "activity",
+    "parent": "okr.eval",
+    "label": "OKR 활용 프로세스",
+    "summary": "종합 리뷰로 정보 수집→인재 스냅샷 작성→인재 논의로 평가·보상·육성 연계",
+    "actor": "팀장/관리자",
+    "timing": "연1회",
+    "inputs": [
+      "목표와 달성도",
+      "배지",
+      "360 피드백"
+    ],
+    "outputs": [
+      "인재 스냅샷",
+      "인재 논의 결과"
+    ],
+    "keywords": [
+      "프로세스",
+      "리뷰",
+      "스냅샷",
+      "논의",
+      "평가",
+      "보상"
+    ],
+    "rel": [
+      {
+        "to": "okr.eval.comprehensive-review",
+        "type": "contain"
+      },
+      {
+        "to": "okr.eval.snapshot",
+        "type": "contain"
+      },
+      {
+        "to": "okr.eval.talent-session",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.70",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.comprehensive-review",
+    "type": "task",
+    "parent": "okr.eval.process",
+    "label": "종합 리뷰",
+    "summary": "목표·피드백·360 피드백을 통해 성과의 내용·난이도·달성 과정과 핵심가치·역량 실천 수준을 종합적으로 리뷰",
+    "actor": "팀장/팀원",
+    "timing": "연1회",
+    "inputs": [
+      "목표와 달성도",
+      "360 피드백",
+      "배지"
+    ],
+    "outputs": [
+      "종합 리뷰 결과"
+    ],
+    "keywords": [
+      "종합",
+      "리뷰",
+      "목표",
+      "피드백",
+      "역량",
+      "성과"
+    ],
+    "rel": [
+      {
+        "to": "okr.eval.interpretation",
+        "type": "support"
+      },
+      {
+        "to": "okr.eval.snapshot",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.75",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.interpretation",
+    "type": "task",
+    "parent": "okr.eval.process",
+    "label": "성과의 해석",
+    "summary": "최종 결과가 아닌 목표 난이도·환경적 이슈·내부 이슈를 종합 고려하여 성과의 상대적 수준을 판단",
+    "actor": "팀장",
+    "timing": "연1회",
+    "inputs": [
+      "종합 리뷰 결과"
+    ],
+    "outputs": [
+      "성과 해석 결과"
+    ],
+    "keywords": [
+      "해석",
+      "난이도",
+      "환경",
+      "내부",
+      "이슈",
+      "상대"
+    ],
+    "rel": [],
+    "src": "OKR p.71",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.snapshot",
+    "type": "output",
+    "parent": "okr.eval.process",
+    "label": "인재 스냅샷",
+    "summary": "성과·역량·승진가능성·이직위험·보상·저성과 이슈·블록·종합등급으로 구성원을 종합 기록",
+    "actor": "팀장/관리자",
+    "timing": "연1회",
+    "inputs": [
+      "종합 리뷰 결과",
+      "성과 해석 결과"
+    ],
+    "outputs": [
+      "인재 스냅샷"
+    ],
+    "keywords": [
+      "스냅샷",
+      "성과",
+      "역량",
+      "승진",
+      "보상",
+      "블록"
+    ],
+    "rel": [
+      {
+        "to": "okr.eval.self-diagnosis",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.78",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.self-diagnosis",
+    "type": "task",
+    "parent": "okr.eval.process",
+    "label": "인재 스냅샷 자가진단",
+    "summary": "성과 분포를 확인하고 관대화·가혹화·중심화·관계 평가 오류를 범하지 않았는지 자가 진단",
+    "actor": "팀장/관리자",
+    "timing": "연1회",
+    "inputs": [
+      "인재 스냅샷"
+    ],
+    "outputs": [
+      "자가진단 결과"
+    ],
+    "keywords": [
+      "자가진단",
+      "분포",
+      "오류",
+      "관대",
+      "가혹",
+      "점검"
+    ],
+    "rel": [
+      {
+        "to": "okr.eval.talent-session",
+        "type": "precede"
+      }
+    ],
+    "src": "OKR p.73",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.talent-session",
+    "type": "activity",
+    "parent": "okr.eval.process",
+    "label": "인재 논의(Talent Session)",
+    "summary": "성과·보상·육성·인재관리 역량을 여러 사람과 논의하여 평가 결과의 객관성·공정성 제고",
+    "actor": "관리자/HR",
+    "timing": "연1회",
+    "inputs": [
+      "인재 스냅샷",
+      "360 피드백"
+    ],
+    "outputs": [
+      "보상·육성 논의 결과",
+      "핵심인재 검토"
+    ],
+    "keywords": [
+      "인재",
+      "논의",
+      "성과",
+      "보상",
+      "육성",
+      "공정성"
+    ],
+    "rel": [],
+    "src": "OKR p.74",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.360-feedback",
+    "type": "data",
+    "parent": "okr.eval.comprehensive-review",
+    "label": "360 피드백",
+    "summary": "업무 협업 관계의 다양한 사람들이 협력·역량 항목에 대해 제공하는 다면 피드백 결과",
+    "actor": "동료",
+    "timing": "연1회",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "360",
+      "피드백",
+      "다면",
+      "협업",
+      "역량",
+      "동료"
+    ],
+    "rel": [],
+    "src": "OKR p.77",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.eval.badge",
+    "type": "data",
+    "parent": "okr.eval.comprehensive-review",
+    "label": "배지(인정과 피드백)",
+    "summary": "달성 과정에서의 행동양식에 대한 인정·피드백을 누적한 배지 정보",
+    "actor": "동료",
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "배지",
+      "인정",
+      "피드백",
+      "행동",
+      "누적"
+    ],
+    "rel": [],
+    "src": "OKR p.70",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.role.member",
+    "type": "role",
+    "parent": null,
+    "label": "팀원(OKR 담당자)",
+    "summary": "개인 OKR을 수립·실행·측정·회고하고 Initiative를 수행하는 OKR 담당 주체",
+    "actor": "팀원",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "팀원",
+      "담당자",
+      "수립",
+      "실행",
+      "측정"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.personal",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.24",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.role.leader",
+    "type": "role",
+    "parent": null,
+    "label": "팀장(OKR 관리자)",
+    "summary": "팀원과 OKR을 논의·정렬하고 코칭·피드백·평가를 수행하는 관리 주체",
+    "actor": "팀장",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "팀장",
+      "관리자",
+      "논의",
+      "코칭",
+      "피드백",
+      "평가"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.personal",
+        "type": "support"
+      },
+      {
+        "to": "okr.cm.adfit-coaching",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.24",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.role.champion",
+    "type": "role",
+    "parent": null,
+    "label": "OKR Champion",
+    "summary": "상위 조직별 OKR 책임자로 Alignment Workshop에 참여",
+    "actor": "OKR Champion",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Champion",
+      "책임자",
+      "조직",
+      "Workshop"
+    ],
+    "rel": [
+      {
+        "to": "okr.align.workshop",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.51",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.role.executive",
+    "type": "role",
+    "parent": null,
+    "label": "임원/CEO",
+    "summary": "변화 의지 확보, 전사 전략 공유, 자원 배분 및 OKR 정렬을 주도하는 경영진",
+    "actor": "임원/CEO",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "임원",
+      "CEO",
+      "변화",
+      "전략",
+      "자원",
+      "정렬"
+    ],
+    "rel": [
+      {
+        "to": "okr.cm.strategy",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.83",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm",
+    "type": "phase",
+    "parent": null,
+    "label": "변화관리",
+    "summary": "확실한 변화 의지·투자·지원과 소규모 변화의 전파·확장으로 기업 문화와 일하는 방식을 변화시킴",
+    "actor": "임원/CEO",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "변화관리",
+      "의지",
+      "투자",
+      "전파",
+      "확장",
+      "문화"
+    ],
+    "rel": [
+      {
+        "to": "okr.cm.strategy",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cm.code",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.83",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.strategy",
+    "type": "activity",
+    "parent": "okr.cm",
+    "label": "변화관리 전략 3단계",
+    "summary": "변화 가치 정의(Step1)→소규모 적용·촉진(Step2)→전파·확장 정착(Step3)의 단계적 변화 전략",
+    "actor": "임원/CEO",
+    "timing": null,
+    "inputs": [],
+    "outputs": [
+      "Action Plan",
+      "새로운 운영 모델"
+    ],
+    "keywords": [
+      "전략",
+      "정의",
+      "적용",
+      "촉진",
+      "전파",
+      "확장"
+    ],
+    "rel": [],
+    "src": "OKR p.83",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.code",
+    "type": "activity",
+    "parent": "okr.cm",
+    "label": "OKR 행동강령",
+    "summary": "성장마인드·좋은질문·OKR공유·Alignment연습·책임주기설정·AD-FIT코칭의 6개 행동강령과 Action Plan",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "행동강령",
+      "성장",
+      "질문",
+      "공유",
+      "책임",
+      "코칭"
+    ],
+    "rel": [
+      {
+        "to": "okr.cm.growth-mindset",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cm.good-question",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cm.sharing",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cm.practice-align",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cm.cadence",
+        "type": "contain"
+      },
+      {
+        "to": "okr.cm.adfit-coaching",
+        "type": "contain"
+      }
+    ],
+    "src": "OKR p.84",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.growth-mindset",
+    "type": "task",
+    "parent": "okr.cm.code",
+    "label": "성장 마인드 기르기(Growth Mindset)",
+    "summary": "고정 사고에서 벗어나 창의·도전적 목표 설정을 유도하는 Growth Mindset 콘테스트 운영",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [
+      "Action Item",
+      "Best OKR"
+    ],
+    "keywords": [
+      "성장",
+      "마인드",
+      "콘테스트",
+      "도전",
+      "창의"
+    ],
+    "rel": [],
+    "src": "OKR p.84",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.good-question",
+    "type": "task",
+    "parent": "okr.cm.code",
+    "label": "좋은 질문하기(Asking Great Questions)",
+    "summary": "What·How에 초점을 둔 열린 질문 가이드를 제공해 효율적인 회의·논의를 유도",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [
+      "회의 운영 포스터"
+    ],
+    "keywords": [
+      "질문",
+      "What",
+      "How",
+      "회의",
+      "논의",
+      "효율"
+    ],
+    "rel": [],
+    "src": "OKR p.84",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.sharing",
+    "type": "task",
+    "parent": "okr.cm.code",
+    "label": "OKR 공유하기(Sharing OKRs)",
+    "summary": "목표·과정·피드백 전 과정을 성과관리 시스템에 공개하고 일상적으로 공유하도록 유도",
+    "actor": null,
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [
+      "전사 공유 OKR"
+    ],
+    "keywords": [
+      "공유",
+      "공개",
+      "시스템",
+      "투명",
+      "피드백"
+    ],
+    "rel": [
+      {
+        "to": "okr.define.visibility",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.90",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.practice-align",
+    "type": "task",
+    "parent": "okr.cm.code",
+    "label": "Alignment 연습하기(Transparency 미팅)",
+    "summary": "전직원 Transparency 미팅으로 전사 전략·계획·시장 변동을 공유하고 Q&A로 OKR 정렬을 유도",
+    "actor": "경영진/직원",
+    "timing": "분기(OKR 주기)",
+    "inputs": [
+      "경영 현황·계획 자료"
+    ],
+    "outputs": [
+      "전략 공유",
+      "Q&A Feedback"
+    ],
+    "keywords": [
+      "Alignment",
+      "미팅",
+      "전략",
+      "공유",
+      "Q&A",
+      "정렬"
+    ],
+    "rel": [
+      {
+        "to": "okr.align",
+        "type": "support"
+      }
+    ],
+    "src": "OKR p.92",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.cadence",
+    "type": "task",
+    "parent": "okr.cm.code",
+    "label": "책임 주기 설정하기(Accountability Cadence)",
+    "summary": "Daily/Weekly 업무 체크, Monthly 진척도·지식 공유, Quarterly OKR Cycle 리뷰로 책임의식 배양",
+    "actor": "팀원/팀장",
+    "timing": "일/주/월/분기",
+    "inputs": [],
+    "outputs": [
+      "진척도 공유",
+      "OKR 리뷰"
+    ],
+    "keywords": [
+      "책임",
+      "주기",
+      "Cadence",
+      "진척도",
+      "Cycle",
+      "리뷰"
+    ],
+    "rel": [],
+    "src": "OKR p.94",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.cm.adfit-coaching",
+    "type": "task",
+    "parent": "okr.cm.code",
+    "label": "AD-FIT 코칭하기",
+    "summary": "Assess·Define·Focus·Implement·Take-away 기반 코칭 가이드로 관리자 코칭 역량을 향상하고 체크리스트 작성·제출 의무화",
+    "actor": "관리자",
+    "timing": "상시",
+    "inputs": [],
+    "outputs": [
+      "AD-FIT 체크리스트"
+    ],
+    "keywords": [
+      "AD-FIT",
+      "코칭",
+      "Assess",
+      "Define",
+      "Focus",
+      "체크리스트"
+    ],
+    "rel": [],
+    "src": "OKR p.96",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "okr.example.job-type",
+    "type": "concept",
+    "parent": "okr.concept.definition",
+    "label": "직무 특성 구분별 OKR 수립",
+    "summary": "전사성과 창출(영업·생산), 정량가치 창출(구매·마케팅), 정성가치 창출(인사·회계) 직무 특성에 따라 OKR 수립 고려사항이 상이",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "직무",
+      "특성",
+      "전사",
+      "정량",
+      "정성",
+      "OKR"
+    ],
+    "rel": [
+      {
+        "to": "okr.align.core-support",
+        "type": "align"
+      }
+    ],
+    "src": "OKR p.99",
+    "_origin": "okr_nodes.json"
+  },
+  {
+    "id": "pm.process",
+    "type": "concept",
+    "parent": null,
+    "label": "성과관리 Process",
+    "summary": "MBO 기반 성과관리 마스터 프로세스(목표수립-Mid-year Review-평가-Feedback)",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "성과관리",
+      "프로세스",
+      "MBO"
+    ],
+    "rel": [
+      {
+        "to": "pm.goal-setting",
+        "type": "contain"
+      },
+      {
+        "to": "pm.mid-year-review",
+        "type": "contain"
+      },
+      {
+        "to": "pm.evaluation",
+        "type": "contain"
+      },
+      {
+        "to": "pm.feedback",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.5",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.goal-setting",
+    "type": "phase",
+    "parent": "pm.process",
+    "label": "목표수립",
+    "summary": "개인 별 KPI 및 목표수준 설정 단계",
+    "actor": null,
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [
+      "개인목표설정서"
+    ],
+    "keywords": [
+      "목표",
+      "수립",
+      "KPI",
+      "목표수준",
+      "설정"
+    ],
+    "rel": [
+      {
+        "to": "pm.mid-year-review",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.5",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.mid-year-review",
+    "type": "phase",
+    "parent": "pm.process",
+    "label": "Mid-year Review",
+    "summary": "평가항목 별 목표달성도에 대한 Review 및 Coaching",
+    "actor": null,
+    "timing": "7월",
+    "inputs": [
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "Mid-year Review 결과 정리"
+    ],
+    "keywords": [
+      "중간점검",
+      "Review",
+      "Coaching",
+      "목표달성도"
+    ],
+    "rel": [
+      {
+        "to": "pm.evaluation",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.5",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.evaluation",
+    "type": "phase",
+    "parent": "pm.process",
+    "label": "평가",
+    "summary": "KPI 항목 별 최종 평가 점수 및 등급 산출",
+    "actor": null,
+    "timing": "12~1월",
+    "inputs": [
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "keywords": [
+      "평가",
+      "점수",
+      "등급",
+      "산출"
+    ],
+    "rel": [
+      {
+        "to": "pm.feedback",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.5",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.feedback",
+    "type": "phase",
+    "parent": "pm.process",
+    "label": "Feedback",
+    "summary": "평가 결과에 대한 Feedback 실시",
+    "actor": null,
+    "timing": "1월",
+    "inputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "outputs": [
+      "Feedback Note"
+    ],
+    "keywords": [
+      "Feedback",
+      "평가",
+      "결과"
+    ],
+    "rel": [],
+    "src": "PM p.5",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.timing",
+    "type": "concept",
+    "parent": "pm.process",
+    "label": "Process 운영 시기",
+    "summary": "성과관리 Process 및 제반 HR 프로그램(Compensation, Business Planning 등) 운영 시기",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "운영",
+      "시기",
+      "프로그램"
+    ],
+    "rel": [],
+    "src": "PM p.6",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.guideline",
+    "type": "activity",
+    "parent": "pm.goal-setting",
+    "label": "지침 수립 및 안내",
+    "summary": "목표수립 지침 수립 및 자회사/BG·중역/팀장 대상 설명회 실시",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [
+      "MBO 운영계획",
+      "목표수립 지침"
+    ],
+    "keywords": [
+      "지침",
+      "수립",
+      "안내",
+      "설명회"
+    ],
+    "rel": [
+      {
+        "to": "pm.gs.self-goal",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.8",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.guideline.holding-plan",
+    "type": "task",
+    "parent": "pm.gs.guideline",
+    "label": "연간 MBO 운영 계획 및 지침 수립",
+    "summary": "연간 MBO 운영 계획·지침 수립 후 Top Team 보고 확정, FA/VM과 재무/전략목표 지침 협의",
+    "actor": "지주부문 HR",
+    "timing": "2~3월",
+    "inputs": [
+      "전년도 지침"
+    ],
+    "outputs": [
+      "MBO 운영 계획",
+      "목표수립 지침"
+    ],
+    "keywords": [
+      "MBO",
+      "운영",
+      "계획",
+      "지침",
+      "수립",
+      "보고",
+      "확정"
+    ],
+    "rel": [],
+    "src": "PM p.9",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.guideline.subsidiary-briefing",
+    "type": "task",
+    "parent": "pm.gs.guideline",
+    "label": "자회사/BG HR 대상 설명회 실시",
+    "summary": "목표수립 지침 및 프로세스 별 주요 Activity Guide 안내",
+    "actor": "지주부문 HR",
+    "timing": "2~3월",
+    "inputs": [
+      "목표수립 지침"
+    ],
+    "outputs": [],
+    "keywords": [
+      "자회사",
+      "BG",
+      "설명회",
+      "안내"
+    ],
+    "rel": [],
+    "src": "PM p.9",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.guideline.local-plan",
+    "type": "task",
+    "parent": "pm.gs.guideline",
+    "label": "자회사/BG 내부 MBO 운영계획 수립",
+    "summary": "지주 배포 지침을 자회사/BG 상황에 맞게 조정, FA/전략팀 재무/전략 KPI 지침 취합, CEO/BG장 보고 확정",
+    "actor": "자회사/BG HR",
+    "timing": "2~3월",
+    "inputs": [
+      "목표수립 지침",
+      "재무 KPI 수립 지침",
+      "전략 KPI 수립 지침"
+    ],
+    "outputs": [
+      "내부 MBO 운영계획"
+    ],
+    "keywords": [
+      "내부",
+      "운영",
+      "계획",
+      "조정",
+      "취합",
+      "보고"
+    ],
+    "rel": [],
+    "src": "PM p.9",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.guideline.exec-briefing",
+    "type": "task",
+    "parent": "pm.gs.guideline",
+    "label": "중역/팀장 대상 설명회 실시",
+    "summary": "목표 수립 지침 및 평가자로서 수행할 주요 Activity Guide 설명회, 설명회 자료 자체 구성",
+    "actor": "자회사/BG HR",
+    "timing": "2~3월",
+    "inputs": [
+      "목표 수립 지침",
+      "성과관리 매뉴얼",
+      "내부 목표수립 Guide"
+    ],
+    "outputs": [
+      "설명회 자료"
+    ],
+    "keywords": [
+      "중역",
+      "팀장",
+      "설명회",
+      "평가자",
+      "Guide"
+    ],
+    "rel": [],
+    "src": "PM p.9",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.self-goal",
+    "type": "activity",
+    "parent": "pm.goal-setting",
+    "label": "자기 목표 수립",
+    "summary": "피평가자가 상위 조직 목표 연계 및 고유 업무 고려하여 자기 목표 설정서 작성",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "사업계획",
+      "상위 조직장 목표 수립 결과",
+      "핵심 고유 업무"
+    ],
+    "outputs": [
+      "자기 목표 설정서"
+    ],
+    "keywords": [
+      "자기",
+      "목표",
+      "수립",
+      "설정서",
+      "작성"
+    ],
+    "rel": [
+      {
+        "to": "pm.gs.guideline",
+        "type": "align"
+      },
+      {
+        "to": "pm.gs.review-meeting",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.10",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.self-goal.role-csf",
+    "type": "task",
+    "parent": "pm.gs.self-goal",
+    "label": "역할책임 및 핵심성공요인 정의",
+    "summary": "상위 조직장 목표 달성 지원 역할책임 정의, 핵심고유 업무 별 핵심성공요인 정의",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "사업계획",
+      "상위 조직장 목표",
+      "핵심 고유 업무"
+    ],
+    "outputs": [],
+    "keywords": [
+      "역할",
+      "책임",
+      "핵심성공요인",
+      "정의"
+    ],
+    "rel": [],
+    "src": "PM p.10",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.self-goal.kpi-target",
+    "type": "task",
+    "parent": "pm.gs.self-goal",
+    "label": "KPI 및 목표수준 설정",
+    "summary": "재무/전략/인재 KPI 및 KPI별 목표수준(Cap/Threshold 포함) 설정, KPI 항목별 가중치 부여",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [
+      "자기 목표 설정서"
+    ],
+    "keywords": [
+      "KPI",
+      "목표수준",
+      "Cap",
+      "Threshold",
+      "가중치",
+      "설정"
+    ],
+    "rel": [],
+    "src": "PM p.10",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.self-goal.exec-strategy",
+    "type": "task",
+    "parent": "pm.gs.self-goal",
+    "label": "중역 전략MBO 계획서 작성",
+    "summary": "중역 전략목표에 대해 별도 전략MBO 계획서 및 추진과제 Milestone Template 작성",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [
+      "전략MBO 계획서",
+      "추진과제 Milestone Template"
+    ],
+    "keywords": [
+      "중역",
+      "전략",
+      "MBO",
+      "계획서",
+      "Milestone",
+      "작성"
+    ],
+    "rel": [],
+    "src": "PM p.10",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.self-goal.submit",
+    "type": "task",
+    "parent": "pm.gs.self-goal",
+    "label": "자기 목표 수립 결과 송부",
+    "summary": "상위 조직장/BG HR에 e-mail 송부(IT System 운영 시 불필요, 중역은 공통 Template Soft Copy 발송)",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "자기 목표 설정서"
+    ],
+    "outputs": [],
+    "keywords": [
+      "결과",
+      "송부",
+      "발송"
+    ],
+    "rel": [],
+    "src": "PM p.10",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-meeting",
+    "type": "activity",
+    "parent": "pm.goal-setting",
+    "label": "목표 검토 회의",
+    "summary": "평가자-피평가자 간 목표 검토 및 협의를 위한 공식 회의 실시",
+    "actor": "평가자/피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "자기 목표 설정서",
+      "Cascading Matrix",
+      "BG LRP/AOP 확정안",
+      "목표수립지침"
+    ],
+    "outputs": [
+      "목표 설정서 수정본",
+      "목표 검토 회의 결과 정리"
+    ],
+    "keywords": [
+      "목표",
+      "검토",
+      "회의",
+      "협의"
+    ],
+    "rel": [
+      {
+        "to": "pm.gs.review-feedback",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.11",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-meeting.arrange",
+    "type": "task",
+    "parent": "pm.gs.review-meeting",
+    "label": "회의 일정 Arrange 및 자료 준비",
+    "summary": "CEO/BG장-중역, 중역-팀장 회의 일정 계획 수립(팀원 회의는 팀장 직접 Arrange), 피평가자별 자료 준비",
+    "actor": "자회사/BG HR",
+    "timing": "2~3월",
+    "inputs": [
+      "목표설정서",
+      "Cascading Matrix",
+      "BG LRP/AOP 확정안",
+      "목표수립지침"
+    ],
+    "outputs": [
+      "회의 일정 계획"
+    ],
+    "keywords": [
+      "일정",
+      "Arrange",
+      "자료",
+      "준비"
+    ],
+    "rel": [],
+    "src": "PM p.11",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-meeting.conduct",
+    "type": "task",
+    "parent": "pm.gs.review-meeting",
+    "label": "목표 검토 회의 실시",
+    "summary": "피평가자별 자기 목표 수립 결과 발표, 목표 수립 결과 Review 및 개선 방향 협의",
+    "actor": "평가자/피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "자기 목표 설정서"
+    ],
+    "outputs": [],
+    "keywords": [
+      "회의",
+      "실시",
+      "발표",
+      "Review",
+      "협의"
+    ],
+    "rel": [],
+    "src": "PM p.11",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-meeting.revise",
+    "type": "task",
+    "parent": "pm.gs.review-meeting",
+    "label": "자기 목표 수정 및 결과 정리",
+    "summary": "협의 내용 바탕 자기 목표 설정서 수정 후 BG HR 송부, 목표수립 진행결과 Summary 반영(팀원은 팀장이 Progress Check Template 작성)",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "목표 검토 회의 협의 내용"
+    ],
+    "outputs": [
+      "자기 목표 설정서 수정본",
+      "목표수립 진행결과 Summary"
+    ],
+    "keywords": [
+      "목표",
+      "수정",
+      "결과",
+      "정리"
+    ],
+    "rel": [],
+    "src": "PM p.11",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-feedback",
+    "type": "activity",
+    "parent": "pm.goal-setting",
+    "label": "목표 검토 및 Feedback",
+    "summary": "기능별(FA/VM/HR) 목표 수립 결과 검토 및 Feedback 실시",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [
+      "목표 설정서 수정본"
+    ],
+    "outputs": [
+      "Feedback Point"
+    ],
+    "keywords": [
+      "목표",
+      "검토",
+      "Feedback",
+      "기능"
+    ],
+    "rel": [
+      {
+        "to": "pm.gs.confirm",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.12",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-feedback.collect",
+    "type": "task",
+    "parent": "pm.gs.review-feedback",
+    "label": "중역 목표 수정본 취합 송부",
+    "summary": "중역 자기 목표 설정서 수정본 취합 후 지주부문 HR 송부(재무는 FA, 전략은 VM팀 별도 취합, 직원목표는 자회사/BG 자체관리)",
+    "actor": "자회사/BG HR",
+    "timing": "2~3월",
+    "inputs": [
+      "자기 목표 설정서 수정본"
+    ],
+    "outputs": [],
+    "keywords": [
+      "중역",
+      "목표",
+      "수정본",
+      "취합",
+      "송부"
+    ],
+    "rel": [],
+    "src": "PM p.12",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.review-feedback.review",
+    "type": "task",
+    "parent": "pm.gs.review-feedback",
+    "label": "기능별 검토 및 Feedback 실시",
+    "summary": "FA 재무KPI, VM 전략KPI, HR 인재KPI 검토(중역은 지주, 직원은 자회사/BG), HR은 Monitoring Tool로 Cascading 비율·가중치 Balance·Target Level Overall Review",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [
+      "목표 설정서 수정본",
+      "Monitoring Tool"
+    ],
+    "outputs": [
+      "Feedback Point"
+    ],
+    "keywords": [
+      "기능",
+      "검토",
+      "Feedback",
+      "Cascading",
+      "가중치",
+      "Target"
+    ],
+    "rel": [],
+    "src": "PM p.12",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.confirm",
+    "type": "activity",
+    "parent": "pm.goal-setting",
+    "label": "목표 확정",
+    "summary": "목표 최종 수정/서명을 통한 확정 및 진행결과 Summary 작성",
+    "actor": "피평가자/1차평가자/2차평가자/HR",
+    "timing": "2~3월",
+    "inputs": [
+      "Feedback Point",
+      "목표 설정서 수정본"
+    ],
+    "outputs": [
+      "개인목표설정서 서명본",
+      "목표수립 진행결과 Summary"
+    ],
+    "keywords": [
+      "목표",
+      "확정",
+      "서명",
+      "Confirm"
+    ],
+    "rel": [],
+    "src": "PM p.13",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.confirm.finalize",
+    "type": "task",
+    "parent": "pm.gs.confirm",
+    "label": "목표 최종 수정 및 서명",
+    "summary": "기능별 Review 결과 반영 목표 최종 수정 후 직속 상사 송부(중역은 Hard Copy 서명 후 BG HR 제출)",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "Feedback Point"
+    ],
+    "outputs": [
+      "개인목표설정서 서명본"
+    ],
+    "keywords": [
+      "목표",
+      "최종",
+      "수정",
+      "서명"
+    ],
+    "rel": [],
+    "src": "PM p.13",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.confirm.sign1",
+    "type": "task",
+    "parent": "pm.gs.confirm",
+    "label": "1차 평가자 서명",
+    "summary": "1차 평가자가 피평가자 서명 개인목표설정서 최종 Review 후 서명",
+    "actor": "1차평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "개인목표설정서 서명본"
+    ],
+    "outputs": [],
+    "keywords": [
+      "1차",
+      "평가자",
+      "서명",
+      "Review"
+    ],
+    "rel": [],
+    "src": "PM p.13",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.confirm.sign2",
+    "type": "task",
+    "parent": "pm.gs.confirm",
+    "label": "2차 평가자 서명(Confirm)",
+    "summary": "2차 평가자 최종 Review 후 서명함으로써 목표 Confirm",
+    "actor": "2차평가자",
+    "timing": "2~3월",
+    "inputs": [
+      "개인목표설정서 서명본"
+    ],
+    "outputs": [],
+    "keywords": [
+      "2차",
+      "평가자",
+      "서명",
+      "Confirm",
+      "Review"
+    ],
+    "rel": [],
+    "src": "PM p.13",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.gs.confirm.collect-summary",
+    "type": "task",
+    "parent": "pm.gs.confirm",
+    "label": "목표 최종본 취합 및 Summary 작성",
+    "summary": "2차 평가자 Confirm 목표설정서 취합 및 누락 점검, 중역 서명본 지주부문 HR 전달, 목표수립 진행결과 Summary 작성/Report",
+    "actor": "BG/자회사 HR",
+    "timing": "2~3월",
+    "inputs": [
+      "개인목표설정서 서명본"
+    ],
+    "outputs": [
+      "목표수립 진행결과 Summary"
+    ],
+    "keywords": [
+      "목표",
+      "취합",
+      "Summary",
+      "작성",
+      "Report"
+    ],
+    "rel": [],
+    "src": "PM p.13",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.prepare",
+    "type": "activity",
+    "parent": "pm.mid-year-review",
+    "label": "Mid-year Review 준비",
+    "summary": "Review 일정/Guide 수립, HR/중역·팀장 교육, 본인 중간점검 양식 작성 및 사전 점검",
+    "actor": "HR/피평가자/1차평가자",
+    "timing": "7월",
+    "inputs": [
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "본인 중간 점검 양식",
+      "면담 일정 계획"
+    ],
+    "keywords": [
+      "중간점검",
+      "준비",
+      "일정",
+      "Guide"
+    ],
+    "rel": [
+      {
+        "to": "pm.myr.interview",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.14",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.prepare.plan",
+    "type": "task",
+    "parent": "pm.myr.prepare",
+    "label": "Review 일정 및 Guide 수립",
+    "summary": "Mid-year Review 운영 계획 수립, 자회사/BG HR 설명회·중역/팀장 Training, 2분기 QBR 연계 일정 계획",
+    "actor": "HR",
+    "timing": "7월",
+    "inputs": [],
+    "outputs": [
+      "Mid-year Review 운영 계획"
+    ],
+    "keywords": [
+      "일정",
+      "Guide",
+      "수립",
+      "설명회",
+      "Training",
+      "QBR"
+    ],
+    "rel": [],
+    "src": "PM p.15",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.prepare.self-check",
+    "type": "task",
+    "parent": "pm.myr.prepare",
+    "label": "본인 중간점검 양식 작성",
+    "summary": "평가항목별 본인 중간 실적 집계 및 중간 점검 양식 정리 후 직속상사 e-mail 발송",
+    "actor": "피평가자",
+    "timing": "7월",
+    "inputs": [
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "본인 중간 점검 양식"
+    ],
+    "keywords": [
+      "본인",
+      "중간점검",
+      "양식",
+      "실적",
+      "집계",
+      "작성"
+    ],
+    "rel": [],
+    "src": "PM p.15",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.prepare.pre-check",
+    "type": "task",
+    "parent": "pm.myr.prepare",
+    "label": "달성도 사전 점검 및 면담 일정 Arrange",
+    "summary": "피평가자 작성 중간점검 양식 기반 주요 면담 Point 사전 정리, 면담 일정 계획 작성하여 BG HR 송부",
+    "actor": "1차평가자",
+    "timing": "7월",
+    "inputs": [
+      "본인 중간 점검 양식"
+    ],
+    "outputs": [
+      "면담 일정 계획",
+      "면담 Point"
+    ],
+    "keywords": [
+      "달성도",
+      "사전",
+      "점검",
+      "면담",
+      "일정"
+    ],
+    "rel": [],
+    "src": "PM p.15",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.interview",
+    "type": "activity",
+    "parent": "pm.mid-year-review",
+    "label": "중간 점검 면담",
+    "summary": "평가자-피평가자 간 1:1 중간 점검 면담 실시",
+    "actor": "평가자/피평가자",
+    "timing": "7월",
+    "inputs": [
+      "본인 중간 점검 양식",
+      "면담 Point"
+    ],
+    "outputs": [],
+    "keywords": [
+      "중간점검",
+      "면담",
+      "1:1"
+    ],
+    "rel": [
+      {
+        "to": "pm.myr.result",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.15",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.interview.conduct",
+    "type": "task",
+    "parent": "pm.myr.interview",
+    "label": "1:1 중간 점검 면담 실시",
+    "summary": "피평가자가 중간점검 양식 토대로 목표 달성도·부진원인·지원필요사항 설명, 평가자 의견 제시 및 개선 방향/지원 사항 논의",
+    "actor": "평가자/피평가자",
+    "timing": "7월",
+    "inputs": [
+      "본인 중간 점검 양식",
+      "면담 Point"
+    ],
+    "outputs": [],
+    "keywords": [
+      "면담",
+      "실시",
+      "달성도",
+      "부진",
+      "개선",
+      "지원"
+    ],
+    "rel": [],
+    "src": "PM p.16",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.interview.monitor",
+    "type": "task",
+    "parent": "pm.myr.interview",
+    "label": "면담 참관 및 진행 현황 Monitoring",
+    "summary": "BG장-중역, 중역-팀장 면담 일부 Sampling 참관, 진행 상황 Monitoring 및 이슈 점검",
+    "actor": "자회사/BG HR",
+    "timing": "7월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "면담",
+      "참관",
+      "진행",
+      "Monitoring"
+    ],
+    "rel": [],
+    "src": "PM p.16",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.result",
+    "type": "activity",
+    "parent": "pm.mid-year-review",
+    "label": "결과 정리 및 취합",
+    "summary": "중간 점검 면담 결과 정리·취합 및 BG장/CEO 보고",
+    "actor": "평가자/HR",
+    "timing": "7월",
+    "inputs": [
+      "본인 중간 점검 양식"
+    ],
+    "outputs": [
+      "Mid-year Review 결과 정리"
+    ],
+    "keywords": [
+      "결과",
+      "정리",
+      "취합",
+      "보고"
+    ],
+    "rel": [],
+    "src": "PM p.17",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.result.record",
+    "type": "task",
+    "parent": "pm.myr.result",
+    "label": "면담 결과 정리 및 송부",
+    "summary": "평가자가 중간 점검 면담 결과(현 수준 의견, 주요 협의 내용)를 정리하여 BG HR e-mail 송부",
+    "actor": "평가자",
+    "timing": "7월",
+    "inputs": [
+      "본인 중간 점검 양식"
+    ],
+    "outputs": [
+      "Mid-year Review 결과 정리"
+    ],
+    "keywords": [
+      "면담",
+      "결과",
+      "정리",
+      "송부"
+    ],
+    "rel": [],
+    "src": "PM p.17",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.myr.result.consolidate",
+    "type": "task",
+    "parent": "pm.myr.result",
+    "label": "결과 취합 및 보고",
+    "summary": "평가자별 결과 양식 취합하여 진행경과·목표달성도·Issue 요약 정리, 자회사/지주부문 HR 송부 및 BG장/CEO 보고",
+    "actor": "자회사/BG HR",
+    "timing": "7월",
+    "inputs": [
+      "Mid-year Review 결과 정리"
+    ],
+    "outputs": [
+      "Mid-year Review 결과 보고"
+    ],
+    "keywords": [
+      "결과",
+      "취합",
+      "보고",
+      "요약"
+    ],
+    "rel": [],
+    "src": "PM p.17",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.guideline",
+    "type": "activity",
+    "parent": "pm.evaluation",
+    "label": "평가 지침 수립 및 안내",
+    "summary": "평가/Feedback 운영 계획 수립 및 자회사/BG·중역/팀장 대상 평가 안내(Feedback 지침 포함)",
+    "actor": "HR",
+    "timing": "12~1월",
+    "inputs": [],
+    "outputs": [
+      "평가 운영 계획",
+      "평가 Guide"
+    ],
+    "keywords": [
+      "평가",
+      "지침",
+      "수립",
+      "안내"
+    ],
+    "rel": [
+      {
+        "to": "pm.ev.self",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.18",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.guideline.plan",
+    "type": "task",
+    "parent": "pm.ev.guideline",
+    "label": "평가 운영 계획 수립 및 보고",
+    "summary": "평가/Feedback 진행 일정·Guide 운영 계획 수립 및 Top Team 보고, FA/VM과 재무/전략 KPI 평가 Guide 협의",
+    "actor": "지주부문 HR",
+    "timing": "12~1월",
+    "inputs": [],
+    "outputs": [
+      "평가 운영 계획"
+    ],
+    "keywords": [
+      "평가",
+      "운영",
+      "계획",
+      "수립",
+      "보고",
+      "협의"
+    ],
+    "rel": [],
+    "src": "PM p.19",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.guideline.brief",
+    "type": "task",
+    "parent": "pm.ev.guideline",
+    "label": "중역/팀장 대상 평가 Guide 배포 및 Training",
+    "summary": "자회사/BG HR 설명회·Guide 배포 및 CEO/BG장 보고, 중역/팀장 평가 Guide 배포·Training(Milestone·운영 Tip 중심)",
+    "actor": "자회사/BG HR",
+    "timing": "12~1월",
+    "inputs": [
+      "평가 운영 계획"
+    ],
+    "outputs": [
+      "평가 Guide"
+    ],
+    "keywords": [
+      "중역",
+      "팀장",
+      "평가",
+      "Guide",
+      "배포",
+      "Training"
+    ],
+    "rel": [],
+    "src": "PM p.19",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.self",
+    "type": "activity",
+    "parent": "pm.evaluation",
+    "label": "자기 평가",
+    "summary": "피평가자가 평가항목별 실적 집계 및 자기 평가서 작성",
+    "actor": "피평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "개인목표설정서",
+      "실적 자료"
+    ],
+    "outputs": [
+      "자기 평가서"
+    ],
+    "keywords": [
+      "자기",
+      "평가",
+      "실적",
+      "작성"
+    ],
+    "rel": [
+      {
+        "to": "pm.ev.supervisor",
+        "type": "precede"
+      },
+      {
+        "to": "pm.gs.self-goal",
+        "type": "measure"
+      }
+    ],
+    "src": "PM p.20",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.self.collect-data",
+    "type": "task",
+    "parent": "pm.ev.self",
+    "label": "평가항목별 실적 자료 집계",
+    "summary": "MBO 목표 달성도 평가 위한 실적자료 집계·분석, 유관팀 협조 요청 및 자료 취합",
+    "actor": "피평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "실적 자료"
+    ],
+    "keywords": [
+      "평가항목",
+      "실적",
+      "자료",
+      "집계",
+      "분석"
+    ],
+    "rel": [],
+    "src": "PM p.20",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.self.write",
+    "type": "task",
+    "parent": "pm.ev.self",
+    "label": "자기 평가서 작성",
+    "summary": "목표 설정서 기준 항목별 목표수준 달성도에 따라 점수·가중치 평점 산정, 달성근거·부진원인 평가 의견 작성",
+    "actor": "피평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "개인목표설정서",
+      "실적 자료"
+    ],
+    "outputs": [
+      "자기 평가서"
+    ],
+    "keywords": [
+      "자기",
+      "평가서",
+      "작성",
+      "점수",
+      "가중치",
+      "평점"
+    ],
+    "rel": [],
+    "src": "PM p.20",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.self.submit",
+    "type": "task",
+    "parent": "pm.ev.self",
+    "label": "자기평가서 송부",
+    "summary": "직속상사에게 자기평가서 e-mail 발송(중역은 BG Controller/전략팀/HR에 Soft Copy 발송)",
+    "actor": "피평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "자기 평가서"
+    ],
+    "outputs": [],
+    "keywords": [
+      "자기평가서",
+      "송부",
+      "발송"
+    ],
+    "rel": [],
+    "src": "PM p.20",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.supervisor",
+    "type": "activity",
+    "parent": "pm.evaluation",
+    "label": "상사 평가",
+    "summary": "1차 평가자가 자기 평가 결과 검토 및 상사 평가 실시",
+    "actor": "1차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "자기 평가서",
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "상사 평가 결과"
+    ],
+    "keywords": [
+      "상사",
+      "평가",
+      "검토",
+      "실시"
+    ],
+    "rel": [
+      {
+        "to": "pm.ev.calibration",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.21",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.supervisor.review",
+    "type": "task",
+    "parent": "pm.ev.supervisor",
+    "label": "자기 평가 결과 검토",
+    "summary": "피평가자 집계 실적자료 정확성·신뢰성 검토, 실적자료 근거 자기평가 결과 타당성 검토",
+    "actor": "1차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "자기 평가서",
+      "실적 자료"
+    ],
+    "outputs": [],
+    "keywords": [
+      "자기",
+      "평가",
+      "검토",
+      "타당성"
+    ],
+    "rel": [],
+    "src": "PM p.21",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.supervisor.evaluate",
+    "type": "task",
+    "parent": "pm.ev.supervisor",
+    "label": "상사 평가 실시",
+    "summary": "목표 설정서 기준 항목별 달성도에 따라 점수·가중치 평점 산정, 정성평가 점수 부여 및 근거 작성, 차상위자/BG HR 발송",
+    "actor": "1차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "자기 평가서",
+      "개인목표설정서"
+    ],
+    "outputs": [
+      "상사 평가 결과"
+    ],
+    "keywords": [
+      "상사",
+      "평가",
+      "실시",
+      "평점",
+      "정성평가"
+    ],
+    "rel": [],
+    "src": "PM p.21",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.calibration",
+    "type": "activity",
+    "parent": "pm.evaluation",
+    "label": "Calibration",
+    "summary": "2차 평가자의 평가 결과 Review 및 Calibration Meeting 실시",
+    "actor": "1차/2차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "상사 평가 결과",
+      "HR Review Report"
+    ],
+    "outputs": [
+      "최종 평가 결과 확정안"
+    ],
+    "keywords": [
+      "Calibration",
+      "Review",
+      "조정",
+      "Meeting"
+    ],
+    "rel": [
+      {
+        "to": "pm.ev.confirm",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.22",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.calibration.prepare",
+    "type": "task",
+    "parent": "pm.ev.calibration",
+    "label": "Calibration 준비",
+    "summary": "Calibration 일정 수립·안내, 취합 상사평가 결과 검토 및 HR Review Report 작성하여 Calibrator 전달",
+    "actor": "자회사/BG HR",
+    "timing": "12~1월",
+    "inputs": [
+      "상사 평가 결과"
+    ],
+    "outputs": [
+      "HR Review Report",
+      "Calibration Guideline"
+    ],
+    "keywords": [
+      "Calibration",
+      "준비",
+      "검토",
+      "Report"
+    ],
+    "rel": [],
+    "src": "PM p.22",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.calibration.review",
+    "type": "task",
+    "parent": "pm.ev.calibration",
+    "label": "차상위자 평가 결과 Review",
+    "summary": "각 평가자별 항목별 평가 결과 및 세부 근거 타당성 Review, Issue 발생 시 재평가/조정 요청",
+    "actor": "2차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "상사 평가 결과",
+      "HR Review Report"
+    ],
+    "outputs": [],
+    "keywords": [
+      "차상위자",
+      "평가",
+      "Review",
+      "조정"
+    ],
+    "rel": [],
+    "src": "PM p.22",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.calibration.meeting",
+    "type": "task",
+    "parent": "pm.ev.calibration",
+    "label": "Calibration Meeting 실시",
+    "summary": "조정 필요 시 1차-2차 평가자 간 Calibration Meeting 실시, HR 배석하여 검토 의견 제시 및 평가 결과 확정 지원",
+    "actor": "1차/2차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "상사 평가 결과",
+      "HR Review Report"
+    ],
+    "outputs": [
+      "최종 평가 결과 확정안"
+    ],
+    "keywords": [
+      "Calibration",
+      "Meeting",
+      "실시",
+      "조정",
+      "확정"
+    ],
+    "rel": [],
+    "src": "PM p.22",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.confirm",
+    "type": "activity",
+    "parent": "pm.evaluation",
+    "label": "평가 결과 확정/보고",
+    "summary": "평가 점수 확정 및 평가 등급 부여, BG장/CEO 보고",
+    "actor": "2차평가자/HR",
+    "timing": "12~1월",
+    "inputs": [
+      "최종 평가 결과 확정안"
+    ],
+    "outputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "keywords": [
+      "평가",
+      "결과",
+      "확정",
+      "등급",
+      "보고"
+    ],
+    "rel": [],
+    "src": "PM p.23",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.confirm.grade",
+    "type": "task",
+    "parent": "pm.ev.confirm",
+    "label": "평가 점수 확정 및 등급 부여",
+    "summary": "1차 상사평가 조정·Calibration 결과 반영 점수 확정, 부문별 평가등급 인원비율 Guide 준수하여 개인별 등급 부여",
+    "actor": "2차평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "최종 평가 결과 확정안"
+    ],
+    "outputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "keywords": [
+      "평가",
+      "점수",
+      "확정",
+      "등급",
+      "부여",
+      "비율"
+    ],
+    "rel": [],
+    "src": "PM p.23",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.ev.confirm.report",
+    "type": "task",
+    "parent": "pm.ev.confirm",
+    "label": "평가 결과 정리 및 보고",
+    "summary": "확정 평가 결과 BG HR 발송, MBO 평가 결과 정리하여 BG장/CEO 보고 및 지주부문 HR에 중역 평가 결과 전달",
+    "actor": "자회사/BG HR",
+    "timing": "12~1월",
+    "inputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "outputs": [
+      "MBO 평가 결과"
+    ],
+    "keywords": [
+      "평가",
+      "결과",
+      "정리",
+      "보고",
+      "전달"
+    ],
+    "rel": [],
+    "src": "PM p.23",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.prepare",
+    "type": "activity",
+    "parent": "pm.feedback",
+    "label": "Feedback 준비",
+    "summary": "평가자 대상 Feedback 안내, 면담 계획 수립 및 Feedback Note 작성",
+    "actor": "HR/평가자",
+    "timing": "1월",
+    "inputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "outputs": [
+      "Feedback Note",
+      "Feedback 면담 계획"
+    ],
+    "keywords": [
+      "Feedback",
+      "준비",
+      "면담",
+      "계획"
+    ],
+    "rel": [
+      {
+        "to": "pm.fb.conduct",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.24",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.prepare.notify",
+    "type": "task",
+    "parent": "pm.fb.prepare",
+    "label": "평가자 대상 Feedback 안내",
+    "summary": "Feedback 일정·양식·면담 Guideline 송부, Calibration·자회사/지주 검토로 확정된 평가 결과 평가자 재송부",
+    "actor": "자회사/BG HR",
+    "timing": "1월",
+    "inputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "outputs": [
+      "Feedback 양식",
+      "Feedback 면담 Guideline"
+    ],
+    "keywords": [
+      "평가자",
+      "Feedback",
+      "안내",
+      "송부"
+    ],
+    "rel": [],
+    "src": "PM p.24",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.prepare.plan",
+    "type": "task",
+    "parent": "pm.fb.prepare",
+    "label": "Feedback 면담 계획 수립",
+    "summary": "피평가자 별 1:1 Feedback 면담 계획 수립 후 BG HR 송부",
+    "actor": "평가자",
+    "timing": "1월",
+    "inputs": [],
+    "outputs": [
+      "Feedback 면담 계획"
+    ],
+    "keywords": [
+      "Feedback",
+      "면담",
+      "계획",
+      "수립"
+    ],
+    "rel": [],
+    "src": "PM p.24",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.prepare.note",
+    "type": "task",
+    "parent": "pm.fb.prepare",
+    "label": "Feedback Note 작성",
+    "summary": "평가 결과 최종 검토 및 종합적 검토 후 Feedback Note 작성(조직성과, 개인성과 Category별 점수, 성과급 지급률, Feedback Comment)",
+    "actor": "평가자",
+    "timing": "1월",
+    "inputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "outputs": [
+      "Feedback Note"
+    ],
+    "keywords": [
+      "Feedback",
+      "Note",
+      "작성",
+      "성과급",
+      "Comment"
+    ],
+    "rel": [],
+    "src": "PM p.24",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.conduct",
+    "type": "activity",
+    "parent": "pm.feedback",
+    "label": "Feedback 실시",
+    "summary": "평가자-피평가자 간 1:1 Feedback Meeting 실시",
+    "actor": "평가자/피평가자",
+    "timing": "1월",
+    "inputs": [
+      "Feedback 양식",
+      "자기 평가서",
+      "최종 평가 점수"
+    ],
+    "outputs": [],
+    "keywords": [
+      "Feedback",
+      "실시",
+      "Meeting",
+      "1:1"
+    ],
+    "rel": [
+      {
+        "to": "pm.fb.result",
+        "type": "precede"
+      },
+      {
+        "to": "pm.ev.confirm",
+        "type": "feedback"
+      }
+    ],
+    "src": "PM p.26",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.conduct.meeting",
+    "type": "task",
+    "parent": "pm.fb.conduct",
+    "label": "1:1 Feedback Meeting 실시",
+    "summary": "Feedback 양식 중심 평가결과·성과급 지급률 산정 근거 설명, 자기평가 Gap 큰 항목·미달성 KPI 논의, 차년도 목표 고려사항 협의",
+    "actor": "평가자/피평가자",
+    "timing": "1월",
+    "inputs": [
+      "Feedback 양식",
+      "자기 평가서",
+      "최종 평가 점수"
+    ],
+    "outputs": [],
+    "keywords": [
+      "Feedback",
+      "Meeting",
+      "실시",
+      "성과급",
+      "협의"
+    ],
+    "rel": [],
+    "src": "PM p.26",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.conduct.monitor",
+    "type": "task",
+    "parent": "pm.fb.conduct",
+    "label": "Feedback Meeting 진행 현황 Monitoring",
+    "summary": "평가자별 제출 Feedback Meeting 일정 계획 대비 진행 상황 확인",
+    "actor": "자회사/BG HR",
+    "timing": "1월",
+    "inputs": [
+      "Feedback 면담 계획"
+    ],
+    "outputs": [],
+    "keywords": [
+      "Feedback",
+      "Meeting",
+      "진행",
+      "Monitoring"
+    ],
+    "rel": [],
+    "src": "PM p.26",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.result",
+    "type": "activity",
+    "parent": "pm.feedback",
+    "label": "Feedback 결과 정리",
+    "summary": "Feedback Meeting 결과 정리·취합 및 BG장/CEO 보고",
+    "actor": "평가자/HR",
+    "timing": "1월",
+    "inputs": [],
+    "outputs": [
+      "Feedback Meeting 결과 정리"
+    ],
+    "keywords": [
+      "Feedback",
+      "결과",
+      "정리",
+      "취합"
+    ],
+    "rel": [],
+    "src": "PM p.27",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.result.record",
+    "type": "task",
+    "parent": "pm.fb.result",
+    "label": "Feedback Meeting 결과 정리 송부",
+    "summary": "피평가자별 평가 점수 결과·Meeting 실시 여부·특이사항 종합 정리하여 BG HR e-mail 송부",
+    "actor": "평가자",
+    "timing": "1월",
+    "inputs": [],
+    "outputs": [
+      "Feedback Meeting 결과 정리"
+    ],
+    "keywords": [
+      "Feedback",
+      "결과",
+      "정리",
+      "송부"
+    ],
+    "rel": [],
+    "src": "PM p.27",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.fb.result.consolidate",
+    "type": "task",
+    "parent": "pm.fb.result",
+    "label": "Feedback 결과 취합 및 보고",
+    "summary": "평가자별 Feedback Meeting 결과 취합하여 Report 작성, 지주부문 HR 송부 및 BG장/CEO 보고",
+    "actor": "자회사/BG HR",
+    "timing": "1월",
+    "inputs": [
+      "Feedback Meeting 결과 정리"
+    ],
+    "outputs": [
+      "Feedback 결과 Report"
+    ],
+    "keywords": [
+      "Feedback",
+      "결과",
+      "취합",
+      "보고"
+    ],
+    "rel": [],
+    "src": "PM p.27",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.role.evaluatee",
+    "type": "role",
+    "parent": "pm.process",
+    "label": "피평가자",
+    "summary": "자기 목표 수립, 본인 중간점검, 자기 평가를 수행하는 평가 대상자",
+    "actor": "피평가자",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "피평가자"
+    ],
+    "rel": [],
+    "src": "PM p.5",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.role.evaluator1",
+    "type": "role",
+    "parent": "pm.process",
+    "label": "1차 평가자",
+    "summary": "직속 상사로서 상사 평가 실시 및 목표 1차 서명 수행",
+    "actor": "1차평가자",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "1차",
+      "평가자"
+    ],
+    "rel": [],
+    "src": "PM p.17",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.role.evaluator2",
+    "type": "role",
+    "parent": "pm.process",
+    "label": "2차 평가자",
+    "summary": "조정/승인자로서 목표 Confirm, 평가 결과 Review, Calibration, 등급 확정 수행",
+    "actor": "2차평가자",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "2차",
+      "평가자"
+    ],
+    "rel": [],
+    "src": "PM p.18",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.role.hr",
+    "type": "role",
+    "parent": "pm.process",
+    "label": "HR",
+    "summary": "지침 수립·안내, Facilitating, 취합·Monitoring·보고를 담당(지주부문/자회사/BG HR)",
+    "actor": "HR",
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "HR",
+      "지주부문",
+      "자회사",
+      "BG"
+    ],
+    "rel": [],
+    "src": "PM p.8",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.goal-setting-sheet",
+    "type": "output",
+    "parent": "pm.gs.self-goal",
+    "label": "개인별 목표 설정서 (경영성과 평가서)",
+    "summary": "피평가자가 KPI·목표수준·가중치를 기재하는 핵심 목표 수립 Template(Excel 양식)",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "개인",
+      "목표",
+      "설정서",
+      "경영성과",
+      "평가서",
+      "Template"
+    ],
+    "rel": [],
+    "src": "PM p.29",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.exec-strategy-mbo",
+    "type": "output",
+    "parent": "pm.gs.self-goal.exec-strategy",
+    "label": "중역 전략과제 MBO 계획서",
+    "summary": "전략과제, 성공의 정의(중장기), KPI, Target, Action Plan을 기술하는 중역用 계획서",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "중역",
+      "전략과제",
+      "MBO",
+      "계획서"
+    ],
+    "rel": [],
+    "src": "PM p.30",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.milestone",
+    "type": "output",
+    "parent": "pm.gs.self-goal.exec-strategy",
+    "label": "추진과제 Milestone Template",
+    "summary": "전략과제별 KPI 달성을 위한 실행 계획을 시기별·일정별로 기입하는 중역用 Template",
+    "actor": "피평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "추진과제",
+      "Milestone",
+      "Template",
+      "일정"
+    ],
+    "rel": [],
+    "src": "PM p.31",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.cascading-matrix",
+    "type": "output",
+    "parent": "pm.gs.review-meeting",
+    "label": "Cascading Matrix",
+    "summary": "상위자 KPI와 피평가자 KPI Alignment 검토를 위한 목표 Cascading Matrix",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Cascading",
+      "Matrix",
+      "Alignment"
+    ],
+    "rel": [
+      {
+        "to": "pm.gs.self-goal",
+        "type": "cascade"
+      }
+    ],
+    "src": "PM p.40",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.review-checklist",
+    "type": "output",
+    "parent": "pm.gs.review-meeting",
+    "label": "목표 검토 Checklist",
+    "summary": "피평가자별 자기목표 수립 결과에 대한 Review Point Check용 Checklist",
+    "actor": "평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목표",
+      "검토",
+      "Checklist",
+      "Review"
+    ],
+    "rel": [],
+    "src": "PM p.39",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.review-result",
+    "type": "output",
+    "parent": "pm.gs.review-meeting",
+    "label": "목표검토회의 결과 정리 Template",
+    "summary": "중역/팀장은 BG HR, 팀원은 팀장이 작성하는 목표검토회의 결과 정리 Template",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목표검토회의",
+      "결과",
+      "정리",
+      "Template"
+    ],
+    "rel": [],
+    "src": "PM p.41",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.member-progress-check",
+    "type": "output",
+    "parent": "pm.gs.review-meeting",
+    "label": "팀원 목표 검토 회의 Progress Check Template",
+    "summary": "팀원 목표 검토 회의 결과 도출 이슈 및 Progress를 취합하는 Template(팀장 작성)",
+    "actor": "1차평가자",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "팀원",
+      "목표",
+      "검토",
+      "Progress",
+      "Check",
+      "Template"
+    ],
+    "rel": [],
+    "src": "PM p.42",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.gs-summary",
+    "type": "output",
+    "parent": "pm.gs.confirm",
+    "label": "목표수립 진행결과 Summary",
+    "summary": "중역 가중치 집계표, 개인별 목표설정서 취합, 진행경과·Monitoring 결과·이슈를 정리하는 Summary",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [
+      "개인별 목표 설정서"
+    ],
+    "outputs": [],
+    "keywords": [
+      "목표수립",
+      "진행결과",
+      "Summary",
+      "가중치",
+      "Monitoring"
+    ],
+    "rel": [],
+    "src": "PM p.43",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.myr-self-check",
+    "type": "output",
+    "parent": "pm.myr.prepare",
+    "label": "본인 중간 점검 Template",
+    "summary": "KPI별 상반기 실적·달성도·하반기 예상실적·연말 예상치·특이사항을 기입하는 피평가자 중간점검 양식",
+    "actor": "피평가자",
+    "timing": "7월",
+    "inputs": [
+      "개인목표설정서"
+    ],
+    "outputs": [],
+    "keywords": [
+      "본인",
+      "중간점검",
+      "Template",
+      "실적",
+      "달성도"
+    ],
+    "rel": [],
+    "src": "PM p.49",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.myr-result",
+    "type": "output",
+    "parent": "pm.myr.result",
+    "label": "Mid-year Review 결과 정리 Template",
+    "summary": "면담 결과(KPI 실적·달성도·하반기 목표·연말 예상치·협의 내용)를 기록하는 결과 정리 Template",
+    "actor": "평가자",
+    "timing": "7월",
+    "inputs": [
+      "본인 중간 점검 양식"
+    ],
+    "outputs": [],
+    "keywords": [
+      "Mid-year",
+      "Review",
+      "결과",
+      "정리",
+      "Template"
+    ],
+    "rel": [],
+    "src": "PM p.51",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.eval-sheet",
+    "type": "output",
+    "parent": "pm.ev.self",
+    "label": "평가 Template",
+    "summary": "정량/정성 평가항목별 점수·가중치 평점 산정 및 종합평점을 도출하는 평가 양식",
+    "actor": "피평가자",
+    "timing": "12~1월",
+    "inputs": [
+      "개인목표설정서",
+      "실적 자료"
+    ],
+    "outputs": [],
+    "keywords": [
+      "평가",
+      "Template",
+      "정량",
+      "정성",
+      "평점",
+      "종합"
+    ],
+    "rel": [],
+    "src": "PM p.53",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.qualitative-eval",
+    "type": "output",
+    "parent": "pm.ev.supervisor",
+    "label": "정성평가 근거 Template",
+    "summary": "정성평가 기준·항목별 세부항목 및 추진성과·Output 기반 점수 근거를 기술하는 양식(중역用/직원用)",
+    "actor": "1차평가자",
+    "timing": "12~1월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "정성평가",
+      "근거",
+      "Template",
+      "Output"
+    ],
+    "rel": [],
+    "src": "PM p.54",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.hr-review-report",
+    "type": "output",
+    "parent": "pm.ev.calibration",
+    "label": "BG HR Review Report",
+    "summary": "MBO 평가 점수 종합정리 및 HR Review 의견을 기술하여 Calibrator에게 전달하는 양식",
+    "actor": "HR",
+    "timing": "12~1월",
+    "inputs": [
+      "상사 평가 결과"
+    ],
+    "outputs": [],
+    "keywords": [
+      "BG",
+      "HR",
+      "Review",
+      "Report",
+      "Calibrator"
+    ],
+    "rel": [],
+    "src": "PM p.56",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.grade-confirm",
+    "type": "output",
+    "parent": "pm.ev.confirm",
+    "label": "최종 평가 등급 확정 결과 정리 양식",
+    "summary": "Calibration을 거쳐 확정된 최종 평가 등급을 BG HR이 정리하는 양식",
+    "actor": "HR",
+    "timing": "12~1월",
+    "inputs": [
+      "최종 평가 결과 확정안"
+    ],
+    "outputs": [],
+    "keywords": [
+      "최종",
+      "평가",
+      "등급",
+      "확정",
+      "정리"
+    ],
+    "rel": [],
+    "src": "PM p.59",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.feedback-note",
+    "type": "output",
+    "parent": "pm.fb.prepare.note",
+    "label": "Feedback Note",
+    "summary": "KPI별 최종 평가 점수·등급, 성과급 지급률, 종합 Feedback Comment를 제시하는 면담 자료",
+    "actor": "평가자",
+    "timing": "1월",
+    "inputs": [
+      "최종 평가 점수",
+      "평가 등급"
+    ],
+    "outputs": [],
+    "keywords": [
+      "Feedback",
+      "Note",
+      "점수",
+      "등급",
+      "성과급",
+      "Comment"
+    ],
+    "rel": [],
+    "src": "PM p.60",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.tpl.feedback-result",
+    "type": "output",
+    "parent": "pm.fb.result",
+    "label": "Feedback Meeting 결과 정리 양식",
+    "summary": "평가자가 작성하여 BG HR이 취합하는 Feedback Meeting 결과 정리 양식",
+    "actor": "평가자",
+    "timing": "1월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Feedback",
+      "Meeting",
+      "결과",
+      "정리",
+      "양식"
+    ],
+    "rel": [],
+    "src": "PM p.62",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.data.exec-weight-table",
+    "type": "data",
+    "parent": "pm.gs.confirm",
+    "label": "중역 목표 수립 결과(가중치) 집계표",
+    "summary": "재무/전략/People Category별 비중 및 중역 Level/Function별 가중치를 기록하는 Excel 집계표",
+    "actor": "HR",
+    "timing": "2~3월",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "중역",
+      "목표",
+      "가중치",
+      "집계표",
+      "Function"
+    ],
+    "rel": [],
+    "src": "PM p.43",
+    "_origin": "pm_nodes_1.json"
+  },
+  {
+    "id": "pm.template.goalsummary",
+    "type": "output",
+    "parent": "pm.goal",
+    "label": "목표수립 진행결과 Summary Template",
+    "summary": "목표수립 진행현황·Monitoring결과·이슈/건의사항을 요약하는 보고 양식",
+    "actor": "HR",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "BG장-중역-팀장-팀원 일정진행 결과",
+      "Monitoring 결과"
+    ],
+    "outputs": [
+      "진행결과 요약",
+      "세부 결과 및 특이사항",
+      "이슈/그룹 건의사항 정리"
+    ],
+    "keywords": [
+      "목표수립",
+      "진행결과",
+      "요약",
+      "Monitoring",
+      "이슈",
+      "건의사항"
+    ],
+    "rel": [
+      {
+        "to": "pm.goal",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.72",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.template.midyear",
+    "type": "output",
+    "parent": "pm.midyear",
+    "label": "Mid-year Review Template",
+    "summary": "본인 중간점검 및 Mid-year Review 결과 정리 양식",
+    "actor": "피평가자/평가자",
+    "timing": "중간점검(7월)",
+    "inputs": [
+      "연초 수립 목표"
+    ],
+    "outputs": [
+      "본인 중간 점검",
+      "Mid-year Review 결과 정리"
+    ],
+    "keywords": [
+      "중간점검",
+      "Review",
+      "본인",
+      "점검",
+      "결과",
+      "정리"
+    ],
+    "rel": [
+      {
+        "to": "pm.midyear",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.75",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.template.eval",
+    "type": "output",
+    "parent": "pm.eval",
+    "label": "평가 Template",
+    "summary": "경영성과 평가서·정성평가 근거기술 양식·BG HR Review Report 등 평가 단계 양식 집합",
+    "actor": "평가자/HR/Calibrator",
+    "timing": "평가(12~1월)",
+    "inputs": [
+      "목표 대비 실적",
+      "정성평가 근거"
+    ],
+    "outputs": [
+      "경영성과 평가서",
+      "정성평가 근거 기술 양식(중역用/직원用)",
+      "BG HR Review Report(Calibrator 전달用)",
+      "BG HR Review Report(최종평가등급 확정 결과 정리 및 보고用)"
+    ],
+    "keywords": [
+      "평가",
+      "경영성과",
+      "정성평가",
+      "근거",
+      "Review",
+      "Report",
+      "등급",
+      "확정"
+    ],
+    "rel": [
+      {
+        "to": "pm.eval",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.77-81",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.template.eval.qualitative",
+    "type": "data",
+    "parent": "pm.template.eval",
+    "label": "정성평가 근거 기술 양식(중역用)",
+    "summary": "사업 포트폴리오 변화·참여 사업영역 경쟁력·재무관리 효율성 등 정성평가 근거 기술 항목",
+    "actor": "중역",
+    "timing": "평가(12~1월)",
+    "inputs": [],
+    "outputs": [
+      "정성평가 근거"
+    ],
+    "keywords": [
+      "정성평가",
+      "근거",
+      "포트폴리오",
+      "경쟁력",
+      "재무관리",
+      "효율성"
+    ],
+    "rel": [
+      {
+        "to": "pm.template.eval",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.78",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.template.feedback",
+    "type": "output",
+    "parent": "pm.feedback",
+    "label": "Feedback Template",
+    "summary": "Feedback Note 및 Feedback 결과 정리 양식",
+    "actor": "평가자",
+    "timing": "Feedback(1월)",
+    "inputs": [
+      "최종평가 결과"
+    ],
+    "outputs": [
+      "Feedback Note",
+      "Feedback 결과 정리"
+    ],
+    "keywords": [
+      "Feedback",
+      "Note",
+      "결과",
+      "정리"
+    ],
+    "rel": [
+      {
+        "to": "pm.feedback",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.82-83",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips",
+    "type": "phase",
+    "parent": null,
+    "label": "Part 2: 운영 Tips",
+    "summary": "목표수립·Mid-year Review·평가·Feedback 각 단계의 실무 운영 Tip 및 상세 Guide 모음",
+    "actor": "평가자/HR",
+    "timing": "연중",
+    "inputs": [],
+    "outputs": [
+      "운영 Tip",
+      "FAQ"
+    ],
+    "keywords": [
+      "운영",
+      "Tip",
+      "Guide",
+      "FAQ"
+    ],
+    "rel": [],
+    "src": "PM p.85-86",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal",
+    "type": "phase",
+    "parent": "pm.tips",
+    "label": "목표 수립 운영 Tip",
+    "summary": "KPI Pooling & Selection, 계층별 Cascading, 가중치/Target 설정, 목표검토 회의, HR 목표검토 및 Feedback Guide로 구성된 목표수립 단계 운영 가이드",
+    "actor": "평가자/HR",
+    "timing": "목표수립(2~3월)",
+    "inputs": [],
+    "outputs": [
+      "목표수립 운영 Guide"
+    ],
+    "keywords": [
+      "목표",
+      "수립",
+      "운영",
+      "Tip",
+      "Cascading",
+      "가중치"
+    ],
+    "rel": [
+      {
+        "to": "pm.goal",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.86",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool",
+    "type": "activity",
+    "parent": "pm.tips.goal",
+    "label": "1. KPI Pooling & Selection",
+    "summary": "조직·개인별로 적합한 목표와 KPI를 3가지 방법론으로 도출·선정·검증하는 활동",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "조직/개인 업무 유형·성격",
+      "대상고객"
+    ],
+    "outputs": [
+      "KPI Pool",
+      "선정 KPI"
+    ],
+    "keywords": [
+      "KPI",
+      "Pooling",
+      "Selection",
+      "도출",
+      "선정",
+      "검증"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.87-88",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.method",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool",
+    "label": "Goal Setting Method 3가지",
+    "summary": "Process/Function Charting(A), Customer Mapping Diagram(B는 Process), Cascading Method 등 목표·KPI 도출 3가지 방법론",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Goal",
+      "Setting",
+      "Method",
+      "Process",
+      "Function",
+      "Customer",
+      "Mapping",
+      "Cascading"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.88",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.method.process",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool.method",
+    "label": "Process/Function Charting",
+    "summary": "프로세스나 기능과 관련하여 목표를 설정하는 방식. 업무 프로세스의 종결에 따라 업무가 완성되는 조직에 적절",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "업무 프로세스/기능"
+    ],
+    "outputs": [
+      "단계별 성과활동",
+      "측정지점"
+    ],
+    "keywords": [
+      "Process",
+      "Function",
+      "Charting",
+      "프로세스",
+      "종결",
+      "성과활동"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.88",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.method.customer",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool.method",
+    "label": "Customer Mapping Diagram",
+    "summary": "고객의 needs와 제공해야 하는 것을 기준으로 목표를 설정하는 방식. 지원기능 팀(내부고객)에 적합, 대고객 활동의 최종 결과 중심으로 성과 정의",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "고객 needs"
+    ],
+    "outputs": [
+      "대고객 활동 결과 중심 성과정의"
+    ],
+    "keywords": [
+      "Customer",
+      "Mapping",
+      "Diagram",
+      "고객",
+      "needs",
+      "결과"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.88",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.method.cascading",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool.method",
+    "label": "Cascading Method",
+    "summary": "조직 전사 목표 달성을 위한 하위조직 핵심성공요소를 기준으로 목표를 설정하는 방식. 상위 전략목표가 명확하고 연계성 높을 때 적합, 영향도·Span of Control 감안",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "상위조직 전략목표"
+    ],
+    "outputs": [
+      "하위조직 핵심성공요소"
+    ],
+    "keywords": [
+      "Cascading",
+      "Method",
+      "전사",
+      "핵심성공요소",
+      "연계성",
+      "영향도",
+      "Span"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method",
+        "type": "contain"
+      },
+      {
+        "to": "pm.tips.goal.cascade",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.88",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.approach",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool",
+    "label": "KPI 도출 2-Step Approach",
+    "summary": "1st Step 전사목표 달성 위한 하위조직 핵심성공요소 도출(Top-down), 2nd Step 팀 업무 성격·대상고객에 따라 Process/Function 또는 Customer Mapping으로 팀 성과요소 도출·검토(Bottom-up)",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "전사 목표"
+    ],
+    "outputs": [
+      "하위조직 핵심성공요소",
+      "팀 성과요소"
+    ],
+    "keywords": [
+      "Step",
+      "핵심성공요소",
+      "도출",
+      "성과요소",
+      "Top-down",
+      "Bottom-up"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.89",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.cascading.steps",
+    "type": "task",
+    "parent": "pm.tips.goal.kpipool.method.cascading",
+    "label": "Cascading Method 단계별 방법",
+    "summary": "전사/상위조직 전략과제·평가지표·중점추진과제 검토→팀 Mission/업무분장과 연결된 핵심역할 결과수준 기술→Process/Function·Customer Map 도출과제와 동일 시 성과책임 배분 및 가중치 결정에 높은 중요도 적용",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "전사 전략과제",
+      "평가지표",
+      "중점추진과제",
+      "팀 Mission/업무분장"
+    ],
+    "outputs": [
+      "성과요소 연계",
+      "성과책임 배분",
+      "가중치 중요도"
+    ],
+    "keywords": [
+      "Cascading",
+      "전략과제",
+      "Mission",
+      "성과책임",
+      "배분",
+      "가중치",
+      "중요도"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method.cascading",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.90",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.cascading.pooling",
+    "type": "task",
+    "parent": "pm.tips.goal.kpipool.method.cascading",
+    "label": "Cascading 방식 KPI Pooling(재무/전략/운영)",
+    "summary": "재무성과는 VDT로 Key Value Driver·예비 재무 KPI 도출, 전략성과는 전략체계도로 전략과제 체계화 후 Key Driver·예비 전략 KPI 도출(전략적 중요도·개선용이성 기준 우선순위), 운영성과(Optional)는 기능영역별 Key Driver·예비 운영 KPI 도출(재무기여도·전략연계성 기준 선정)",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "회사 재무목표",
+      "경영계획 전략과제",
+      "기능영역(영업·생산·구매·서비스)"
+    ],
+    "outputs": [
+      "재무 KPI Pool",
+      "전략 KPI Pool",
+      "운영 KPI Pool"
+    ],
+    "keywords": [
+      "KPI",
+      "Pooling",
+      "재무",
+      "전략",
+      "운영",
+      "VDT",
+      "전략체계도",
+      "KeyDriver"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method.cascading",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.91",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.vdt",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool.method.cascading",
+    "label": "Value Driver Tree(VDT)",
+    "summary": "Cascading 방식으로 핵심성과동인을 도출하고 KPI Pool을 도출하는 방법론. 기본구성요소는 목표와 달성방안이며 달성방안은 MECE하게 목표가 구체화되도록 설정, 구체성 미흡 시 방안을 목표로 트리 연장",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "회사 재무성과(EVA, FCF 등)"
+    ],
+    "outputs": [
+      "Key Value Driver",
+      "예비 KPI Pool"
+    ],
+    "keywords": [
+      "ValueDriverTree",
+      "VDT",
+      "핵심성과동인",
+      "목표",
+      "달성방안",
+      "MECE"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method.cascading",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.92-95",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.process.steps",
+    "type": "task",
+    "parent": "pm.tips.goal.kpipool.method.process",
+    "label": "Process/Function Charting 단계별 방법",
+    "summary": "Step1 Value Chain으로부터 주요 Biz Process 또는 Main Function 도출, Step2 개인별 고유 핵심업무(Main Task) 도출, Step3 핵심성공요인(CSF) 정의, Step4 CSF별 성과수준 측정 KPI 도출. 기능 간 선후관계 불명확·독립적이면 프로세스 도출 불필요",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "Value Chain",
+      "조직 Biz Process/Main Function"
+    ],
+    "outputs": [
+      "Main Task",
+      "핵심성공요인(CSF)",
+      "KPI Pool"
+    ],
+    "keywords": [
+      "Process",
+      "Function",
+      "Charting",
+      "ValueChain",
+      "MainTask",
+      "CSF",
+      "KPI"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method.process",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.96-97",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.customer.steps",
+    "type": "task",
+    "parent": "pm.tips.goal.kpipool.method.customer",
+    "label": "Customer Mapping Diagram 단계별 방법",
+    "summary": "관련 고객 List-up 및 분류기준으로 Category화→대상고객별 조직단위 주요 역할·활동 기술→고객별 기대활동·결과 인지 시 기대수준 명시. 고객 종류 다양하고 동일 Quality/Service 미제공 시 적합",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "관련 고객 List"
+    ],
+    "outputs": [
+      "고객 Category",
+      "고객별 역할·활동·기대수준",
+      "KPI Pool"
+    ],
+    "keywords": [
+      "Customer",
+      "Mapping",
+      "고객",
+      "Category",
+      "역할",
+      "활동",
+      "기대수준"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.method.customer",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.98-99",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.smart",
+    "type": "concept",
+    "parent": "pm.tips.goal.kpipool",
+    "label": "SMART 목표 요건 / KPI 선정 시 고려사항",
+    "summary": "목표는 기간 내 달성 예상 결과의 양과 질로 구체화, 전사·BG 목표와 연계, 개인은 KPI 연관 3~5개 목표 설정. Specific·Measurable·Achievable·Realistic·Time-bound 충족. 리더십/기술개발 활동은 부적합",
+    "actor": "피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "KPI",
+      "상위조직 목표"
+    ],
+    "outputs": [
+      "SMART 목표(3~5개)"
+    ],
+    "keywords": [
+      "SMART",
+      "목표",
+      "Specific",
+      "Measurable",
+      "Achievable",
+      "Realistic",
+      "Time-bound",
+      "연계"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.100",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.validation",
+    "type": "task",
+    "parent": "pm.tips.goal.kpipool",
+    "label": "KPI 선정 및 검증(적정성 평가)",
+    "summary": "KPI Pool에 대해 적정성 평가 실시. 평가기준 중 최소 3개 이상 적용(전략연계성·측정가능성·통제가능성·목표설정용이성 등). 일반적으로 5~6개 내외 관리가능 개수 선정",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "KPI Pool"
+    ],
+    "outputs": [
+      "선정 KPI(5~6개)"
+    ],
+    "keywords": [
+      "KPI",
+      "선정",
+      "검증",
+      "적정성",
+      "전략연계성",
+      "측정가능성",
+      "통제가능성"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.101-102",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.kpipool.criteria",
+    "type": "data",
+    "parent": "pm.tips.goal.kpipool.validation",
+    "label": "KPI 선정 기준(Strategic/Measurable/Controllable)",
+    "summary": "전략연계성(전사·상위 KPI 연계 여부), 측정가능성(객관적 측정 가능 여부), 통제가능성(담당자 역할·책임 범위 내 통제 여부)을 기준으로 KPI 판단",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Strategic",
+      "Measurable",
+      "Controllable",
+      "전략연계성",
+      "측정가능성",
+      "통제가능성"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.kpipool.validation",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.102",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.cascade",
+    "type": "activity",
+    "parent": "pm.tips.goal",
+    "label": "2. 계층별 Cascading Guide",
+    "summary": "상위 목표를 Cascading하여 팀장·팀원의 목표를 수립하는 단계. 계층별 적합한 Cascading 방식을 이해하고 KPI 도출에 활용, 평가자의 목표설정 검증에도 활용",
+    "actor": "중역/팀장",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "상위 목표"
+    ],
+    "outputs": [
+      "팀장 KPI",
+      "팀원 KPI"
+    ],
+    "keywords": [
+      "계층",
+      "Cascading",
+      "팀장",
+      "팀원",
+      "KPI",
+      "도출"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.103",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.cascade.leader",
+    "type": "concept",
+    "parent": "pm.tips.goal.cascade",
+    "label": "팀장 KPI Cascading 5유형",
+    "summary": "①중역 KPI=팀장 KPI(직접 책임) ②간접부서로서 상위중역 성과 공유(중역KPI=∑팀장KPI) ③복수 팀 배분 KPI ④중역 KPI 일부 구성요소를 하위팀이 책임/Control(목표치≠팀장목표치) ⑤상위중역에 없으나 팀 차원 중요 KPI 별도 선정",
+    "actor": "중역",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "상위중역 목표"
+    ],
+    "outputs": [
+      "팀장 KPI",
+      "팀장 목표치"
+    ],
+    "keywords": [
+      "팀장",
+      "KPI",
+      "Cascading",
+      "직접책임",
+      "공유",
+      "배분",
+      "별도선정"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.cascade",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.104-105",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.cascade.bgteam",
+    "type": "concept",
+    "parent": "pm.tips.goal.cascade",
+    "label": "BG 직속팀장 KPI Cascading",
+    "summary": "BG 직속 팀 KPI는 BG장 KPI 외에 본부 지원부서 KPI를 Top-Down 방식으로 Cascading. ①BG장 KPI/목표치 Cascading(일반 팀장 방식과 동일) ②전사 지원부서 KPI 중 BG 직속팀 수행 필요 KPI Cascading",
+    "actor": "BG장",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "BG장 KPI",
+      "전사 지원부서 KPI"
+    ],
+    "outputs": [
+      "BG 직속팀 KPI"
+    ],
+    "keywords": [
+      "BG",
+      "직속팀장",
+      "KPI",
+      "Cascading",
+      "지원부서",
+      "Top-Down"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.cascade",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.106",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.cascade.member",
+    "type": "concept",
+    "parent": "pm.tips.goal.cascade",
+    "label": "팀원 KPI Cascading 5유형",
+    "summary": "①개인 혼자 담당(전체책임)→팀 KPI 그대로 Cascading ②그룹 업무(선임자 전체책임/팀원 일부책임) ③개인별 독립 책임→책임단위(지역·제품)별 Cascading ④긴밀 협업·독립역할 구분 어려움(협력수행)→팀원간 KPI·목표 공유 ⑤Staff 부서 간접영향 KPI(통제불가)→팀원 Level Cascading 안함이 원칙",
+    "actor": "팀장",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "팀 KPI"
+    ],
+    "outputs": [
+      "팀원 KPI"
+    ],
+    "keywords": [
+      "팀원",
+      "KPI",
+      "Cascading",
+      "책임",
+      "협력",
+      "공유",
+      "통제"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.cascade",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.107-108",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.cascade.member.verify",
+    "type": "task",
+    "parent": "pm.tips.goal.cascade",
+    "label": "팀원 Draft Goal 취합/검증",
+    "summary": "팀원 개개인의 Draft Goal 작성 후, 팀장은 이를 취합하여 팀 목표 달성 가능성 및 개인별 역할/책임 수준의 적정성 등을 중심으로 Goal Setting 적정성을 검증",
+    "actor": "팀장",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "팀원 Draft Goal"
+    ],
+    "outputs": [
+      "검증된 팀원 목표"
+    ],
+    "keywords": [
+      "Draft",
+      "Goal",
+      "취합",
+      "검증",
+      "적정성",
+      "달성가능성"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.cascade",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.109",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight",
+    "type": "activity",
+    "parent": "pm.tips.goal",
+    "label": "3. 가중치 / Target 설정 Tip",
+    "summary": "KPI 항목 도출 이후, KPI 항목별 가중치와 Target을 설정하는 단계. Target 설정 고려요인·방법, Data 분포별 분석방법, 가중치 설정 방법별 개념·장단점 활용",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "선정 KPI"
+    ],
+    "outputs": [
+      "KPI별 가중치",
+      "KPI별 Target"
+    ],
+    "keywords": [
+      "가중치",
+      "Target",
+      "설정",
+      "Tip",
+      "분석"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.110",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.target.factors",
+    "type": "concept",
+    "parent": "pm.tips.goal.weight",
+    "label": "Target 설정 고려요인",
+    "summary": "기대수준 설정 시 고려요인 - 과거실적추이(Historical Data), 벤치마킹(세계정상급·경쟁사·산업평균), 경영진 의지(전략적 Point·의지적 목표치), 내·외부 평가(고객 기대수준·조직 강약점), 직원 역량(고유 경험·Know-how)",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "과거 Data",
+      "경쟁사 실적",
+      "내부 Needs"
+    ],
+    "outputs": [],
+    "keywords": [
+      "Target",
+      "고려요인",
+      "과거실적",
+      "벤치마킹",
+      "경영진",
+      "의지",
+      "역량"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.111",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.target.method",
+    "type": "concept",
+    "parent": "pm.tips.goal.weight",
+    "label": "기준별 Targeting 방법",
+    "summary": "Benchmarking(경쟁사 상대성과 기반, 강약점 명확/자료수집 까다로움), VDT 세분화(가장 정밀/시간소요·복잡), 과거실적 변동범위 내 상향(명료·용이/전략연계 배제), 과거평균 크게 상회 혁신목표(획기적 성과/수용도 불리)",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "과거 실적 Data",
+      "경쟁사 성과"
+    ],
+    "outputs": [
+      "Target"
+    ],
+    "keywords": [
+      "Targeting",
+      "방법",
+      "Benchmarking",
+      "VDT",
+      "상향",
+      "혁신목표"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.112",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.target.dataanalysis",
+    "type": "data",
+    "parent": "pm.tips.goal.weight",
+    "label": "과거 Data 분포 유형별 분석방법",
+    "summary": "정규분포→평균·표준편차, 특정구간 집중분포→Median·Quantile, 일정값 중심 불규칙→Moving average(Window 크기 결정), 일정 Pattern 분포→Regression Model(함수식·예상값, RMSE 고려)",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "과거 Data"
+    ],
+    "outputs": [
+      "Targeting 기준"
+    ],
+    "keywords": [
+      "Data",
+      "분포",
+      "분석",
+      "정규분포",
+      "표준편차",
+      "Median",
+      "Quantile",
+      "MovingAverage",
+      "Regression",
+      "RMSE"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.113",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.target.capthreshold",
+    "type": "data",
+    "parent": "pm.tips.goal.weight",
+    "label": "Cap/Target/Threshold 설정 Guideline",
+    "summary": "Cap(현격한 초과달성, 원칙 Target 대비 120%, 감소형 지표는 80%), Target(충실 달성·경쟁사 대비 우위/대등), Threshold(미달이나 개선도, 원칙 Target 대비 90%, 감소형 지표는 110%)",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "Target"
+    ],
+    "outputs": [
+      "Cap",
+      "Target",
+      "Threshold"
+    ],
+    "keywords": [
+      "Cap",
+      "Target",
+      "Threshold",
+      "120",
+      "90",
+      "감소형",
+      "지표"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.114",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.weight.factors",
+    "type": "concept",
+    "parent": "pm.tips.goal.weight",
+    "label": "가중치 설정 Process 및 고려요인",
+    "summary": "Process: ①Category별 비중 결정(재무/전략/인재육성 KPI 간 비중, 장기전략-단기재무 Trade-off 고려, 그룹 기본 Guideline Range 제공) ②세부 KPI 비중 결정. 고려요인: 전략적 중요도 최우선, 조직 공헌도·업무 비중 종합 판단. 각 항목 최소 5% 이상, 일률적 동일 가중치 지양",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "선정 KPI",
+      "그룹 가중치 Guideline"
+    ],
+    "outputs": [
+      "Category별 비중",
+      "세부 KPI 비중"
+    ],
+    "keywords": [
+      "가중치",
+      "Process",
+      "Category",
+      "비중",
+      "전략적중요도",
+      "공헌도",
+      "5%"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.115",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.weight.method",
+    "type": "concept",
+    "parent": "pm.tips.goal.weight",
+    "label": "가중치 설정 방법(순위법/요소평가법/쌍대비교법)",
+    "summary": "순위법(전략적 중요도 우선순위 부여, 역환산 우선순위 비율로 가중치/단순·용이하나 중요도 차이 반영 어려움), 요소평가법(상대적 중요도 합계 100 평가/차이 반영 용이, 정교성 미흡), 쌍대비교법(2개씩 번갈아 전략적 중요도 판단, 점수합계 비율/정교하나 지표 많으면 비교 수 급증)",
+    "actor": null,
+    "timing": null,
+    "inputs": [
+      "선정 KPI"
+    ],
+    "outputs": [
+      "KPI별 가중치"
+    ],
+    "keywords": [
+      "가중치",
+      "순위법",
+      "요소평가법",
+      "쌍대비교법",
+      "전략적중요도",
+      "정교성"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.116",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.weight.rank",
+    "type": "task",
+    "parent": "pm.tips.goal.weight.weight.method",
+    "label": "순위법/요소평가법 가중치 설정 절차",
+    "summary": "순위법: ①전략적 중요도 측면 지표 우선순위 부여 ②역으로 환산된 환산순위 부여(환산순위=최소순위+최대순위-해당지표순위) ③우선순위 합계 비율로 가중치 설정(가중치=환산순위/순위합계x100)",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "선정 KPI"
+    ],
+    "outputs": [
+      "KPI별 가중치"
+    ],
+    "keywords": [
+      "순위법",
+      "요소평가법",
+      "환산순위",
+      "우선순위",
+      "가중치",
+      "합계"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight.weight.method",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.117",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.weight.weight.pairwise",
+    "type": "task",
+    "parent": "pm.tips.goal.weight.weight.method",
+    "label": "쌍대비교법 가중치 설정 절차",
+    "summary": "가로·세로축에 지표 기입→2개씩 번갈아 전략적 평가점수 부여(가로기준 세로평가: 중요3·동일2·덜중요1)→지표별 평가점수 합계→총점수 합계 대비 비율로 가중치 결정",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "선정 KPI"
+    ],
+    "outputs": [
+      "KPI별 가중치"
+    ],
+    "keywords": [
+      "쌍대비교법",
+      "평가점수",
+      "중요",
+      "동일",
+      "합계",
+      "가중치"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.weight.weight.method",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.118",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.review",
+    "type": "activity",
+    "parent": "pm.tips.goal",
+    "label": "4. 목표 검토 회의 진행 Tip",
+    "summary": "자기 목표 설정 이후 평가자-피평가자 간 목표 검토 단계. 단계별 Check Point로 면담 유도, 피평가자 질문 유형별 대응방법 활용",
+    "actor": "평가자/피평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "피평가자 자기 목표"
+    ],
+    "outputs": [
+      "확정 목표"
+    ],
+    "keywords": [
+      "목표",
+      "검토",
+      "회의",
+      "면담",
+      "Tip",
+      "확정"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.119",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.review.stages",
+    "type": "concept",
+    "parent": "pm.tips.goal.review",
+    "label": "목표검토 회의 단계별 면담 포인트",
+    "summary": "①피평가자 설명(적극 경청, '왜 그 목표 설정?' 질문) ②평가자 점검(조직목표 적합성·목표별 역할 부여·달성 시 팀목표 달성 여부, 목표 Cascading Matrix 활용 검증; 목표 구체성·측정가능성·추진계획 실현성) ③협의/확정(목표 수준 적절성·가중치 적정성, 충분한 대화로 완전한 협의 도달)",
+    "actor": "평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "피평가자 목표",
+      "목표 Cascading Matrix"
+    ],
+    "outputs": [
+      "점검 결과",
+      "확정 목표"
+    ],
+    "keywords": [
+      "면담",
+      "포인트",
+      "설명",
+      "점검",
+      "협의",
+      "확정",
+      "Cascading",
+      "Matrix"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.review",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.120-121",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.review.response",
+    "type": "concept",
+    "parent": "pm.tips.goal.review",
+    "label": "피평가자 우려 유형별 대응 방법",
+    "summary": "측정 어려움(정성적 측정기준 활용 가능), 목표설정 불필요 인식(명확 정의·구체 기준의 중요성), 목표 조정 우려(절차 따라 조정 가능, 도전적·실현가능 목표), 업무범위 우려(팀목표 연계·비중 높은 업무 80% 대표 일 선정), 목표설정 효용(명확한 방향성·업무시간 효율화) 등 우려별 대응 화법 제시",
+    "actor": "평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "피평가자 우려"
+    ],
+    "outputs": [
+      "대응 화법"
+    ],
+    "keywords": [
+      "피평가자",
+      "우려",
+      "대응",
+      "측정",
+      "조정",
+      "화법"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.review",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.122-123",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview",
+    "type": "activity",
+    "parent": "pm.tips.goal",
+    "label": "5. HR 목표 검토 및 Feedback Guide",
+    "summary": "목표 검토 회의 종료 후 취합된 자기 목표에 대한 기능별 Monitoring 및 Feedback 제공. 기능조직(FA/전략팀) 외 HR·총체적 관점(Holistic View)에서 목표수립 결과 검증. Monitoring Tool로 KPI·가중치·기대수준 1차 검증 후 특이사항은 담당자 Contact으로 Rationale 확인",
+    "actor": "HR(CC HR/BG HR)",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "취합된 자기 목표"
+    ],
+    "outputs": [
+      "Monitoring 결과",
+      "Feedback"
+    ],
+    "keywords": [
+      "HR",
+      "목표검토",
+      "Feedback",
+      "Monitoring",
+      "Holistic",
+      "검증",
+      "Rationale"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal",
+        "type": "contain"
+      }
+    ],
+    "src": "PM p.123-124",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.tool",
+    "type": "output",
+    "parent": "pm.tips.goal.hrreview",
+    "label": "Monitoring Tool",
+    "summary": "KPI Overall, 가중치, Target 측면에서 평가자 및 HR이 Monitoring할 수 있도록 구성한 도구. Goal Grid, Direct Cascading 비중, 재무/전략 KPI Balance Check 등으로 구성",
+    "actor": "평가자/HR",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "설정 KPI",
+      "가중치",
+      "Target"
+    ],
+    "outputs": [
+      "Monitoring 결과"
+    ],
+    "keywords": [
+      "Monitoring",
+      "Tool",
+      "KPI",
+      "가중치",
+      "Target"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.124",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.goalgrid",
+    "type": "concept",
+    "parent": "pm.tips.goal.hrreview.tool",
+    "label": "A. Goal Grid",
+    "summary": "설정 KPI를 중요도(가중치, 가로축)와 보유/달성도(세로축) 기준으로 Dotting하여 목표항목 정합성을 점검하는 4분할 Grid. 필요성 순서 Achieve(중요/미달성)>Preserve(중요/달성)>Avoid(비중요/낮은달성)>Eliminate(비중요/달성)",
+    "actor": "HR/평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "전년도 달성 KPI",
+      "해당년도 확정 KPI",
+      "전년도 제외 KPI"
+    ],
+    "outputs": [
+      "Goal Grid Dotting 결과"
+    ],
+    "keywords": [
+      "GoalGrid",
+      "Dotting",
+      "중요도",
+      "달성도",
+      "Achieve",
+      "Preserve",
+      "Avoid",
+      "Eliminate"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview.tool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.125",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.goalgrid.check",
+    "type": "task",
+    "parent": "pm.tips.goal.hrreview.goalgrid",
+    "label": "Goal Grid 주요 점검/확인 Point",
+    "summary": "Achieve(중요하나 달성 어려워 제외한 항목·전년 달성도 낮은 항목 확인), Preserve(달성 용이해 선정한 KPI 없는지·꾸준히 높은 수치 확인, 목표수준 비현실적 과대/과소 설정 확인), Avoid(목표달성 어려워 가중치 축소 KPI 확인), Eliminate(제외 필요 KPI·꾸준히 높은 달성·낮은 가중치 확인)",
+    "actor": "HR/평가자",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "과거 Data",
+      "전년도 가중치/달성도",
+      "올해 목표수준"
+    ],
+    "outputs": [
+      "점검 결과"
+    ],
+    "keywords": [
+      "GoalGrid",
+      "점검",
+      "Achieve",
+      "Preserve",
+      "Avoid",
+      "Eliminate",
+      "가중치",
+      "달성도"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview.goalgrid",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.126",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.directcascading",
+    "type": "concept",
+    "parent": "pm.tips.goal.hrreview.tool",
+    "label": "B-1. 상위 KPI의 Direct Cascading 비중",
+    "summary": "재무·전략 KPI 중 상위 목표에서 직접 Cascading된 항목의 비중을 피평가자 개인 단위로 비교(가로축 평가단위, 세로축 KPI 비중, 좌측 BG 평균, Front/Back/Staff 별도 작성). CC HR은 중역, BG HR은 팀장 단위 Check",
+    "actor": "HR(CC HR/BG HR)",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "피평가자 재무/전략 KPI"
+    ],
+    "outputs": [
+      "Direct Cascading 비중 Chart"
+    ],
+    "keywords": [
+      "DirectCascading",
+      "비중",
+      "재무",
+      "전략",
+      "KPI",
+      "Front",
+      "Back",
+      "Staff"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview.tool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.127",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.directcascading.check",
+    "type": "task",
+    "parent": "pm.tips.goal.hrreview.directcascading",
+    "label": "Direct Cascading 비중 점검/확인 Point",
+    "summary": "Direct Cascading 비중이 지나치게 높거나 낮은 피평가자 Check. 비중 작으면 필요 KPI Customizing 적절 활용 확인, 크면 Customizing 불필요한 Rationale 존재 확인. 재무/전략 각각·Function 각각 Check. Function 특성 부합 확인(Front 낮음, Back 차별화, Staff 높음)",
+    "actor": "HR",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "Direct Cascading 비중 Chart"
+    ],
+    "outputs": [
+      "점검 결과"
+    ],
+    "keywords": [
+      "DirectCascading",
+      "비중",
+      "점검",
+      "Customizing",
+      "Rationale",
+      "Function",
+      "특성"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview.directcascading",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.128",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.balance",
+    "type": "concept",
+    "parent": "pm.tips.goal.hrreview.tool",
+    "label": "C-1. 재무/전략 KPI Balance Check(Function별)",
+    "summary": "BG HR에서 Function별 중역·팀장의 재무 KPI와 전략 KPI 가중치 합 경향 파악·특이 Case 점검. 가로축 BG 단위, 세로축 재무/전략 KPI 가중치 합, 좌측에 Function 전체 평균 누적막대, Front/Back/Staff 별도 작성",
+    "actor": "BG HR",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "중역/팀장 재무·전략 KPI 가중치"
+    ],
+    "outputs": [
+      "KPI Balance Chart"
+    ],
+    "keywords": [
+      "재무",
+      "전략",
+      "KPI",
+      "Balance",
+      "가중치",
+      "Function",
+      "경향"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview.tool",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.129",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.tips.goal.hrreview.balance.check",
+    "type": "task",
+    "parent": "pm.tips.goal.hrreview.balance",
+    "label": "재무/전략 KPI Balance 점검/확인 Point",
+    "summary": "가중치가 전형적 경향과 다른 경우 Check(Front는 재무 가중치 지나치게 낮은 경우), 전형적 경향과 같아도 평균 대비 큰 차이 Check(Front는 재무 지나치게 높은 경우). Front/Back/Staff 각각 분석하여 일반 특성 부합 확인(Front 재무 높음, Back 차별화, Staff 전략 높음)",
+    "actor": "BG HR",
+    "timing": "목표수립(2~3월)",
+    "inputs": [
+      "KPI Balance Chart"
+    ],
+    "outputs": [
+      "점검 결과"
+    ],
+    "keywords": [
+      "재무",
+      "전략",
+      "Balance",
+      "점검",
+      "가중치",
+      "Front",
+      "Back",
+      "Staff",
+      "평균"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview.balance",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.130",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.role.cchr",
+    "type": "role",
+    "parent": null,
+    "label": "CC HR",
+    "summary": "전사(Center) HR. 중역 단위 위주로 목표수립 결과 Monitoring 및 Direct Cascading 비중 Check 수행",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "CCHR",
+      "전사",
+      "중역",
+      "Monitoring"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.127",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.role.bghr",
+    "type": "role",
+    "parent": null,
+    "label": "BG HR",
+    "summary": "BG(Business Group) HR. 팀장 단위 위주로 목표수립 결과 Monitoring 및 Function별 KPI Balance Check 수행",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "BGHR",
+      "팀장",
+      "Monitoring",
+      "Function"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.127-129",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.concept.function",
+    "type": "concept",
+    "parent": null,
+    "label": "Function 구분(Front/Back/Staff)",
+    "summary": "조직 기능 구분. Front(Direct Cascading 비중 낮음·재무 비중 높음), Back(업무 특성 따라 차별화), Staff(Direct Cascading 비중 높음·전략 비중 높음). HR Monitoring Chart 분석의 기준 축",
+    "actor": null,
+    "timing": null,
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Function",
+      "Front",
+      "Back",
+      "Staff",
+      "재무",
+      "전략",
+      "Cascading"
+    ],
+    "rel": [
+      {
+        "to": "pm.tips.goal.hrreview",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.128-130",
+    "_origin": "pm_nodes_2.json"
+  },
+  {
+    "id": "pm.phase.goalsetting",
+    "type": "phase",
+    "parent": null,
+    "label": "목표 수립",
+    "summary": "연초 KPI·Target·가중치를 설정하는 마스터 프로세스 1단계",
+    "actor": "평가자/피평가자",
+    "timing": "연초",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목표",
+      "수립",
+      "KPI",
+      "가중치"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.midyear",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.132",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.phase.midyear",
+    "type": "phase",
+    "parent": null,
+    "label": "Mid-year Review (중간점검)",
+    "summary": "상반기 목표 달성도를 점검하고 Coaching·Intervention을 실시하는 단계",
+    "actor": "평가자",
+    "timing": "회계연도 중간",
+    "inputs": [
+      "중간점검 양식"
+    ],
+    "outputs": [
+      "Mid-year Review 결과"
+    ],
+    "keywords": [
+      "중간점검",
+      "Review",
+      "Coaching",
+      "Intervention"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.evaluation",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.135",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.phase.evaluation",
+    "type": "phase",
+    "parent": null,
+    "label": "평가",
+    "summary": "연말 목표 달성도 및 정성 평가를 수행하고 등급을 부여하는 단계",
+    "actor": "평가자/HR",
+    "timing": "연말",
+    "inputs": [
+      "성과 Back-up Data"
+    ],
+    "outputs": [
+      "평가 결과",
+      "평가 등급"
+    ],
+    "keywords": [
+      "평가",
+      "달성도",
+      "등급",
+      "Calibration"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.feedback",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.146",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.phase.feedback",
+    "type": "phase",
+    "parent": null,
+    "label": "Feedback",
+    "summary": "평가 결과를 피평가자에게 전달하고 차년도 성과 향상을 유도하는 단계",
+    "actor": "평가자",
+    "timing": "평가 종료 후",
+    "inputs": [
+      "평가 결과"
+    ],
+    "outputs": [
+      "Feedback 면담 결과"
+    ],
+    "keywords": [
+      "Feedback",
+      "면담",
+      "동기부여",
+      "Communication"
+    ],
+    "rel": [],
+    "src": "PM p.162",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.act.hr_goal_review",
+    "type": "activity",
+    "parent": "pm.phase.goalsetting",
+    "label": "HR 목표 검토 및 Feedback",
+    "summary": "HR이 목표 수립 결과의 가중치·Target 적정성을 Monitoring Tool로 점검",
+    "actor": "CC HR / BG HR",
+    "timing": "목표 수립 직후",
+    "inputs": [
+      "개인별 KPI",
+      "가중치",
+      "Target"
+    ],
+    "outputs": [
+      "가중치 적정성 Check Tool",
+      "Target Level Check Tool"
+    ],
+    "keywords": [
+      "HR",
+      "목표",
+      "검토",
+      "Monitoring",
+      "적정성"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.goalsetting",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.132",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.weight_check",
+    "type": "output",
+    "parent": "pm.act.hr_goal_review",
+    "label": "가중치 적정성 Check Tool",
+    "summary": "개인 단위 KPI 가중치를 Dotting하여 상·하한 및 KPI 개수 적정성을 점검하는 양식",
+    "actor": "CC HR(중역) / BG HR(팀장)",
+    "timing": "목표 수립 후 검토 시",
+    "inputs": [
+      "개인별 KPI",
+      "KPI별 가중치",
+      "개인별 KPI 개수"
+    ],
+    "outputs": [
+      "가중치 특이사항 점검 결과"
+    ],
+    "keywords": [
+      "가중치",
+      "적정성",
+      "Dotting",
+      "상한",
+      "하한",
+      "Filtering"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_goal_review",
+        "type": "support"
+      },
+      {
+        "to": "pm.out.target_check",
+        "type": "precede"
+      }
+    ],
+    "src": "PM p.132",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.weight_check.axis",
+    "type": "data",
+    "parent": "pm.out.weight_check",
+    "label": "축 구성 (가로=개인 단위, 세로=KPI 가중치)",
+    "summary": "가로축 개인 단위·세로축 KPI 가중치로 구성된 그래프 축",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "가로축",
+      "개인",
+      "세로축",
+      "가중치"
+    ],
+    "rel": [],
+    "src": "PM p.131",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.weight_check.upper",
+    "type": "data",
+    "parent": "pm.out.weight_check",
+    "label": "가중치 상한 (25%)",
+    "summary": "KPI 가중치 상한 25%, 개인별 KPI 개수가 적은 경우 상향 조절 가능",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "가중치",
+      "상한",
+      "25"
+    ],
+    "rel": [],
+    "src": "PM p.131",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.weight_check.lower",
+    "type": "data",
+    "parent": "pm.out.weight_check",
+    "label": "가중치 하한 (5%)",
+    "summary": "KPI 항목수 및 항목간 가중치를 고려해 5% 수준으로 설정한 하한",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "가중치",
+      "하한",
+      "5",
+      "항목수"
+    ],
+    "rel": [],
+    "src": "PM p.131",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.weight_check.kpicount",
+    "type": "data",
+    "parent": "pm.out.weight_check",
+    "label": "KPI 개수 적정성 (10개 이하)",
+    "summary": "개인 KPI 개수가 관리 가능한 적정 수준(10개 이하)인지 확인, 11개 이상 과다 Check",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "KPI",
+      "개수",
+      "적정",
+      "과다"
+    ],
+    "rel": [],
+    "src": "PM p.132",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.weight_check.samevalue",
+    "type": "data",
+    "parent": "pm.out.weight_check",
+    "label": "동일 가중치 다수 부여 여부",
+    "summary": "개인 KPI 절반 이상이 동일 가중치를 가져 형식적 비중 부여인지 Check",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "동일",
+      "가중치",
+      "절반",
+      "형식",
+      "비중"
+    ],
+    "rel": [],
+    "src": "PM p.132",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.target_check",
+    "type": "output",
+    "parent": "pm.act.hr_goal_review",
+    "label": "Target Level Check Tool",
+    "summary": "개인 KPI Target이 전년 실적 대비 적정한지 Target Level을 Dotting하여 점검하는 양식",
+    "actor": "CC HR(중역) / BG HR(팀장)",
+    "timing": "목표 수립 후 검토 시",
+    "inputs": [
+      "당해년도 Target",
+      "전년도 실적"
+    ],
+    "outputs": [
+      "Target Level 특이사항 점검 결과"
+    ],
+    "keywords": [
+      "Target",
+      "Level",
+      "Check",
+      "전년",
+      "실적",
+      "Dotting"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_goal_review",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.134",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.target_check.formula",
+    "type": "data",
+    "parent": "pm.out.target_check",
+    "label": "Target Level 산출식",
+    "summary": "(당해년도 Target - 전년도 실적) / 전년도 실적, 동일 시 0%",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [
+      "당해년도 Target",
+      "전년도 실적"
+    ],
+    "outputs": [
+      "Target Level"
+    ],
+    "keywords": [
+      "Target",
+      "Level",
+      "산출",
+      "전년",
+      "실적"
+    ],
+    "rel": [],
+    "src": "PM p.134",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.target_check.toohigh",
+    "type": "data",
+    "parent": "pm.out.target_check",
+    "label": "Target Level 과다 (Too Stretched)",
+    "summary": "일반 경향 대비 Target Level이 지나치게 높은 Too Stretched Goal 여부 Check",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Target",
+      "Level",
+      "Stretched",
+      "과다"
+    ],
+    "rel": [],
+    "src": "PM p.134",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.target_check.negative",
+    "type": "data",
+    "parent": "pm.out.target_check",
+    "label": "Target Level 음수 여부",
+    "summary": "전년 실적보다 낮은 Target을 설정해 Target Level이 음의 값을 가지는 경우 Check",
+    "actor": "HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Target",
+      "Level",
+      "음수",
+      "전년",
+      "실적"
+    ],
+    "rel": [],
+    "src": "PM p.134",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.act.midyear_prep",
+    "type": "activity",
+    "parent": "pm.phase.midyear",
+    "label": "Mid-year Review 준비 및 진행",
+    "summary": "중간점검 양식 기반 달성도 분석, Check Point 점검, 면담 진행",
+    "actor": "평가자",
+    "timing": "Mid-year Review 기간",
+    "inputs": [
+      "본인 중간 점검 양식"
+    ],
+    "outputs": [
+      "중간점검 결과 정리"
+    ],
+    "keywords": [
+      "중간점검",
+      "준비",
+      "면담",
+      "달성도"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.midyear",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.137",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.midyear_form",
+    "type": "output",
+    "parent": "pm.act.midyear_prep",
+    "label": "본인 중간 점검 양식",
+    "summary": "피평가자가 연초 계획 대비 목표 달성도를 작성하는 중간점검 양식",
+    "actor": "피평가자",
+    "timing": "Mid-year Review 전",
+    "inputs": [
+      "연초 설정 계획",
+      "목표 달성도"
+    ],
+    "outputs": [
+      "중간점검 면담 Point"
+    ],
+    "keywords": [
+      "중간점검",
+      "양식",
+      "달성도",
+      "계획"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.midyear_prep",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.137",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.midyear_checkpoint",
+    "type": "output",
+    "parent": "pm.act.midyear_prep",
+    "label": "Mid-year Review Check Point",
+    "summary": "역할/책임 변화(Check A)와 목표 진척도(Check B)를 점검하는 중점 검토 양식",
+    "actor": "평가자",
+    "timing": "Mid-year Review 진행 시",
+    "inputs": [
+      "조직·개인업무 변동사항",
+      "기대수준 대비 중간 실적"
+    ],
+    "outputs": [
+      "Intervention 방안"
+    ],
+    "keywords": [
+      "Check",
+      "Point",
+      "역할",
+      "진척도",
+      "Intervention"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.midyear_prep",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.138",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.midyear_checkpoint.checkA",
+    "type": "data",
+    "parent": "pm.out.midyear_checkpoint",
+    "label": "Check A: 역할/책임 변화 확인 (R&R Changes)",
+    "summary": "조직(Organization)·개인업무(Job) 변화에 따른 R&R 변동 여부 확인",
+    "actor": "평가자",
+    "timing": "Mid-year Review 시",
+    "inputs": [
+      "조직개편 여부",
+      "신규 입사자",
+      "부서 이동",
+      "결원 여부"
+    ],
+    "outputs": [],
+    "keywords": [
+      "역할",
+      "책임",
+      "변화",
+      "R&R",
+      "조직",
+      "Job"
+    ],
+    "rel": [],
+    "src": "PM p.139",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.midyear_checkpoint.checkB",
+    "type": "data",
+    "parent": "pm.out.midyear_checkpoint",
+    "label": "Check B: 목표 진척도 확인 (Progress)",
+    "summary": "기대수준 대비 중간 실적(부진/충족)과 성과 Driver를 분석",
+    "actor": "평가자",
+    "timing": "Mid-year Review 시",
+    "inputs": [
+      "기대수준 대비 중간 실적",
+      "성과부진/우수 사유"
+    ],
+    "outputs": [],
+    "keywords": [
+      "목표",
+      "진척도",
+      "Progress",
+      "성과",
+      "Driver",
+      "실적"
+    ],
+    "rel": [],
+    "src": "PM p.139",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.interview_checklist",
+    "type": "output",
+    "parent": "pm.act.midyear_prep",
+    "label": "중간점검 면담 진행 Checklist",
+    "summary": "면담 준비·中·종료 후 Process 측면과 목표 달성도 Contents 측면을 점검하는 Checklist",
+    "actor": "평가자",
+    "timing": "중간점검 면담 시",
+    "inputs": [
+      "면담 준비 자료"
+    ],
+    "outputs": [
+      "면담 진행 점검 결과"
+    ],
+    "keywords": [
+      "면담",
+      "Checklist",
+      "준비",
+      "달성도",
+      "점검"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.midyear_prep",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.143",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.interview_checklist.process",
+    "type": "data",
+    "parent": "pm.out.interview_checklist",
+    "label": "면담 진행 Check-list (Process 측면)",
+    "summary": "면담 준비·면담 中·면담 종료 이후 단계별 진행 점검 항목",
+    "actor": "평가자",
+    "timing": "면담 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "면담",
+      "Process",
+      "준비",
+      "종료"
+    ],
+    "rel": [],
+    "src": "PM p.143",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.interview_checklist.contents",
+    "type": "data",
+    "parent": "pm.out.interview_checklist",
+    "label": "목표 달성도 확인 Checklist (Contents 측면)",
+    "summary": "업무 진행·노력·창의성·수단방법·지원사항·열의 등 목표 달성 점검 항목",
+    "actor": "평가자",
+    "timing": "면담 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목표",
+      "달성도",
+      "Contents",
+      "업무",
+      "지원"
+    ],
+    "rel": [],
+    "src": "PM p.143",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.act.eval_special",
+    "type": "activity",
+    "parent": "pm.phase.evaluation",
+    "label": "신규 입사/이동/TF 평가 Guide 적용",
+    "summary": "신규입사자·이동자·TF/Project 수행자에 대한 예외 평가 기준 적용",
+    "actor": "평가자/HR",
+    "timing": "평가 시",
+    "inputs": [
+      "근무 기간",
+      "입사일",
+      "이동 시점"
+    ],
+    "outputs": [
+      "평가 등급",
+      "성과급 지급률"
+    ],
+    "keywords": [
+      "신규",
+      "입사",
+      "이동",
+      "TF",
+      "평가",
+      "Guide"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.evaluation",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.147",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.tf_eval_process",
+    "type": "output",
+    "parent": "pm.act.eval_special",
+    "label": "TF/Project 수행 성과 반영 Process 양식",
+    "summary": "TF/PRJ 내 개인 목표 설정부터 평가점수 반영까지의 주체별 Process",
+    "actor": "피평가자/TF PRJ Mgr/소속팀장/BG HR",
+    "timing": "TF/Project 수행 시",
+    "inputs": [
+      "TF/PRJ 목표",
+      "세부 평가항목",
+      "가중치"
+    ],
+    "outputs": [
+      "TF/PRJ 평가점수",
+      "개인 KPI 달성도 점수"
+    ],
+    "keywords": [
+      "TF",
+      "Project",
+      "평가점수",
+      "Process",
+      "달성도"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.eval_special",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.151",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.tf_eval_process.roles",
+    "type": "data",
+    "parent": "pm.out.tf_eval_process",
+    "label": "주체별 역할 (피평가자/TF PRJ Mgr/소속팀장/BG HR)",
+    "summary": "각 주체별 목표설정·평가점수산출·가중치조정·Monitoring 역할 구분",
+    "actor": "전 주체",
+    "timing": "TF/Project 수행 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "피평가자",
+      "Mgr",
+      "팀장",
+      "HR",
+      "역할"
+    ],
+    "rel": [],
+    "src": "PM p.151",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.tf_eval_process.score",
+    "type": "data",
+    "parent": "pm.out.tf_eval_process",
+    "label": "TF/PRJ 평가점수 산출 (세부항목 × 가중치)",
+    "summary": "세부 평가항목에 가중치를 곱해 도출한 점수를 해당 KPI 달성도 점수로 반영",
+    "actor": "TF PRJ Mgr",
+    "timing": "성과평가 시",
+    "inputs": [
+      "세부 평가항목",
+      "가중치"
+    ],
+    "outputs": [
+      "KPI 달성도 점수"
+    ],
+    "keywords": [
+      "평가점수",
+      "세부",
+      "항목",
+      "가중치",
+      "달성도"
+    ],
+    "rel": [],
+    "src": "PM p.151",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.backup_data",
+    "type": "output",
+    "parent": "pm.phase.evaluation",
+    "label": "성과 Back-up Data 수집 양식",
+    "summary": "Fact에 기초한 근거로 목표 유형별 적합한 성과 근거를 마련하는 양식",
+    "actor": "피평가자/평가자",
+    "timing": "평가 준비 시",
+    "inputs": [
+      "목표 유형",
+      "목표 달성 결과"
+    ],
+    "outputs": [
+      "Fact 기반 성과 근거"
+    ],
+    "keywords": [
+      "Back-up",
+      "Data",
+      "Fact",
+      "근거",
+      "성과"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.evaluation",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.152",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.backup_data.desc",
+    "type": "data",
+    "parent": "pm.out.backup_data",
+    "label": "설명 항목",
+    "summary": "목표 유형에 따라 적합한 목표달성결과 근거 마련 방법 설명",
+    "actor": "평가자",
+    "timing": "평가 준비 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "설명",
+      "목표",
+      "유형",
+      "근거"
+    ],
+    "rel": [],
+    "src": "PM p.152",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.backup_data.example",
+    "type": "data",
+    "parent": "pm.out.backup_data",
+    "label": "예시 항목",
+    "summary": "목표 유형별 Back-up 자료 준비 시 참고할 예시",
+    "actor": "평가자",
+    "timing": "평가 준비 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "예시",
+      "Back-up",
+      "자료",
+      "준비"
+    ],
+    "rel": [],
+    "src": "PM p.152",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.calibration",
+    "type": "output",
+    "parent": "pm.phase.evaluation",
+    "label": "Calibration Point 양식",
+    "summary": "차상위자-평가자 간 평가의견 교환·조정으로 평가 객관성을 높이는 검토 양식",
+    "actor": "차상위자 / 평가자(직속 상사)",
+    "timing": "평가 결과 조정 시",
+    "inputs": [
+      "평가 결과",
+      "평가의견"
+    ],
+    "outputs": [
+      "조율된 평가 결과"
+    ],
+    "keywords": [
+      "Calibration",
+      "객관성",
+      "조정",
+      "평가의견"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.evaluation",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.153",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.calibration.purpose",
+    "type": "data",
+    "parent": "pm.out.calibration",
+    "label": "Calibration의 목적",
+    "summary": "평가 객관성·정확성 제고, 눈높이 차이 조율, 왜곡된 평가 결과 방지",
+    "actor": "차상위자",
+    "timing": "Calibration 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "목적",
+      "객관성",
+      "조율",
+      "왜곡",
+      "방지"
+    ],
+    "rel": [],
+    "src": "PM p.153",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.calibration.checkpoint",
+    "type": "data",
+    "parent": "pm.out.calibration",
+    "label": "주요 검토 포인트",
+    "summary": "관대화/중심화/가혹화 경향, 성과 무관 요인 개입, 목표 난이도·직무 복잡성 고려 여부",
+    "actor": "차상위자",
+    "timing": "Calibration 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "검토",
+      "관대화",
+      "중심화",
+      "가혹화",
+      "난이도"
+    ],
+    "rel": [],
+    "src": "PM p.153",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.act.hr_result_analysis",
+    "type": "activity",
+    "parent": "pm.phase.evaluation",
+    "label": "HR 평가결과 분석",
+    "summary": "전체 분포·조직별·MBO Category별 분석으로 평가결과 적정성 점검",
+    "actor": "HR",
+    "timing": "평가 종료 후",
+    "inputs": [
+      "평가 결과 점수"
+    ],
+    "outputs": [
+      "평가결과 분석 시사점"
+    ],
+    "keywords": [
+      "HR",
+      "평가결과",
+      "분석",
+      "분포",
+      "Category"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.evaluation",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.155",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.dist_analysis",
+    "type": "output",
+    "parent": "pm.act.hr_result_analysis",
+    "label": "전체 점수 분포 분석 양식",
+    "summary": "Dimension별 점수 분포를 구간별로 나타내고 관대화/중심화 경향을 분석하는 양식",
+    "actor": "HR",
+    "timing": "평가 종료 후",
+    "inputs": [
+      "점수 구간",
+      "평균",
+      "표준편차",
+      "첨도",
+      "편도"
+    ],
+    "outputs": [
+      "분포 경향 시사점"
+    ],
+    "keywords": [
+      "점수",
+      "분포",
+      "관대화",
+      "중심화",
+      "Dimension"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_result_analysis",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.156",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.dist_analysis.dimension",
+    "type": "data",
+    "parent": "pm.out.dist_analysis",
+    "label": "Dimension 구분 (직책 × MBO Category)",
+    "summary": "일반중역/팀장/팀원 및 총점/재무/전략/인재/정성점수 구분",
+    "actor": "HR",
+    "timing": "분석 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Dimension",
+      "직책",
+      "재무",
+      "전략",
+      "인재",
+      "정성"
+    ],
+    "rel": [],
+    "src": "PM p.156",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.dist_analysis.stats",
+    "type": "data",
+    "parent": "pm.out.dist_analysis",
+    "label": "통계 지표 (평균/표준편차/첨도/편도)",
+    "summary": "전년도 및 당해년도 평균·표준편차·첨도·편도 비교 지표",
+    "actor": "HR",
+    "timing": "분석 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "평균",
+      "표준편차",
+      "첨도",
+      "편도"
+    ],
+    "rel": [],
+    "src": "PM p.156",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.org_analysis",
+    "type": "output",
+    "parent": "pm.act.hr_result_analysis",
+    "label": "조직별 비교 분석 양식",
+    "summary": "조직단위별 평균 점수를 전체 평균과 비교하고 경영성과 대비 적정성을 분석하는 양식",
+    "actor": "HR",
+    "timing": "평가 종료 후",
+    "inputs": [
+      "조직단위별 평균 점수",
+      "전체 평균",
+      "경영성과"
+    ],
+    "outputs": [
+      "조직 간 비교 시사점"
+    ],
+    "keywords": [
+      "조직",
+      "비교",
+      "평균",
+      "Gap",
+      "경영성과"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_result_analysis",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.158",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.org_analysis.gap",
+    "type": "data",
+    "parent": "pm.out.org_analysis",
+    "label": "평균과의 Gap",
+    "summary": "평가단위 평균이 전체 평균 대비 지나치게 높거나 낮은지 점검",
+    "actor": "HR",
+    "timing": "분석 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "평균",
+      "Gap",
+      "전체",
+      "평가단위"
+    ],
+    "rel": [],
+    "src": "PM p.158",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.mbo_category_analysis",
+    "type": "output",
+    "parent": "pm.act.hr_result_analysis",
+    "label": "MBO Category별 비교 분석 양식",
+    "summary": "재무/전략/인재/정성 Category가 총점에 미치는 영향과 경향 차이를 분석하는 양식",
+    "actor": "HR",
+    "timing": "평가 종료 후",
+    "inputs": [
+      "Category별 평균 점수",
+      "상위 조직 평균"
+    ],
+    "outputs": [
+      "Category별 시사점"
+    ],
+    "keywords": [
+      "MBO",
+      "Category",
+      "재무",
+      "전략",
+      "인재",
+      "정성",
+      "총점"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_result_analysis",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.160",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.mbo_category_analysis.influence",
+    "type": "data",
+    "parent": "pm.out.mbo_category_analysis",
+    "label": "Category별 총점 영향도",
+    "summary": "각 Category가 총점에 미치는 영향 및 조직 특성 고려 시 적절성",
+    "actor": "HR",
+    "timing": "분석 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Category",
+      "총점",
+      "영향",
+      "조직",
+      "특성"
+    ],
+    "rel": [],
+    "src": "PM p.160",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.feedback_comm",
+    "type": "output",
+    "parent": "pm.phase.feedback",
+    "label": "효과적 Communication Tips",
+    "summary": "경청·질문기법·긍정적 언어 사용 원칙으로 Feedback 면담을 진행하는 Guide",
+    "actor": "평가자",
+    "timing": "Feedback 면담 시",
+    "inputs": [
+      "피평가자 상황"
+    ],
+    "outputs": [
+      "Feedback 면담 결과"
+    ],
+    "keywords": [
+      "Communication",
+      "경청",
+      "질문",
+      "긍정",
+      "언어"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.feedback",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.163",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.feedback_point",
+    "type": "output",
+    "parent": "pm.phase.feedback",
+    "label": "구성원 상황별 Feedback Point",
+    "summary": "성과 수준(Positive/Negative) 및 감정상황을 고려한 Feedback 방안",
+    "actor": "평가자",
+    "timing": "Feedback 면담 시",
+    "inputs": [
+      "성과 달성 수준",
+      "구성원 감정상황"
+    ],
+    "outputs": [
+      "맞춤형 Feedback"
+    ],
+    "keywords": [
+      "Feedback",
+      "Point",
+      "Positive",
+      "Negative",
+      "감정"
+    ],
+    "rel": [
+      {
+        "to": "pm.phase.feedback",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.166",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.feedback_point.positive",
+    "type": "data",
+    "parent": "pm.out.feedback_point",
+    "label": "Positive Feedback (동기부여 中心)",
+    "summary": "충분한 성과를 거둔 구성원에 대해 성공요인 강화·자부심 부여",
+    "actor": "평가자",
+    "timing": "Feedback 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Positive",
+      "동기부여",
+      "성공",
+      "강화"
+    ],
+    "rel": [],
+    "src": "PM p.166",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.out.feedback_point.negative",
+    "type": "data",
+    "parent": "pm.out.feedback_point",
+    "label": "Negative Feedback (성과 강화 방안 모색 中心)",
+    "summary": "성과 미달 구성원에 대해 문제 해결적 Approach로 구체적 개선 의견 제시",
+    "actor": "평가자",
+    "timing": "Feedback 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Negative",
+      "성과",
+      "강화",
+      "개선",
+      "문제해결"
+    ],
+    "rel": [],
+    "src": "PM p.166",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.role.cc_hr",
+    "type": "role",
+    "parent": null,
+    "label": "CC HR",
+    "summary": "중역 단위 위주로 목표·평가를 점검하는 본사 HR",
+    "actor": "CC HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "CC",
+      "HR",
+      "중역",
+      "점검"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_goal_review",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.131",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.role.bg_hr",
+    "type": "role",
+    "parent": null,
+    "label": "BG HR",
+    "summary": "팀장 단위 위주로 목표·평가를 점검하고 TF/Project 조정을 관리하는 BG HR",
+    "actor": "BG HR",
+    "timing": "검토 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "BG",
+      "HR",
+      "팀장",
+      "점검",
+      "관리"
+    ],
+    "rel": [
+      {
+        "to": "pm.act.hr_goal_review",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.131",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.concept.star",
+    "type": "concept",
+    "parent": "pm.act.midyear_prep",
+    "label": "STAR 기법",
+    "summary": "상황(Situation)·과업(Task)·행동(Action)·결과(Result) 4요소로 중간점검 Point를 설정하는 기법",
+    "actor": "평가자",
+    "timing": "중간점검 면담 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "STAR",
+      "상황",
+      "과업",
+      "행동",
+      "결과"
+    ],
+    "rel": [
+      {
+        "to": "pm.out.interview_checklist",
+        "type": "support"
+      }
+    ],
+    "src": "PM p.145",
+    "_origin": "pm_nodes_3.json"
+  },
+  {
+    "id": "pm.concept.intervention",
+    "type": "concept",
+    "parent": "pm.out.midyear_checkpoint",
+    "label": "Intervention (개입)",
+    "summary": "역할/책임 변화 및 목표 진척도 분석 결과에 따라 실시하는 적절한 방식의 개입",
+    "actor": "평가자",
+    "timing": "Mid-year Review 시",
+    "inputs": [],
+    "outputs": [],
+    "keywords": [
+      "Intervention",
+      "개입",
+      "변화",
+      "진척도"
+    ],
+    "rel": [],
+    "src": "PM p.139",
+    "_origin": "pm_nodes_3.json"
+  }
+]
