@@ -1,0 +1,5731 @@
+{
+  "meta": {
+    "title": "성과관리·평가 E2E AI Agent 아키텍처 Spec (마인드맵 자동 도출)",
+    "derived_from": "enhanced_mindmap.json",
+    "purpose": "레이어드 마인드맵에서 Agent 시스템 구성요소를 도출한 개발 기획 명세. Orchestrator→Manager→Sub-agent→Assistant 4계층.",
+    "architecture": "AI Agent(오케스트레이터) ─ AI Manager(단계 6) ─ AI Sub-agent(활동 35) ─ AI Assistant/DB(지식 175). User는 Human-in-loop 게이트로 개입.",
+    "develop_notes": {
+      "manager": "단계 entry/exit·quality_gates(매뉴얼 근거 검증규칙)·coordination·escalation·OKR/MBO 분기 추가",
+      "subagent": "agent_type·autonomy_level·tool_interface(query/retrieve/validate)·io_contract·dependencies(precede)·guardrails 추가",
+      "assistant": "평면 카탈로그 → knowledge_domains(retrieval_mode·backing_system)·access_apis·governance 추가"
+    },
+    "counts": {
+      "managers": 6,
+      "subagents": 35,
+      "human_gates": 29,
+      "knowledge_data": 34,
+      "knowledge_context": 99,
+      "knowledge_principle": 42,
+      "knowledge_domains": 9,
+      "subagent_types": {
+        "generator": 12,
+        "facilitator": 6,
+        "validator": 8,
+        "retriever": 4,
+        "monitor": 3,
+        "calculator": 2
+      },
+      "autonomy_levels": {
+        "human_approve": 13,
+        "suggest": 14,
+        "human_led": 3,
+        "auto": 3,
+        "auto_with_review": 2
+      },
+      "manager_quality_gates": 22
+    }
+  },
+  "orchestrator": {
+    "id": "orchestrator",
+    "label": "AI Agent (Orchestrator)",
+    "flow": [
+      "u.goal",
+      "u.check",
+      "u.eval",
+      "u.fb"
+    ],
+    "cross_cutting": [
+      "x.align",
+      "x.change"
+    ],
+    "responsibility": "성과관리·평가 E2E 전 단계를 오케스트레이션. 사용자 대화 인터페이스, 현재 단계·상태 관리, 다음 단계 트리거, 단계별 AI Manager 호출·결과 종합, 사용자 승인 게이트 관리.",
+    "manages": [
+      "mgr.u.goal",
+      "mgr.u.check",
+      "mgr.u.eval",
+      "mgr.u.fb",
+      "mgr.x.align",
+      "mgr.x.change"
+    ],
+    "human_gate_total": 29
+  },
+  "managers": [
+    {
+      "id": "mgr.u.goal",
+      "label": "U1 목표수립 Manager",
+      "phase": "u.goal",
+      "kind": "core",
+      "summary": "전략·상위목표 연계하여 개인 목표/OKR·KPI·가중치·목표수준 설정·확정",
+      "okr_mbo_note": "통합 진행. OKR=OKR Canvas Brainstorming·자율 수립·시스템 등록 / MBO=KPI Pooling·계층 Cascading·가중치/Target·서명 확정. 두 방식 모두 SMART·상위목표 연계 원칙 공유.",
+      "entry_criteria": "연간 MBO 운영계획·지침 확정, 상위(전사/조직) 목표 수립 완료",
+      "exit_criteria": "전 피평가자 목표 2차 평가자 Confirm(서명) 및 시스템 등록 완료",
+      "coordination": "sequential",
+      "quality_gates": [
+        {
+          "rule": "KPI 항목 가중치 5~25% 범위",
+          "threshold": "min 5% / max 25%",
+          "source": "pm.out.weight_check"
+        },
+        {
+          "rule": "개인 KPI 개수 ≤ 10개",
+          "threshold": "≤10 (11+ 과다)",
+          "source": "pm.out.weight_check.kpicount"
+        },
+        {
+          "rule": "동일 가중치 과다 부여 금지",
+          "threshold": "절반 미만",
+          "source": "pm.out.weight_check.samevalue"
+        },
+        {
+          "rule": "SMART/FAST 충족 점검",
+          "threshold": "체크리스트 통과",
+          "source": "pm.tips.goal.kpipool.smart / okr.principle.fast"
+        },
+        {
+          "rule": "Target Level 음수·과다(Too Stretched) 점검",
+          "threshold": "전년대비 합리범위",
+          "source": "pm.out.target_check"
+        },
+        {
+          "rule": "Direct Cascading 비중 Function 특성 부합",
+          "threshold": "Front 낮음/Back 차별화/Staff 높음",
+          "source": "pm.tips.goal.hrreview.directcascading"
+        }
+      ],
+      "escalation": "가중치/Target 이상치·Cascading 불균형 → HR 운영자·평가자 Contact으로 Rationale 확인",
+      "okr_mbo_branching": {
+        "OKR": "OKR Canvas Brainstorming→FAST 점검→Performance Plus 등록",
+        "MBO": "KPI Pooling→Cascading→가중치/Target→검토회의→서명 확정"
+      },
+      "manages_subagents": [
+        "sa.okr.define.personal",
+        "sa.pm.gs.guideline",
+        "sa.pm.gs.self-goal",
+        "sa.pm.gs.review-meeting",
+        "sa.pm.gs.review-feedback",
+        "sa.pm.gs.confirm",
+        "sa.pm.tips.goal.kpipool",
+        "sa.pm.tips.goal.cascade",
+        "sa.pm.tips.goal.weight",
+        "sa.pm.tips.goal.review",
+        "sa.pm.tips.goal.hrreview",
+        "sa.pm.act.hr_goal_review"
+      ],
+      "subagent_count": 12,
+      "human_gate_count": 12
+    },
+    {
+      "id": "mgr.u.check",
+      "label": "U2 실행·점검 Manager",
+      "phase": "u.check",
+      "kind": "core",
+      "summary": "상시 측정·리뷰(OKR)와 중간점검 면담(MBO)으로 진척도 추적·성과개선·목표 보완",
+      "okr_mbo_note": "통합 진행. OKR=주간 Start/Review 브리핑 등 상시 점검 / MBO=Mid-year Review 1회 면담. 둘 다 진척도·R&R 변화 점검 후 목표 보완.",
+      "entry_criteria": "목표 확정 후 운영 기간 경과(주간/반기 시점 도래)",
+      "exit_criteria": "중간점검 면담 전수 실시·결과 취합 및 보고 완료",
+      "coordination": "sequential",
+      "quality_gates": [
+        {
+          "rule": "R&R 변화 반영(Check A)",
+          "threshold": "조직·직무 변동 확인",
+          "source": "pm.out.midyear_checkpoint.checkA"
+        },
+        {
+          "rule": "목표 진척도 부진/충족 분류(Check B)",
+          "threshold": "기대수준 대비",
+          "source": "pm.out.midyear_checkpoint.checkB"
+        },
+        {
+          "rule": "면담 실시율 100%",
+          "threshold": "전 피평가자",
+          "source": "pm.myr.interview"
+        }
+      ],
+      "escalation": "부진 항목·R&R 변동 大 → Intervention(개입) 수준 결정, 목표 보완 요청",
+      "okr_mbo_branching": {
+        "OKR": "주간 Start/Review 브리핑 상시 점검",
+        "MBO": "Mid-year Review 1:1 면담"
+      },
+      "manages_subagents": [
+        "sa.okr.review.weekly-briefing",
+        "sa.okr.review.annual-review",
+        "sa.pm.myr.prepare",
+        "sa.pm.myr.interview",
+        "sa.pm.myr.result",
+        "sa.pm.act.midyear_prep"
+      ],
+      "subagent_count": 6,
+      "human_gate_count": 7
+    },
+    {
+      "id": "mgr.u.eval",
+      "label": "U3 평가 Manager",
+      "phase": "u.eval",
+      "kind": "core",
+      "summary": "자기/상사/2차 평가·Calibration으로 점수·등급 확정(MBO) + OKR 성과 활용",
+      "okr_mbo_note": "통합 진행. MBO=KPI 달성도 점수·등급·상대비율·Calibration / OKR=결과 직접등급화 지양, 목표 의미·과정 종합 해석·인재 논의. 평가-보상 연계 정도가 상이.",
+      "entry_criteria": "평가 운영계획·Guide 확정, 운영 기간 종료(실적 확정)",
+      "exit_criteria": "Calibration 거쳐 평가 점수·등급 확정 및 BG장/CEO 보고 완료",
+      "coordination": "sequential",
+      "quality_gates": [
+        {
+          "rule": "부문별 평가등급 인원비율 Guide 준수",
+          "threshold": "Guide 범위",
+          "source": "pm.ev.confirm.grade"
+        },
+        {
+          "rule": "Calibration 경향(관대화/중심화/가혹화) 점검",
+          "threshold": "분포 정상범위",
+          "source": "pm.out.dist_analysis"
+        },
+        {
+          "rule": "조직별 평균 Gap 점검",
+          "threshold": "전체 평균 대비",
+          "source": "pm.out.org_analysis.gap"
+        },
+        {
+          "rule": "실적자료 신뢰성·자기평가 타당성 검증",
+          "threshold": "근거 충족",
+          "source": "pm.ev.supervisor.review"
+        }
+      ],
+      "escalation": "왜곡 평가·Gap 이상 → Calibration Meeting 재평가/조정 요청(HR 배석)",
+      "okr_mbo_branching": {
+        "OKR": "결과 직접등급화 지양·종합 해석·인재 논의",
+        "MBO": "KPI 달성도 점수→상사평가→Calibration→등급"
+      },
+      "manages_subagents": [
+        "sa.okr.eval.process",
+        "sa.okr.eval.talent-session",
+        "sa.pm.ev.guideline",
+        "sa.pm.ev.self",
+        "sa.pm.ev.supervisor",
+        "sa.pm.ev.calibration",
+        "sa.pm.ev.confirm",
+        "sa.pm.act.eval_special",
+        "sa.pm.act.hr_result_analysis"
+      ],
+      "subagent_count": 9,
+      "human_gate_count": 8
+    },
+    {
+      "id": "mgr.u.fb",
+      "label": "U4 피드백 Manager",
+      "phase": "u.fb",
+      "kind": "core",
+      "summary": "평가결과 Feedback 면담·Note + CFR(대화·피드백·인정) 상시 피드백 루프",
+      "okr_mbo_note": "통합 진행. MBO=평가결과 1:1 Feedback Note 면담 / OKR=CFR(대화·피드백·인정) 상시 루프. 둘 다 차년도 목표로 연결.",
+      "entry_criteria": "평가 결과 확정",
+      "exit_criteria": "전 피평가자 Feedback Meeting 실시·결과 취합 보고 완료",
+      "coordination": "sequential",
+      "quality_gates": [
+        {
+          "rule": "전 피평가자 Feedback Meeting 실시",
+          "threshold": "100%",
+          "source": "pm.fb.conduct"
+        },
+        {
+          "rule": "성과급 지급률 산정 근거 명시",
+          "threshold": "Note 기재",
+          "source": "pm.fb.prepare.note"
+        },
+        {
+          "rule": "자기평가 Gap 큰 항목·미달성 KPI 설명",
+          "threshold": "면담 포함",
+          "source": "pm.fb.conduct.meeting"
+        }
+      ],
+      "escalation": "Negative 성과·감정 이슈 → 문제해결적 Approach·개선계획 수립",
+      "okr_mbo_branching": {
+        "OKR": "CFR(대화·피드백·인정) 상시 루프",
+        "MBO": "평가결과 1:1 Feedback Note 면담"
+      },
+      "manages_subagents": [
+        "sa.pm.fb.prepare",
+        "sa.pm.fb.conduct",
+        "sa.pm.fb.result"
+      ],
+      "subagent_count": 3,
+      "human_gate_count": 2
+    },
+    {
+      "id": "mgr.x.align",
+      "label": "X1 정렬·연계 Manager",
+      "phase": "x.align",
+      "kind": "cross",
+      "summary": "수직(상위→하위 Cascading)·수평(부서간) 목표 정렬. 전 단계 횡단 지원",
+      "okr_mbo_note": "통합 진행. MBO=상위→하위 기계적 Cascading·할당 / OKR=기여 기반 직·간접 유연 연계. 본 설계는 유연 연계를 기본, 기계적 Cascading은 가중치/Target 검증 단계에서 보강.",
+      "entry_criteria": "조직별 OKR/목표 초안 수립 (목표수립 단계와 병행)",
+      "exit_criteria": "조직 간 OKR 적합성·연계성 검토 및 자원 배분 결정",
+      "coordination": "parallel",
+      "quality_gates": [
+        {
+          "rule": "상위 KR을 하위 Objective로 설정 금지",
+          "threshold": "위반 0",
+          "source": "okr.align.guideline"
+        },
+        {
+          "rule": "Core=직접 / Support=간접 Alignment",
+          "threshold": "유형 일치",
+          "source": "okr.align.option"
+        },
+        {
+          "rule": "조직 간 균형 배분·충돌 점검",
+          "threshold": "충돌 0",
+          "source": "okr.align.support-review"
+        }
+      ],
+      "escalation": "조직 간 우선순위 충돌 → Alignment Workshop에서 경영진/Champion 조정",
+      "okr_mbo_branching": {
+        "OKR": "기여 기반 직·간접 유연 연계",
+        "MBO": "상위→하위 기계적 Cascading(가중치/Target 검증으로 보강)"
+      },
+      "manages_subagents": [
+        "sa.okr.align.vertical",
+        "sa.okr.align.horizontal",
+        "sa.okr.align.workshop"
+      ],
+      "subagent_count": 3,
+      "human_gate_count": 0
+    },
+    {
+      "id": "mgr.x.change",
+      "label": "X2 변화관리·원칙·문화 Manager",
+      "phase": "x.change",
+      "kind": "cross",
+      "summary": "OKR 전환 변화관리 + FAST 원칙 + 행동강령 등 운영 문화. 전 단계 횡단",
+      "okr_mbo_note": "OKR 고유. MBO에는 명시적 변화관리 단계 없음. AI Agent 도입 자체가 변화관리 대상이므로 본 단계를 운영 문화·원칙 계층으로 횡단 적용.",
+      "entry_criteria": "상시 (전 단계 횡단)",
+      "exit_criteria": "상시 (정착·문화화 지속)",
+      "coordination": "parallel",
+      "quality_gates": [
+        {
+          "rule": "6대 행동강령 준수",
+          "threshold": "Action Plan 이행",
+          "source": "okr.cm.code"
+        },
+        {
+          "rule": "책임 주기(D/W/M/Q) Cadence 운영",
+          "threshold": "주기 충족",
+          "source": "okr.cm.cadence"
+        },
+        {
+          "rule": "투명성 — 전 과정 시스템 공개",
+          "threshold": "공개 운영",
+          "source": "okr.cm.sharing"
+        }
+      ],
+      "escalation": "변화 저항·수용도 저하 → 임원/CEO 변화 의지·자원 재확인",
+      "okr_mbo_branching": {
+        "OKR": "변화관리 3단계·6대 행동강령",
+        "MBO": "명시적 단계 없음 — AI Agent 도입 자체가 변화관리 대상"
+      },
+      "manages_subagents": [
+        "sa.okr.cm.strategy",
+        "sa.okr.cm.code"
+      ],
+      "subagent_count": 2,
+      "human_gate_count": 0
+    }
+  ],
+  "subagents": [
+    {
+      "id": "sa.okr.define.personal",
+      "label": "개인 OKR 수립",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "human_approve",
+      "goal": "OKR Canvas 기반으로 팀원·팀장이 논의하여 목표 3~5개와 목표별 핵심결과 3~5개를 수립",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 3
+        },
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 9
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Initiative",
+          "OKR Canvas",
+          "개인 R&R",
+          "과거 목표",
+          "목표 Pool",
+          "목표별 핵심결과 3~5개",
+          "전사 Mission",
+          "전사 OKR",
+          "전사 및 조직 OKR",
+          "조직 OKR",
+          "최종 목표 3~5개",
+          "핵심결과 Pool",
+          "확정된 개인 OKR"
+        ],
+        "outputs": [
+          "Initiative",
+          "OKR Canvas",
+          "개인 OKR",
+          "목표 Pool",
+          "목표별 핵심결과 3~5개",
+          "시스템 등록 OKR",
+          "점검 결과",
+          "최종 목표 3~5개",
+          "핵심결과 Pool",
+          "확정된 개인 OKR"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.define.personal",
+          "label": "개인 OKR 수립",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.define.system-register",
+          "label": "Performance Plus OKR 등록·확정",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.initiative-set",
+          "label": "Initiative 설정",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.checklist",
+          "label": "개인 OKR 수립 점검",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.confirm",
+          "label": "개인 OKR 확정",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.kr-priority",
+          "label": "핵심결과 우선순위화",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.kr-brainstorm",
+          "label": "핵심결과 Brainstorming",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.obj-priority",
+          "label": "목표 우선순위화",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.obj-brainstorm",
+          "label": "목표 Brainstorming",
+          "kind": "task"
+        },
+        {
+          "id": "okr.define.canvas",
+          "label": "OKR Canvas",
+          "kind": "output"
+        }
+      ],
+      "tools": {
+        "data": [
+          "OKR 측정 방법(Measurement)",
+          "공개 범위(Visibility)",
+          "목표 주기(Target Date)"
+        ],
+        "context": [
+          "Initiative 설정 맥락",
+          "OKR 점검 맥락",
+          "OKR 확정 결정 맥락",
+          "개인 목표 설정 맥락",
+          "목표 Brainstorming 맥락",
+          "목표 우선순위화 맥락",
+          "시스템 등록 맥락",
+          "핵심결과 발산 맥락",
+          "핵심결과 우선순위 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "OKR Canvas"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "okr.define.system-register",
+          "label": "Performance Plus OKR 등록·확정"
+        },
+        {
+          "id": "okr.define.confirm",
+          "label": "개인 OKR 확정"
+        }
+      ],
+      "human_roles": [
+        "1차평가자(팀장)",
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.okr.align.vertical",
+      "label": "수직적 Alignment",
+      "phase": "x.align",
+      "phase_label": "X1 정렬·연계",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "하향식(Top-Down) 방향성·의미 정렬과 상향식(Bottom-Up) 기여 기반 자율 수립의 상하 균형 정렬",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "조직별 OKR"
+        ],
+        "outputs": [
+          "검토 결과"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": [
+          "sa.okr.align.horizontal"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.align.vertical",
+          "label": "수직적 Alignment",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.align.support-review",
+          "label": "Support OKR Alignment 검토",
+          "kind": "task"
+        },
+        {
+          "id": "okr.align.core-review",
+          "label": "Core OKR Alignment 검토",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Core OKR 정렬 맥락",
+          "Support OKR 정렬 맥락",
+          "수직 정렬 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "경영진(임원/CEO)"
+      ]
+    },
+    {
+      "id": "sa.okr.align.horizontal",
+      "label": "수평적 Alignment",
+      "phase": "x.align",
+      "phase_label": "X1 정렬·연계",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "수평 조직 간 OKR 우선순위 논의 및 기능적 연결·협업을 통해 상위조직 OKR 달성에 기여",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 1
+        }
+      ],
+      "io_contract": {
+        "inputs": [],
+        "outputs": []
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.okr.align.vertical"
+        ],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.align.horizontal",
+          "label": "수평적 Alignment",
+          "kind": "activity"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "수평 정렬 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": []
+    },
+    {
+      "id": "sa.okr.align.workshop",
+      "label": "Alignment Workshop",
+      "phase": "x.align",
+      "phase_label": "X1 정렬·연계",
+      "origin": "OKR",
+      "agent_type": "facilitator",
+      "agent_type_desc": "회의·면담 실시간 보조 (가이드·질문·기록)",
+      "autonomy_level": "human_led",
+      "goal": "조직별 Alignment 검증 후 조직 간 OKR 적합성·연계성 검토, 우선순위 수립, 인적·물적 자원 배분 결정",
+      "tool_interface": [],
+      "io_contract": {
+        "inputs": [
+          "자원 조달 문서",
+          "조직별 OKR 수립 내용"
+        ],
+        "outputs": [
+          "자원 조달 비중",
+          "조직 OKR 우선순위",
+          "조직 OKR 종합 피드백"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.align.workshop",
+          "label": "Alignment Workshop",
+          "kind": "activity"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "경영진(임원/CEO)"
+      ]
+    },
+    {
+      "id": "sa.okr.review.weekly-briefing",
+      "label": "주간 브리핑(목표 점검 및 회고)",
+      "phase": "u.check",
+      "phase_label": "U2 실행·점검",
+      "origin": "OKR",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "suggest",
+      "goal": "월요일 Start Meeting과 금요일 Review Briefing으로 진행 업무를 점검·회고하여 목표 지속/중단/보완 결정",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "개인 OKR",
+          "목표 점검 결과",
+          "전 주차 점검 내용",
+          "주간 진행 결과",
+          "주간 진행 업무"
+        ],
+        "outputs": [
+          "Next Step",
+          "리뷰 결과",
+          "목표 점검 결과",
+          "사전 공유 업무",
+          "지속/보완/중단 결정"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.review.weekly-briefing",
+          "label": "주간 브리핑(목표 점검 및 회고)",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.review.retro-question",
+          "label": "회고 문항(Follow Up)",
+          "kind": "task"
+        },
+        {
+          "id": "okr.review.agenda",
+          "label": "목표점검 Agenda",
+          "kind": "task"
+        },
+        {
+          "id": "okr.review.meeting-prep",
+          "label": "미팅 사전 준비(Scrum)",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Scrum 사전준비 맥락",
+          "목표점검 Agenda 맥락",
+          "주간 점검·회고 맥락",
+          "회고 문항 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "1차평가자(팀장)",
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.okr.review.annual-review",
+      "label": "OKR 달성도 종합리뷰",
+      "phase": "u.check",
+      "phase_label": "U2 실행·점검",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "연말 일괄 실시하는 개인 종합리뷰·상위관리자 리뷰·OKR 지향노트 작성으로 차기 OKR 정교화",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "OKR 회고노트",
+          "개인 종합 리뷰 결과",
+          "수행업무 과정·결과",
+          "종합 피드백",
+          "주간 CFR",
+          "주간 CFR 내용"
+        ],
+        "outputs": [
+          "OKR 지향노트",
+          "OKR 회고노트",
+          "개인 종합 리뷰 결과",
+          "종합 피드백"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.review.annual-review",
+          "label": "OKR 달성도 종합리뷰",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.review.aim-note",
+          "label": "OKR 지향노트",
+          "kind": "output"
+        },
+        {
+          "id": "okr.review.manager-review",
+          "label": "상위관리자 리뷰",
+          "kind": "task"
+        },
+        {
+          "id": "okr.review.self-review",
+          "label": "개인 종합 리뷰",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "개인 종합 리뷰 맥락",
+          "상위관리자 리뷰 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "OKR 지향노트"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "경영진(임원/CEO)",
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.okr.eval.process",
+      "label": "OKR 활용 프로세스",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "종합 리뷰로 정보 수집→인재 스냅샷 작성→인재 논의로 평가·보상·육성 연계",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 2
+        },
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "360 피드백",
+          "목표와 달성도",
+          "배지",
+          "성과 해석 결과",
+          "인재 스냅샷",
+          "종합 리뷰 결과"
+        ],
+        "outputs": [
+          "보상·육성 논의 결과",
+          "성과 해석 결과",
+          "인재 논의 결과",
+          "인재 스냅샷",
+          "자가진단 결과",
+          "종합 리뷰 결과",
+          "핵심인재 검토"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": [
+          "sa.okr.eval.talent-session"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.eval.process",
+          "label": "OKR 활용 프로세스",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.eval.talent-session",
+          "label": "인재 논의(Talent Session)",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.eval.self-diagnosis",
+          "label": "인재 스냅샷 자가진단",
+          "kind": "task"
+        },
+        {
+          "id": "okr.eval.snapshot",
+          "label": "인재 스냅샷",
+          "kind": "output"
+        },
+        {
+          "id": "okr.eval.interpretation",
+          "label": "성과의 해석",
+          "kind": "task"
+        },
+        {
+          "id": "okr.eval.comprehensive-review",
+          "label": "종합 리뷰",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [
+          "360 피드백",
+          "배지(인정과 피드백)"
+        ],
+        "context": [
+          "성과 해석 맥락",
+          "인재 논의 맥락",
+          "종합 리뷰 맥락",
+          "평가 자가진단 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "인재 스냅샷"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "1차평가자(팀장)"
+      ]
+    },
+    {
+      "id": "sa.okr.eval.talent-session",
+      "label": "인재 논의(Talent Session)",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "OKR",
+      "agent_type": "facilitator",
+      "agent_type_desc": "회의·면담 실시간 보조 (가이드·질문·기록)",
+      "autonomy_level": "human_led",
+      "goal": "성과·보상·육성·인재관리 역량을 여러 사람과 논의하여 평가 결과의 객관성·공정성 제고",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 1
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "360 피드백",
+          "인재 스냅샷"
+        ],
+        "outputs": [
+          "보상·육성 논의 결과",
+          "핵심인재 검토"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.okr.eval.process"
+        ],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.eval.talent-session",
+          "label": "인재 논의(Talent Session)",
+          "kind": "activity"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "인재 논의 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.okr.cm.strategy",
+      "label": "변화관리 전략 3단계",
+      "phase": "x.change",
+      "phase_label": "X2 변화관리·원칙·문화",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "변화 가치 정의(Step1)→소규모 적용·촉진(Step2)→전파·확장 정착(Step3)의 단계적 변화 전략",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 1
+        }
+      ],
+      "io_contract": {
+        "inputs": [],
+        "outputs": [
+          "Action Plan",
+          "새로운 운영 모델"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.cm.strategy",
+          "label": "변화관리 전략 3단계",
+          "kind": "activity"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "변화관리 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "경영진(임원/CEO)"
+      ]
+    },
+    {
+      "id": "sa.okr.cm.code",
+      "label": "OKR 행동강령",
+      "phase": "x.change",
+      "phase_label": "X2 변화관리·원칙·문화",
+      "origin": "OKR",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "성장마인드·좋은질문·OKR공유·Alignment연습·책임주기설정·AD-FIT코칭의 6개 행동강령과 Action Plan",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 6
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "경영 현황·계획 자료"
+        ],
+        "outputs": [
+          "AD-FIT 체크리스트",
+          "Action Item",
+          "Best OKR",
+          "OKR 리뷰",
+          "Q&A Feedback",
+          "전략 공유",
+          "전사 공유 OKR",
+          "진척도 공유",
+          "회의 운영 포스터"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "okr.cm.code",
+          "label": "OKR 행동강령",
+          "kind": "activity"
+        },
+        {
+          "id": "okr.cm.adfit-coaching",
+          "label": "AD-FIT 코칭하기",
+          "kind": "task"
+        },
+        {
+          "id": "okr.cm.cadence",
+          "label": "책임 주기 설정하기(Accountability Cadence)",
+          "kind": "task"
+        },
+        {
+          "id": "okr.cm.practice-align",
+          "label": "Alignment 연습하기(Transparency 미팅)",
+          "kind": "task"
+        },
+        {
+          "id": "okr.cm.sharing",
+          "label": "OKR 공유하기(Sharing OKRs)",
+          "kind": "task"
+        },
+        {
+          "id": "okr.cm.good-question",
+          "label": "좋은 질문하기(Asking Great Questions)",
+          "kind": "task"
+        },
+        {
+          "id": "okr.cm.growth-mindset",
+          "label": "성장 마인드 기르기(Growth Mindset)",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "AD-FIT 코칭 맥락",
+          "Growth Mindset 맥락",
+          "OKR 공유 맥락",
+          "Transparency 미팅 맥락",
+          "좋은 질문 맥락",
+          "책임 주기 설정 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": []
+    },
+    {
+      "id": "sa.pm.gs.guideline",
+      "label": "지침 수립 및 안내",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "retriever",
+      "agent_type_desc": "지침·데이터 조회·배포",
+      "autonomy_level": "auto",
+      "goal": "목표수립 지침 수립 및 자회사/BG·중역/팀장 대상 설명회 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "내부 목표수립 Guide",
+          "목표 수립 지침",
+          "목표수립 지침",
+          "성과관리 매뉴얼",
+          "재무 KPI 수립 지침",
+          "전년도 지침",
+          "전략 KPI 수립 지침"
+        ],
+        "outputs": [
+          "MBO 운영 계획",
+          "MBO 운영계획",
+          "내부 MBO 운영계획",
+          "목표수립 지침",
+          "설명회 자료"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": [
+          "sa.pm.gs.self-goal"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.gs.guideline",
+          "label": "지침 수립 및 안내",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.gs.guideline.exec-briefing",
+          "label": "중역/팀장 대상 설명회 실시",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.guideline.local-plan",
+          "label": "자회사/BG 내부 MBO 운영계획 수립",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.guideline.subsidiary-briefing",
+          "label": "자회사/BG HR 대상 설명회 실시",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.guideline.holding-plan",
+          "label": "연간 MBO 운영 계획 및 지침 수립",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "내부 운영계획 맥락",
+          "연간 운영계획 맥락",
+          "자회사 설명회 맥락",
+          "중역/팀장 설명회 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.gs.self-goal",
+      "label": "자기 목표 수립",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "피평가자가 상위 조직 목표 연계 및 고유 업무 고려하여 자기 목표 설정서 작성",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 5
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "사업계획",
+          "상위 조직장 목표",
+          "상위 조직장 목표 수립 결과",
+          "자기 목표 설정서",
+          "핵심 고유 업무"
+        ],
+        "outputs": [
+          "개인별 목표 설정서 (경영성과 평가서)",
+          "자기 목표 설정서",
+          "전략MBO 계획서",
+          "중역 전략과제 MBO 계획서",
+          "추진과제 Milestone Template"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.gs.guideline"
+        ],
+        "downstream": [
+          "sa.pm.gs.review-meeting"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.gs.self-goal",
+          "label": "자기 목표 수립",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.goal-setting-sheet",
+          "label": "개인별 목표 설정서 (경영성과 평가서)",
+          "kind": "output"
+        },
+        {
+          "id": "pm.gs.self-goal.submit",
+          "label": "자기 목표 수립 결과 송부",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.self-goal.exec-strategy",
+          "label": "중역 전략MBO 계획서 작성",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tpl.milestone",
+          "label": "추진과제 Milestone Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.tpl.exec-strategy-mbo",
+          "label": "중역 전략과제 MBO 계획서",
+          "kind": "output"
+        },
+        {
+          "id": "pm.gs.self-goal.kpi-target",
+          "label": "KPI 및 목표수준 설정",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.self-goal.role-csf",
+          "label": "역할책임 및 핵심성공요인 정의",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "KPI·목표수준 설정 맥락",
+          "역할책임·CSF 정의 맥락",
+          "자기 목표 수립 맥락",
+          "자기목표 송부 맥락",
+          "중역 전략MBO 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "개인별 목표 설정서 (경영성과 평가서)",
+        "중역 전략과제 MBO 계획서",
+        "추진과제 Milestone Template"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.gs.review-meeting",
+      "label": "목표 검토 회의",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "facilitator",
+      "agent_type_desc": "회의·면담 실시간 보조 (가이드·질문·기록)",
+      "autonomy_level": "human_approve",
+      "goal": "평가자-피평가자 간 목표 검토 및 협의를 위한 공식 회의 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "BG LRP/AOP 확정안",
+          "Cascading Matrix",
+          "목표 검토 회의 협의 내용",
+          "목표설정서",
+          "목표수립지침",
+          "자기 목표 설정서"
+        ],
+        "outputs": [
+          "Cascading Matrix",
+          "목표 검토 Checklist",
+          "목표 검토 회의 결과 정리",
+          "목표 설정서 수정본",
+          "목표검토회의 결과 정리 Template",
+          "목표수립 진행결과 Summary",
+          "자기 목표 설정서 수정본",
+          "팀원 목표 검토 회의 Progress Check Template",
+          "회의 일정 계획"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.gs.self-goal"
+        ],
+        "downstream": [
+          "sa.pm.gs.review-feedback"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.gs.review-meeting",
+          "label": "목표 검토 회의",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.member-progress-check",
+          "label": "팀원 목표 검토 회의 Progress Check Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.tpl.review-result",
+          "label": "목표검토회의 결과 정리 Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.tpl.review-checklist",
+          "label": "목표 검토 Checklist",
+          "kind": "output"
+        },
+        {
+          "id": "pm.tpl.cascading-matrix",
+          "label": "Cascading Matrix",
+          "kind": "output"
+        },
+        {
+          "id": "pm.gs.review-meeting.revise",
+          "label": "자기 목표 수정 및 결과 정리",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.review-meeting.conduct",
+          "label": "목표 검토 회의 실시",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.review-meeting.arrange",
+          "label": "회의 일정 Arrange 및 자료 준비",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "검토회의 Arrange 맥락",
+          "검토회의 실시 맥락",
+          "목표 검토 회의 맥락",
+          "목표 수정·정리 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "Cascading Matrix",
+        "목표 검토 Checklist",
+        "목표검토회의 결과 정리 Template",
+        "팀원 목표 검토 회의 Progress Check Template"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.gs.review-meeting",
+          "label": "목표 검토 회의"
+        },
+        {
+          "id": "pm.tpl.member-progress-check",
+          "label": "팀원 목표 검토 회의 Progress Check Template"
+        },
+        {
+          "id": "pm.tpl.review-result",
+          "label": "목표검토회의 결과 정리 Template"
+        },
+        {
+          "id": "pm.gs.review-meeting.conduct",
+          "label": "목표 검토 회의 실시"
+        },
+        {
+          "id": "pm.gs.review-meeting.arrange",
+          "label": "회의 일정 Arrange 및 자료 준비"
+        }
+      ],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.gs.review-feedback",
+      "label": "목표 검토 및 Feedback",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "suggest",
+      "goal": "기능별(FA/VM/HR) 목표 수립 결과 검토 및 Feedback 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Monitoring Tool",
+          "목표 설정서 수정본",
+          "자기 목표 설정서 수정본"
+        ],
+        "outputs": [
+          "Feedback Point"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.gs.review-meeting"
+        ],
+        "downstream": [
+          "sa.pm.gs.confirm"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.gs.review-feedback",
+          "label": "목표 검토 및 Feedback",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.gs.review-feedback.review",
+          "label": "기능별 검토 및 Feedback 실시",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.review-feedback.collect",
+          "label": "중역 목표 수정본 취합 송부",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "기능별 HR 검토 맥락",
+          "중역 수정본 취합 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.gs.confirm",
+      "label": "목표 확정",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "human_approve",
+      "goal": "목표 최종 수정/서명을 통한 확정 및 진행결과 Summary 작성",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 1
+        },
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Feedback Point",
+          "개인목표설정서 서명본",
+          "개인별 목표 설정서",
+          "목표 설정서 수정본"
+        ],
+        "outputs": [
+          "개인목표설정서 서명본",
+          "목표수립 진행결과 Summary"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.gs.review-feedback"
+        ],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.gs.confirm",
+          "label": "목표 확정",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.gs-summary",
+          "label": "목표수립 진행결과 Summary",
+          "kind": "output"
+        },
+        {
+          "id": "pm.gs.confirm.collect-summary",
+          "label": "목표 최종본 취합 및 Summary 작성",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.confirm.sign2",
+          "label": "2차 평가자 서명(Confirm)",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.confirm.sign1",
+          "label": "1차 평가자 서명",
+          "kind": "task"
+        },
+        {
+          "id": "pm.gs.confirm.finalize",
+          "label": "목표 최종 수정 및 서명",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [
+          "중역 목표 수립 결과(가중치) 집계표"
+        ],
+        "context": [
+          "1차 평가자 서명 맥락",
+          "2차 평가자 Confirm 맥락",
+          "목표 최종 수정·서명 맥락",
+          "목표 취합·Summary 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "목표수립 진행결과 Summary"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.gs.confirm",
+          "label": "목표 확정"
+        },
+        {
+          "id": "pm.gs.confirm.sign2",
+          "label": "2차 평가자 서명(Confirm)"
+        },
+        {
+          "id": "pm.gs.confirm.sign1",
+          "label": "1차 평가자 서명"
+        },
+        {
+          "id": "pm.gs.confirm.finalize",
+          "label": "목표 최종 수정 및 서명"
+        }
+      ],
+      "human_roles": [
+        "1차평가자(팀장)",
+        "2차평가자(중역/BG장)",
+        "HR 운영자",
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.myr.prepare",
+      "label": "Mid-year Review 준비",
+      "phase": "u.check",
+      "phase_label": "U2 실행·점검",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "human_approve",
+      "goal": "Review 일정/Guide 수립, HR/중역·팀장 교육, 본인 중간점검 양식 작성 및 사전 점검",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "개인목표설정서",
+          "본인 중간 점검 양식"
+        ],
+        "outputs": [
+          "Mid-year Review 운영 계획",
+          "면담 Point",
+          "면담 일정 계획",
+          "본인 중간 점검 Template",
+          "본인 중간 점검 양식"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": [
+          "sa.pm.myr.interview"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.myr.prepare",
+          "label": "Mid-year Review 준비",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.myr-self-check",
+          "label": "본인 중간 점검 Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.myr.prepare.pre-check",
+          "label": "달성도 사전 점검 및 면담 일정 Arrange",
+          "kind": "task"
+        },
+        {
+          "id": "pm.myr.prepare.self-check",
+          "label": "본인 중간점검 양식 작성",
+          "kind": "task"
+        },
+        {
+          "id": "pm.myr.prepare.plan",
+          "label": "Review 일정 및 Guide 수립",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Mid-year Review 계획 맥락",
+          "면담 사전점검 맥락",
+          "본인 중간점검 작성 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "본인 중간 점검 Template"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.myr.prepare.pre-check",
+          "label": "달성도 사전 점검 및 면담 일정 Arrange"
+        }
+      ],
+      "human_roles": [
+        "1차평가자(팀장)",
+        "HR 운영자",
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.myr.interview",
+      "label": "중간 점검 면담",
+      "phase": "u.check",
+      "phase_label": "U2 실행·점검",
+      "origin": "MBO",
+      "agent_type": "facilitator",
+      "agent_type_desc": "회의·면담 실시간 보조 (가이드·질문·기록)",
+      "autonomy_level": "human_approve",
+      "goal": "평가자-피평가자 간 1:1 중간 점검 면담 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "면담 Point",
+          "본인 중간 점검 양식"
+        ],
+        "outputs": []
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.myr.prepare"
+        ],
+        "downstream": [
+          "sa.pm.myr.result"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.myr.interview",
+          "label": "중간 점검 면담",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.myr.interview.monitor",
+          "label": "면담 참관 및 진행 현황 Monitoring",
+          "kind": "task"
+        },
+        {
+          "id": "pm.myr.interview.conduct",
+          "label": "1:1 중간 점검 면담 실시",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "면담 참관 맥락",
+          "중간 점검 면담 맥락",
+          "중간점검 면담 실시 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.myr.interview",
+          "label": "중간 점검 면담"
+        },
+        {
+          "id": "pm.myr.interview.monitor",
+          "label": "면담 참관 및 진행 현황 Monitoring"
+        },
+        {
+          "id": "pm.myr.interview.conduct",
+          "label": "1:1 중간 점검 면담 실시"
+        }
+      ],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.myr.result",
+      "label": "결과 정리 및 취합",
+      "phase": "u.check",
+      "phase_label": "U2 실행·점검",
+      "origin": "MBO",
+      "agent_type": "monitor",
+      "agent_type_desc": "진행 모니터링·취합·리포트 자동화",
+      "autonomy_level": "human_approve",
+      "goal": "중간 점검 면담 결과 정리·취합 및 BG장/CEO 보고",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Mid-year Review 결과 정리",
+          "본인 중간 점검 양식"
+        ],
+        "outputs": [
+          "Mid-year Review 결과 보고",
+          "Mid-year Review 결과 정리",
+          "Mid-year Review 결과 정리 Template"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.myr.interview"
+        ],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.myr.result",
+          "label": "결과 정리 및 취합",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.myr-result",
+          "label": "Mid-year Review 결과 정리 Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.myr.result.consolidate",
+          "label": "결과 취합 및 보고",
+          "kind": "task"
+        },
+        {
+          "id": "pm.myr.result.record",
+          "label": "면담 결과 정리 및 송부",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "면담 결과 정리 맥락",
+          "면담 결과 취합 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "Mid-year Review 결과 정리 Template"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.myr.result.consolidate",
+          "label": "결과 취합 및 보고"
+        },
+        {
+          "id": "pm.myr.result.record",
+          "label": "면담 결과 정리 및 송부"
+        }
+      ],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.ev.guideline",
+      "label": "평가 지침 수립 및 안내",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "retriever",
+      "agent_type_desc": "지침·데이터 조회·배포",
+      "autonomy_level": "human_approve",
+      "goal": "평가/Feedback 운영 계획 수립 및 자회사/BG·중역/팀장 대상 평가 안내(Feedback 지침 포함)",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "평가 운영 계획"
+        ],
+        "outputs": [
+          "평가 Guide",
+          "평가 운영 계획"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": [
+          "sa.pm.ev.self"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.ev.guideline",
+          "label": "평가 지침 수립 및 안내",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.ev.guideline.brief",
+          "label": "중역/팀장 대상 평가 Guide 배포 및 Training",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.guideline.plan",
+          "label": "평가 운영 계획 수립 및 보고",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "평가 Guide 배포 맥락",
+          "평가 운영계획 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.ev.guideline.plan",
+          "label": "평가 운영 계획 수립 및 보고"
+        }
+      ],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.ev.self",
+      "label": "자기 평가",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "피평가자가 평가항목별 실적 집계 및 자기 평가서 작성",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "개인목표설정서",
+          "실적 자료",
+          "자기 평가서"
+        ],
+        "outputs": [
+          "실적 자료",
+          "자기 평가서",
+          "평가 Template"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.ev.guideline"
+        ],
+        "downstream": [
+          "sa.pm.ev.supervisor"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.ev.self",
+          "label": "자기 평가",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.eval-sheet",
+          "label": "평가 Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.ev.self.submit",
+          "label": "자기평가서 송부",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.self.write",
+          "label": "자기 평가서 작성",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.self.collect-data",
+          "label": "평가항목별 실적 자료 집계",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "실적자료 집계 맥락",
+          "자기·상사 평가 맥락",
+          "자기평가서 송부 맥락",
+          "자기평가서 작성 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "평가 Template"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.ev.supervisor",
+      "label": "상사 평가",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "1차 평가자가 자기 평가 결과 검토 및 상사 평가 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "개인목표설정서",
+          "실적 자료",
+          "자기 평가서"
+        ],
+        "outputs": [
+          "상사 평가 결과",
+          "정성평가 근거 Template"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.ev.self"
+        ],
+        "downstream": [
+          "sa.pm.ev.calibration"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.ev.supervisor",
+          "label": "상사 평가",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.qualitative-eval",
+          "label": "정성평가 근거 Template",
+          "kind": "output"
+        },
+        {
+          "id": "pm.ev.supervisor.evaluate",
+          "label": "상사 평가 실시",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.supervisor.review",
+          "label": "자기 평가 결과 검토",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "상사 평가 실시 맥락",
+          "자기평가 검토 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "정성평가 근거 Template"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "1차평가자(팀장)"
+      ]
+    },
+    {
+      "id": "sa.pm.ev.calibration",
+      "label": "Calibration",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "human_approve",
+      "goal": "2차 평가자의 평가 결과 Review 및 Calibration Meeting 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "HR Review Report",
+          "상사 평가 결과"
+        ],
+        "outputs": [
+          "BG HR Review Report",
+          "Calibration Guideline",
+          "HR Review Report",
+          "최종 평가 결과 확정안"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.ev.supervisor"
+        ],
+        "downstream": [
+          "sa.pm.ev.confirm"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.ev.calibration",
+          "label": "Calibration",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.hr-review-report",
+          "label": "BG HR Review Report",
+          "kind": "output"
+        },
+        {
+          "id": "pm.ev.calibration.meeting",
+          "label": "Calibration Meeting 실시",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.calibration.review",
+          "label": "차상위자 평가 결과 Review",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.calibration.prepare",
+          "label": "Calibration 준비",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Calibration Meeting 맥락",
+          "Calibration Review 맥락",
+          "Calibration 맥락",
+          "Calibration 준비 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "BG HR Review Report"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.ev.calibration",
+          "label": "Calibration"
+        },
+        {
+          "id": "pm.ev.calibration.meeting",
+          "label": "Calibration Meeting 실시"
+        },
+        {
+          "id": "pm.ev.calibration.prepare",
+          "label": "Calibration 준비"
+        }
+      ],
+      "human_roles": [
+        "2차평가자(중역/BG장)"
+      ]
+    },
+    {
+      "id": "sa.pm.ev.confirm",
+      "label": "평가 결과 확정/보고",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "monitor",
+      "agent_type_desc": "진행 모니터링·취합·리포트 자동화",
+      "autonomy_level": "human_approve",
+      "goal": "평가 점수 확정 및 평가 등급 부여, BG장/CEO 보고",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "최종 평가 결과 확정안",
+          "최종 평가 점수",
+          "평가 등급"
+        ],
+        "outputs": [
+          "MBO 평가 결과",
+          "최종 평가 등급 확정 결과 정리 양식",
+          "최종 평가 점수",
+          "평가 등급"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.ev.calibration"
+        ],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.ev.confirm",
+          "label": "평가 결과 확정/보고",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.grade-confirm",
+          "label": "최종 평가 등급 확정 결과 정리 양식",
+          "kind": "output"
+        },
+        {
+          "id": "pm.ev.confirm.report",
+          "label": "평가 결과 정리 및 보고",
+          "kind": "task"
+        },
+        {
+          "id": "pm.ev.confirm.grade",
+          "label": "평가 점수 확정 및 등급 부여",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "등급 부여 맥락",
+          "평가 결과 보고 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "최종 평가 등급 확정 결과 정리 양식"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.ev.confirm",
+          "label": "평가 결과 확정/보고"
+        },
+        {
+          "id": "pm.tpl.grade-confirm",
+          "label": "최종 평가 등급 확정 결과 정리 양식"
+        },
+        {
+          "id": "pm.ev.confirm.report",
+          "label": "평가 결과 정리 및 보고"
+        },
+        {
+          "id": "pm.ev.confirm.grade",
+          "label": "평가 점수 확정 및 등급 부여"
+        }
+      ],
+      "human_roles": [
+        "2차평가자(중역/BG장)",
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.fb.prepare",
+      "label": "Feedback 준비",
+      "phase": "u.fb",
+      "phase_label": "U4 피드백",
+      "origin": "MBO",
+      "agent_type": "retriever",
+      "agent_type_desc": "지침·데이터 조회·배포",
+      "autonomy_level": "human_approve",
+      "goal": "평가자 대상 Feedback 안내, 면담 계획 수립 및 Feedback Note 작성",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "최종 평가 점수",
+          "평가 등급"
+        ],
+        "outputs": [
+          "Feedback Note",
+          "Feedback 면담 Guideline",
+          "Feedback 면담 계획",
+          "Feedback 양식"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": [
+          "sa.pm.fb.conduct"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.fb.prepare",
+          "label": "Feedback 준비",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.fb.prepare.note",
+          "label": "Feedback Note 작성",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tpl.feedback-note",
+          "label": "Feedback Note",
+          "kind": "output"
+        },
+        {
+          "id": "pm.fb.prepare.plan",
+          "label": "Feedback 면담 계획 수립",
+          "kind": "task"
+        },
+        {
+          "id": "pm.fb.prepare.notify",
+          "label": "평가자 대상 Feedback 안내",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Feedback Note 작성 맥락",
+          "Feedback 면담계획 맥락",
+          "Feedback 안내 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "Feedback Note"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.fb.prepare.plan",
+          "label": "Feedback 면담 계획 수립"
+        }
+      ],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.fb.conduct",
+      "label": "Feedback 실시",
+      "phase": "u.fb",
+      "phase_label": "U4 피드백",
+      "origin": "MBO",
+      "agent_type": "facilitator",
+      "agent_type_desc": "회의·면담 실시간 보조 (가이드·질문·기록)",
+      "autonomy_level": "human_led",
+      "goal": "평가자-피평가자 간 1:1 Feedback Meeting 실시",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Feedback 면담 계획",
+          "Feedback 양식",
+          "자기 평가서",
+          "최종 평가 점수"
+        ],
+        "outputs": []
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.fb.prepare"
+        ],
+        "downstream": [
+          "sa.pm.fb.result"
+        ]
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.fb.conduct",
+          "label": "Feedback 실시",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.fb.conduct.monitor",
+          "label": "Feedback Meeting 진행 현황 Monitoring",
+          "kind": "task"
+        },
+        {
+          "id": "pm.fb.conduct.meeting",
+          "label": "1:1 Feedback Meeting 실시",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Feedback Meeting 맥락",
+          "Feedback Monitoring 맥락",
+          "Feedback 면담 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.fb.result",
+      "label": "Feedback 결과 정리",
+      "phase": "u.fb",
+      "phase_label": "U4 피드백",
+      "origin": "MBO",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "human_approve",
+      "goal": "Feedback Meeting 결과 정리·취합 및 BG장/CEO 보고",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Feedback Meeting 결과 정리"
+        ],
+        "outputs": [
+          "Feedback Meeting 결과 정리",
+          "Feedback Meeting 결과 정리 양식",
+          "Feedback 결과 Report"
+        ]
+      },
+      "dependencies": {
+        "upstream": [
+          "sa.pm.fb.conduct"
+        ],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.fb.result",
+          "label": "Feedback 결과 정리",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tpl.feedback-result",
+          "label": "Feedback Meeting 결과 정리 양식",
+          "kind": "output"
+        },
+        {
+          "id": "pm.fb.result.consolidate",
+          "label": "Feedback 결과 취합 및 보고",
+          "kind": "task"
+        },
+        {
+          "id": "pm.fb.result.record",
+          "label": "Feedback Meeting 결과 정리 송부",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Feedback 결과 정리 맥락",
+          "Feedback 취합·보고 맥락"
+        ],
+        "principle": []
+      },
+      "produces": [
+        "Feedback Meeting 결과 정리 양식"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.fb.result.consolidate",
+          "label": "Feedback 결과 취합 및 보고"
+        }
+      ],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.tips.goal.kpipool",
+      "label": "1. KPI Pooling & Selection",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "generator",
+      "agent_type_desc": "초안·산출물 생성 (LLM 생성)",
+      "autonomy_level": "suggest",
+      "goal": "조직·개인별로 적합한 목표와 KPI를 3가지 방법론으로 도출·선정·검증하는 활동",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 1
+        },
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 6
+        },
+        {
+          "op": "validate.principle",
+          "mode": "rule_engine",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "KPI Pool",
+          "Value Chain",
+          "경영계획 전략과제",
+          "관련 고객 List",
+          "기능영역(영업·생산·구매·서비스)",
+          "대상고객",
+          "전사 전략과제",
+          "조직 Biz Process/Main Function",
+          "조직/개인 업무 유형·성격",
+          "중점추진과제",
+          "팀 Mission/업무분장",
+          "평가지표",
+          "회사 재무목표"
+        ],
+        "outputs": [
+          "KPI Pool",
+          "Main Task",
+          "가중치 중요도",
+          "고객 Category",
+          "고객별 역할·활동·기대수준",
+          "선정 KPI",
+          "선정 KPI(5~6개)",
+          "성과요소 연계",
+          "성과책임 배분",
+          "운영 KPI Pool",
+          "재무 KPI Pool",
+          "전략 KPI Pool",
+          "핵심성공요인(CSF)"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [
+        "Goal Setting Method 3가지",
+        "KPI 도출 2-Step Approach",
+        "SMART 목표 요건 / KPI 선정 시 고려사항"
+      ],
+      "executes": [
+        {
+          "id": "pm.tips.goal.kpipool",
+          "label": "1. KPI Pooling & Selection",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.validation",
+          "label": "KPI 선정 및 검증(적정성 평가)",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.cascading.pooling",
+          "label": "Cascading 방식 KPI Pooling(재무/전략/운영)",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.cascading.steps",
+          "label": "Cascading Method 단계별 방법",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.customer.steps",
+          "label": "Customer Mapping Diagram 단계별 방법",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.process.steps",
+          "label": "Process/Function Charting 단계별 방법",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [
+          "KPI 선정 기준(Strategic/Measurable/Controllable)"
+        ],
+        "context": [
+          "Cascading KPI Pooling 맥락",
+          "Cascading Method 단계 맥락",
+          "Customer Mapping 맥락",
+          "KPI 검증 맥락",
+          "KPI 도출 맥락",
+          "Process/Function Charting 맥락"
+        ],
+        "principle": [
+          "Goal Setting Method 3가지",
+          "KPI 도출 2-Step Approach",
+          "SMART 목표 요건 / KPI 선정 시 고려사항"
+        ]
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.tips.goal.cascade",
+      "label": "2. 계층별 Cascading Guide",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "calculator",
+      "agent_type_desc": "수치 계산·산정 (결정적 연산)",
+      "autonomy_level": "auto_with_review",
+      "goal": "상위 목표를 Cascading하여 팀장·팀원의 목표를 수립하는 단계. 계층별 적합한 Cascading 방식을 이해하고 KPI 도출에 활용, 평가자의 목표설정 검증에도 활용",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 1
+        },
+        {
+          "op": "validate.principle",
+          "mode": "rule_engine",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "상위 목표",
+          "팀원 Draft Goal"
+        ],
+        "outputs": [
+          "검증된 팀원 목표",
+          "팀원 KPI",
+          "팀장 KPI"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [
+        "BG 직속팀장 KPI Cascading",
+        "팀원 KPI Cascading 5유형",
+        "팀장 KPI Cascading 5유형"
+      ],
+      "executes": [
+        {
+          "id": "pm.tips.goal.cascade",
+          "label": "2. 계층별 Cascading Guide",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tips.goal.cascade.member.verify",
+          "label": "팀원 Draft Goal 취합/검증",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "팀원 Draft 검증 맥락"
+        ],
+        "principle": [
+          "BG 직속팀장 KPI Cascading",
+          "팀원 KPI Cascading 5유형",
+          "팀장 KPI Cascading 5유형"
+        ]
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "1차평가자(팀장)",
+        "2차평가자(중역/BG장)"
+      ]
+    },
+    {
+      "id": "sa.pm.tips.goal.weight",
+      "label": "3. 가중치 / Target 설정 Tip",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "calculator",
+      "agent_type_desc": "수치 계산·산정 (결정적 연산)",
+      "autonomy_level": "auto_with_review",
+      "goal": "KPI 항목 도출 이후, KPI 항목별 가중치와 Target을 설정하는 단계. Target 설정 고려요인·방법, Data 분포별 분석방법, 가중치 설정 방법별 개념·장단점 활용",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 2
+        },
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        },
+        {
+          "op": "validate.principle",
+          "mode": "rule_engine",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "선정 KPI"
+        ],
+        "outputs": [
+          "KPI별 Target",
+          "KPI별 가중치"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [
+        "Target 설정 고려요인",
+        "가중치 설정 Process 및 고려요인",
+        "가중치 설정 방법(순위법/요소평가법/쌍대비교법)",
+        "기준별 Targeting 방법"
+      ],
+      "executes": [
+        {
+          "id": "pm.tips.goal.weight",
+          "label": "3. 가중치 / Target 설정 Tip",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tips.goal.weight.weight.pairwise",
+          "label": "쌍대비교법 가중치 설정 절차",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.weight.weight.rank",
+          "label": "순위법/요소평가법 가중치 설정 절차",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [
+          "Cap/Target/Threshold 설정 Guideline",
+          "과거 Data 분포 유형별 분석방법"
+        ],
+        "context": [
+          "가중치·Target 설정 맥락",
+          "순위법/요소평가법 맥락",
+          "쌍대비교법 맥락"
+        ],
+        "principle": [
+          "Target 설정 고려요인",
+          "가중치 설정 Process 및 고려요인",
+          "가중치 설정 방법(순위법/요소평가법/쌍대비교법)",
+          "기준별 Targeting 방법"
+        ]
+      },
+      "produces": [],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.tips.goal.review",
+      "label": "4. 목표 검토 회의 진행 Tip",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "facilitator",
+      "agent_type_desc": "회의·면담 실시간 보조 (가이드·질문·기록)",
+      "autonomy_level": "human_approve",
+      "goal": "자기 목표 설정 이후 평가자-피평가자 간 목표 검토 단계. 단계별 Check Point로 면담 유도, 피평가자 질문 유형별 대응방법 활용",
+      "tool_interface": [
+        {
+          "op": "validate.principle",
+          "mode": "rule_engine",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "피평가자 자기 목표"
+        ],
+        "outputs": [
+          "확정 목표"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [
+        "목표검토 회의 단계별 면담 포인트",
+        "피평가자 우려 유형별 대응 방법"
+      ],
+      "executes": [
+        {
+          "id": "pm.tips.goal.review",
+          "label": "4. 목표 검토 회의 진행 Tip",
+          "kind": "activity"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [],
+        "principle": [
+          "목표검토 회의 단계별 면담 포인트",
+          "피평가자 우려 유형별 대응 방법"
+        ]
+      },
+      "produces": [],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.tips.goal.review",
+          "label": "4. 목표 검토 회의 진행 Tip"
+        }
+      ],
+      "human_roles": [
+        "피평가자(실무자)"
+      ]
+    },
+    {
+      "id": "sa.pm.tips.goal.hrreview",
+      "label": "5. HR 목표 검토 및 Feedback Guide",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "suggest",
+      "goal": "목표 검토 회의 종료 후 취합된 자기 목표에 대한 기능별 Monitoring 및 Feedback 제공. 기능조직(FA/전략팀) 외 HR·총체적 관점(Holistic View)에서 목표수립 결과 검증. Monitoring Tool로 KPI·가중치·기대수준 1차 검증 후 특이사항은 담당자 Contact으로 Rationale 확인",
+      "tool_interface": [
+        {
+          "op": "retrieve.context",
+          "mode": "rag",
+          "n": 3
+        },
+        {
+          "op": "validate.principle",
+          "mode": "rule_engine",
+          "n": 3
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Direct Cascading 비중 Chart",
+          "KPI Balance Chart",
+          "Target",
+          "가중치",
+          "과거 Data",
+          "설정 KPI",
+          "올해 목표수준",
+          "전년도 가중치/달성도",
+          "취합된 자기 목표"
+        ],
+        "outputs": [
+          "Feedback",
+          "Monitoring Tool",
+          "Monitoring 결과",
+          "점검 결과"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [
+        "A. Goal Grid",
+        "B-1. 상위 KPI의 Direct Cascading 비중",
+        "C-1. 재무/전략 KPI Balance Check(Function별)"
+      ],
+      "executes": [
+        {
+          "id": "pm.tips.goal.hrreview",
+          "label": "5. HR 목표 검토 및 Feedback Guide",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.tool",
+          "label": "Monitoring Tool",
+          "kind": "output"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.balance.check",
+          "label": "재무/전략 KPI Balance 점검/확인 Point",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.directcascading.check",
+          "label": "Direct Cascading 비중 점검/확인 Point",
+          "kind": "task"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.goalgrid.check",
+          "label": "Goal Grid 주요 점검/확인 Point",
+          "kind": "task"
+        }
+      ],
+      "tools": {
+        "data": [],
+        "context": [
+          "Direct Cascading 점검 맥락",
+          "Goal Grid 점검 맥락",
+          "재무/전략 Balance 점검 맥락"
+        ],
+        "principle": [
+          "A. Goal Grid",
+          "B-1. 상위 KPI의 Direct Cascading 비중",
+          "C-1. 재무/전략 KPI Balance Check(Function별)"
+        ]
+      },
+      "produces": [
+        "Monitoring Tool"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.act.hr_goal_review",
+      "label": "HR 목표 검토 및 Feedback",
+      "phase": "u.goal",
+      "phase_label": "U1 목표수립",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "suggest",
+      "goal": "HR이 목표 수립 결과의 가중치·Target 적정성을 Monitoring Tool로 점검",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 8
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "KPI별 가중치",
+          "Target",
+          "가중치",
+          "개인별 KPI",
+          "개인별 KPI 개수",
+          "당해년도 Target",
+          "전년도 실적"
+        ],
+        "outputs": [
+          "Target Level Check Tool",
+          "Target Level 특이사항 점검 결과",
+          "가중치 적정성 Check Tool",
+          "가중치 특이사항 점검 결과"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.act.hr_goal_review",
+          "label": "HR 목표 검토 및 Feedback",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.out.target_check",
+          "label": "Target Level Check Tool",
+          "kind": "output"
+        },
+        {
+          "id": "pm.out.weight_check",
+          "label": "가중치 적정성 Check Tool",
+          "kind": "output"
+        }
+      ],
+      "tools": {
+        "data": [
+          "KPI 개수 적정성 (10개 이하)",
+          "Target Level 과다 (Too Stretched)",
+          "Target Level 산출식",
+          "Target Level 음수 여부",
+          "가중치 상한 (25%)",
+          "가중치 하한 (5%)",
+          "동일 가중치 다수 부여 여부",
+          "축 구성 (가로=개인 단위, 세로=KPI 가중치)"
+        ],
+        "context": [],
+        "principle": []
+      },
+      "produces": [
+        "Target Level Check Tool",
+        "가중치 적정성 Check Tool"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.act.midyear_prep",
+      "label": "Mid-year Review 준비 및 진행",
+      "phase": "u.check",
+      "phase_label": "U2 실행·점검",
+      "origin": "MBO",
+      "agent_type": "validator",
+      "agent_type_desc": "규칙 기반 검증·점검 (rule check)",
+      "autonomy_level": "human_approve",
+      "goal": "중간점검 양식 기반 달성도 분석, Check Point 점검, 면담 진행",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 4
+        },
+        {
+          "op": "validate.principle",
+          "mode": "rule_engine",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "기대수준 대비 중간 실적",
+          "면담 준비 자료",
+          "목표 달성도",
+          "본인 중간 점검 양식",
+          "연초 설정 계획",
+          "조직·개인업무 변동사항"
+        ],
+        "outputs": [
+          "Intervention 방안",
+          "Mid-year Review Check Point",
+          "면담 진행 점검 결과",
+          "본인 중간 점검 양식",
+          "중간점검 결과 정리",
+          "중간점검 면담 Point",
+          "중간점검 면담 진행 Checklist"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [
+        "Intervention (개입)",
+        "STAR 기법"
+      ],
+      "executes": [
+        {
+          "id": "pm.act.midyear_prep",
+          "label": "Mid-year Review 준비 및 진행",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.out.interview_checklist",
+          "label": "중간점검 면담 진행 Checklist",
+          "kind": "output"
+        },
+        {
+          "id": "pm.out.midyear_checkpoint",
+          "label": "Mid-year Review Check Point",
+          "kind": "output"
+        },
+        {
+          "id": "pm.out.midyear_form",
+          "label": "본인 중간 점검 양식",
+          "kind": "output"
+        }
+      ],
+      "tools": {
+        "data": [
+          "Check A: 역할/책임 변화 확인 (R&R Changes)",
+          "Check B: 목표 진척도 확인 (Progress)",
+          "면담 진행 Check-list (Process 측면)",
+          "목표 달성도 확인 Checklist (Contents 측면)"
+        ],
+        "context": [],
+        "principle": [
+          "Intervention (개입)",
+          "STAR 기법"
+        ]
+      },
+      "produces": [
+        "Mid-year Review Check Point",
+        "본인 중간 점검 양식",
+        "중간점검 면담 진행 Checklist"
+      ],
+      "human_in_loop_gates": [
+        {
+          "id": "pm.out.interview_checklist",
+          "label": "중간점검 면담 진행 Checklist"
+        }
+      ],
+      "human_roles": []
+    },
+    {
+      "id": "sa.pm.act.eval_special",
+      "label": "신규 입사/이동/TF 평가 Guide 적용",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "retriever",
+      "agent_type_desc": "지침·데이터 조회·배포",
+      "autonomy_level": "auto",
+      "goal": "신규입사자·이동자·TF/Project 수행자에 대한 예외 평가 기준 적용",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 2
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "TF/PRJ 목표",
+          "가중치",
+          "근무 기간",
+          "세부 평가항목",
+          "이동 시점",
+          "입사일"
+        ],
+        "outputs": [
+          "TF/PRJ 평가점수",
+          "TF/Project 수행 성과 반영 Process 양식",
+          "개인 KPI 달성도 점수",
+          "성과급 지급률",
+          "평가 등급"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.act.eval_special",
+          "label": "신규 입사/이동/TF 평가 Guide 적용",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.out.tf_eval_process",
+          "label": "TF/Project 수행 성과 반영 Process 양식",
+          "kind": "output"
+        }
+      ],
+      "tools": {
+        "data": [
+          "TF/PRJ 평가점수 산출 (세부항목 × 가중치)",
+          "주체별 역할 (피평가자/TF PRJ Mgr/소속팀장/BG HR)"
+        ],
+        "context": [],
+        "principle": []
+      },
+      "produces": [
+        "TF/Project 수행 성과 반영 Process 양식"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    },
+    {
+      "id": "sa.pm.act.hr_result_analysis",
+      "label": "HR 평가결과 분석",
+      "phase": "u.eval",
+      "phase_label": "U3 평가",
+      "origin": "MBO",
+      "agent_type": "monitor",
+      "agent_type_desc": "진행 모니터링·취합·리포트 자동화",
+      "autonomy_level": "auto",
+      "goal": "전체 분포·조직별·MBO Category별 분석으로 평가결과 적정성 점검",
+      "tool_interface": [
+        {
+          "op": "query.data",
+          "mode": "structured_db",
+          "n": 4
+        }
+      ],
+      "io_contract": {
+        "inputs": [
+          "Category별 평균 점수",
+          "경영성과",
+          "상위 조직 평균",
+          "전체 평균",
+          "점수 구간",
+          "조직단위별 평균 점수",
+          "첨도",
+          "편도",
+          "평가 결과 점수",
+          "평균",
+          "표준편차"
+        ],
+        "outputs": [
+          "Category별 시사점",
+          "MBO Category별 비교 분석 양식",
+          "분포 경향 시사점",
+          "전체 점수 분포 분석 양식",
+          "조직 간 비교 시사점",
+          "조직별 비교 분석 양식",
+          "평가결과 분석 시사점"
+        ]
+      },
+      "dependencies": {
+        "upstream": [],
+        "downstream": []
+      },
+      "guardrails": [],
+      "executes": [
+        {
+          "id": "pm.act.hr_result_analysis",
+          "label": "HR 평가결과 분석",
+          "kind": "activity"
+        },
+        {
+          "id": "pm.out.mbo_category_analysis",
+          "label": "MBO Category별 비교 분석 양식",
+          "kind": "output"
+        },
+        {
+          "id": "pm.out.org_analysis",
+          "label": "조직별 비교 분석 양식",
+          "kind": "output"
+        },
+        {
+          "id": "pm.out.dist_analysis",
+          "label": "전체 점수 분포 분석 양식",
+          "kind": "output"
+        }
+      ],
+      "tools": {
+        "data": [
+          "Category별 총점 영향도",
+          "Dimension 구분 (직책 × MBO Category)",
+          "통계 지표 (평균/표준편차/첨도/편도)",
+          "평균과의 Gap"
+        ],
+        "context": [],
+        "principle": []
+      },
+      "produces": [
+        "MBO Category별 비교 분석 양식",
+        "전체 점수 분포 분석 양식",
+        "조직별 비교 분석 양식"
+      ],
+      "human_in_loop_gates": [],
+      "human_roles": [
+        "HR 운영자"
+      ]
+    }
+  ],
+  "assistant": {
+    "id": "assistant",
+    "label": "AI Assistant / DB / Infra",
+    "access_apis": [
+      {
+        "op": "query.data",
+        "desc": "정형 데이터 조회(직무·실적·KPI)",
+        "mode": "structured_db"
+      },
+      {
+        "op": "compute",
+        "desc": "가중치·Target·점수 계산",
+        "mode": "function"
+      },
+      {
+        "op": "retrieve.context",
+        "desc": "맥락·가이드 검색",
+        "mode": "rag"
+      },
+      {
+        "op": "validate.principle",
+        "desc": "원칙·규칙 결정적 검증",
+        "mode": "rule_engine"
+      },
+      {
+        "op": "get_template",
+        "desc": "산출물 양식 제공",
+        "mode": "template_store"
+      },
+      {
+        "op": "log_audit",
+        "desc": "접근·변경 감사 기록",
+        "mode": "audit"
+      }
+    ],
+    "knowledge_domains": [
+      {
+        "id": "d.org",
+        "label": "직무·조직 체계",
+        "retrieval_mode": "structured_db",
+        "backing_system": "HRIS / 직무체계 DB",
+        "count": 10,
+        "by_layer": {
+          "data": 3,
+          "context": 0,
+          "principle": 7
+        },
+        "members": [
+          {
+            "id": "pm.concept.function",
+            "label": "Function 구분(Front/Back/Staff)",
+            "layer": "L3_principle",
+            "phase": "core",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.timing",
+            "label": "Process 운영 시기",
+            "layer": "L3_principle",
+            "phase": "core",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.process",
+            "label": "성과관리 Process",
+            "layer": "L3_principle",
+            "phase": "core",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.midyear_checkpoint.checkA",
+            "label": "Check A: 역할/책임 변화 확인 (R&R Changes)",
+            "layer": "L3_data",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.interview_checklist.process",
+            "label": "면담 진행 Check-list (Process 측면)",
+            "layer": "L3_data",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.tf_eval_process.roles",
+            "label": "주체별 역할 (피평가자/TF PRJ Mgr/소속팀장/BG HR)",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.hrreview.balance",
+            "label": "C-1. 재무/전략 KPI Balance Check(Function별)",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.method.customer",
+            "label": "Customer Mapping Diagram",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.method.process",
+            "label": "Process/Function Charting",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.weight.weight.factors",
+            "label": "가중치 설정 Process 및 고려요인",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          }
+        ]
+      },
+      {
+        "id": "d.goalkpi",
+        "label": "목표·KPI 데이터",
+        "retrieval_mode": "structured_db",
+        "backing_system": "Performance Plus (OKR/MBO)",
+        "count": 5,
+        "by_layer": {
+          "data": 4,
+          "context": 0,
+          "principle": 1
+        },
+        "members": [
+          {
+            "id": "pm.tips.goal.kpipool.criteria",
+            "label": "KPI 선정 기준(Strategic/Measurable/Controllable)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "okr.define.measurement",
+            "label": "OKR 측정 방법(Measurement)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.define.visibility",
+            "label": "공개 범위(Visibility)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.define.target-date",
+            "label": "목표 주기(Target Date)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.initiative",
+            "label": "Initiative",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          }
+        ]
+      },
+      {
+        "id": "d.actuals",
+        "label": "실적·성과 분포 데이터",
+        "retrieval_mode": "structured_db",
+        "backing_system": "성과 Data Warehouse",
+        "count": 13,
+        "by_layer": {
+          "data": 13,
+          "context": 0,
+          "principle": 0
+        },
+        "members": [
+          {
+            "id": "pm.out.midyear_checkpoint.checkB",
+            "label": "Check B: 목표 진척도 확인 (Progress)",
+            "layer": "L3_data",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.interview_checklist.contents",
+            "label": "목표 달성도 확인 Checklist (Contents 측면)",
+            "layer": "L3_data",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "okr.eval.360-feedback",
+            "label": "360 피드백",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "pm.out.mbo_category_analysis.influence",
+            "label": "Category별 총점 영향도",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.dist_analysis.dimension",
+            "label": "Dimension 구분 (직책 × MBO Category)",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "okr.eval.badge",
+            "label": "배지(인정과 피드백)",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "pm.out.backup_data.desc",
+            "label": "설명 항목",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.backup_data.example",
+            "label": "예시 항목",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.calibration.checkpoint",
+            "label": "주요 검토 포인트",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.dist_analysis.stats",
+            "label": "통계 지표 (평균/표준편차/첨도/편도)",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.org_analysis.gap",
+            "label": "평균과의 Gap",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.weight.target.dataanalysis",
+            "label": "과거 Data 분포 유형별 분석방법",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.data.exec-weight-table",
+            "label": "중역 목표 수립 결과(가중치) 집계표",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          }
+        ]
+      },
+      {
+        "id": "d.weightrule",
+        "label": "가중치·Target 규칙",
+        "retrieval_mode": "rule_engine",
+        "backing_system": "Rule Engine / Monitoring Tool",
+        "count": 13,
+        "by_layer": {
+          "data": 10,
+          "context": 0,
+          "principle": 3
+        },
+        "members": [
+          {
+            "id": "pm.out.tf_eval_process.score",
+            "label": "TF/PRJ 평가점수 산출 (세부항목 × 가중치)",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.weight.target.capthreshold",
+            "label": "Cap/Target/Threshold 설정 Guideline",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.weight_check.kpicount",
+            "label": "KPI 개수 적정성 (10개 이하)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.target_check.toohigh",
+            "label": "Target Level 과다 (Too Stretched)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.target_check.formula",
+            "label": "Target Level 산출식",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.target_check.negative",
+            "label": "Target Level 음수 여부",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.weight.target.factors",
+            "label": "Target 설정 고려요인",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.weight_check.upper",
+            "label": "가중치 상한 (25%)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.weight.weight.method",
+            "label": "가중치 설정 방법(순위법/요소평가법/쌍대비교법)",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.weight_check.lower",
+            "label": "가중치 하한 (5%)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.weight.target.method",
+            "label": "기준별 Targeting 방법",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.weight_check.samevalue",
+            "label": "동일 가중치 다수 부여 여부",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.weight_check.axis",
+            "label": "축 구성 (가로=개인 단위, 세로=KPI 가중치)",
+            "layer": "L3_data",
+            "phase": "u.goal",
+            "origin": "MBO"
+          }
+        ]
+      },
+      {
+        "id": "d.evalrule",
+        "label": "평가·등급 규칙",
+        "retrieval_mode": "rule_engine",
+        "backing_system": "Rule Engine",
+        "count": 3,
+        "by_layer": {
+          "data": 1,
+          "context": 0,
+          "principle": 2
+        },
+        "members": [
+          {
+            "id": "pm.out.calibration.purpose",
+            "label": "Calibration의 목적",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.hrreview.goalgrid",
+            "label": "A. Goal Grid",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.hrreview.directcascading",
+            "label": "B-1. 상위 KPI의 Direct Cascading 비중",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          }
+        ]
+      },
+      {
+        "id": "d.method",
+        "label": "방법론·원칙",
+        "retrieval_mode": "knowledge_base",
+        "backing_system": "Knowledge Base (rule+RAG)",
+        "count": 26,
+        "by_layer": {
+          "data": 0,
+          "context": 0,
+          "principle": 26
+        },
+        "members": [
+          {
+            "id": "pm.concept.star",
+            "label": "STAR 기법",
+            "layer": "L3_principle",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "okr.eval.change",
+            "label": "성과 평가의 변화",
+            "layer": "L3_principle",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.cfr",
+            "label": "CFR(Conversation·Feedback·Recognition)",
+            "layer": "L3_principle",
+            "phase": "u.fb",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.cfr.conversation",
+            "label": "Conversation(구성원 간 대화)",
+            "layer": "L3_principle",
+            "phase": "u.fb",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.cfr.recognition",
+            "label": "Recognition(성취에 대한 인정)",
+            "layer": "L3_principle",
+            "phase": "u.fb",
+            "origin": "OKR"
+          },
+          {
+            "id": "pm.tips.goal.cascade.bgteam",
+            "label": "BG 직속팀장 KPI Cascading",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.method.cascading",
+            "label": "Cascading Method",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.method",
+            "label": "Goal Setting Method 3가지",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.approach",
+            "label": "KPI 도출 2-Step Approach",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.smart",
+            "label": "SMART 목표 요건 / KPI 선정 시 고려사항",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.kpipool.vdt",
+            "label": "Value Driver Tree(VDT)",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.cascade.member",
+            "label": "팀원 KPI Cascading 5유형",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.cascade.leader",
+            "label": "팀장 KPI Cascading 5유형",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.review.response",
+            "label": "피평가자 우려 유형별 대응 방법",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "okr.principle.align",
+            "label": "Align(정렬과 연결)",
+            "layer": "L3_principle",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.align.option",
+            "label": "Alignment Option(직접/간접)",
+            "layer": "L3_principle",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.align.guideline",
+            "label": "Alignment 유의사항",
+            "layer": "L3_principle",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.align.core-support",
+            "label": "Core OKR / Support OKR 구분",
+            "layer": "L3_principle",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.principle.focus",
+            "label": "Focus(집중과 전념)",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.keyresult",
+            "label": "Key Result(핵심결과)",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.definition",
+            "label": "OKR 정의",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.principle.fast",
+            "label": "OKR 핵심원칙 FAST",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.objective",
+            "label": "Objective(목표)",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.principle.stretch",
+            "label": "Stretch(도전적 목표)",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.principle.track",
+            "label": "Track & Update(추적과 변용)",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.kr-type",
+            "label": "핵심결과 Type",
+            "layer": "L3_principle",
+            "phase": "x.change",
+            "origin": "OKR"
+          }
+        ]
+      },
+      {
+        "id": "d.context",
+        "label": "맥락·해석",
+        "retrieval_mode": "rag",
+        "backing_system": "Context Store / RAG",
+        "count": 85,
+        "by_layer": {
+          "data": 0,
+          "context": 85,
+          "principle": 0
+        },
+        "members": [
+          {
+            "id": "ctx.r.myr-plan",
+            "label": "Mid-year Review 계획 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.next-okr",
+            "label": "Next OKR 개선 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.meeting-prep",
+            "label": "Scrum 사전준비 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.self-review",
+            "label": "개인 종합 리뷰 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.t.review-agenda",
+            "label": "목표점검 Agenda 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.myr-self",
+            "label": "본인 중간점검 작성 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.manager-review",
+            "label": "상위관리자 리뷰 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.check.weekly",
+            "label": "주간 점검·회고 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.retro-q",
+            "label": "회고 문항 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.cal-meeting",
+            "label": "Calibration Meeting 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.cal-review",
+            "label": "Calibration Review 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.eval.calibration",
+            "label": "Calibration 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.cal-prep",
+            "label": "Calibration 준비 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.confirm-grade",
+            "label": "등급 부여 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.ev-evaluate",
+            "label": "상사 평가 실시 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.eval.interpret",
+            "label": "성과 해석 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.ev-collect",
+            "label": "실적자료 집계 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.eval.talent",
+            "label": "인재 논의 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.eval.self",
+            "label": "자기·상사 평가 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.supervisor-review",
+            "label": "자기평가 검토 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.ev-self-submit",
+            "label": "자기평가서 송부 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.eval-write",
+            "label": "자기평가서 작성 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.comprehensive",
+            "label": "종합 리뷰 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.ev-brief",
+            "label": "평가 Guide 배포 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.ev-report",
+            "label": "평가 결과 보고 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.ev-plan",
+            "label": "평가 운영계획 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.self-diagnosis",
+            "label": "평가 자가진단 맥락",
+            "layer": "L3_context",
+            "phase": "u.eval",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.cf-sign1",
+            "label": "1차 평가자 서명 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.cf-sign2",
+            "label": "2차 평가자 Confirm 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.cascade-pooling",
+            "label": "Cascading KPI Pooling 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.cas-steps",
+            "label": "Cascading Method 단계 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.cust-steps",
+            "label": "Customer Mapping 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.dc-check",
+            "label": "Direct Cascading 점검 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.gg-check",
+            "label": "Goal Grid 점검 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.initiative",
+            "label": "Initiative 설정 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.t.kpi-validation",
+            "label": "KPI 검증 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.goal.kpipool",
+            "label": "KPI 도출 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.kpi-target",
+            "label": "KPI·목표수준 설정 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.okr-checklist",
+            "label": "OKR 점검 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.okr-confirm",
+            "label": "OKR 확정 결정 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.proc-steps",
+            "label": "Process/Function Charting 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.goal.weight",
+            "label": "가중치·Target 설정 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.goal.personal",
+            "label": "개인 목표 설정 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.rm-arrange",
+            "label": "검토회의 Arrange 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.rm-conduct",
+            "label": "검토회의 실시 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.hrreview-review",
+            "label": "기능별 HR 검토 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.local-plan",
+            "label": "내부 운영계획 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.obj-brainstorm",
+            "label": "목표 Brainstorming 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.goal.review",
+            "label": "목표 검토 회의 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.rm-revise",
+            "label": "목표 수정·정리 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.obj-priority",
+            "label": "목표 우선순위화 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.cf-finalize",
+            "label": "목표 최종 수정·서명 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.cf-summary",
+            "label": "목표 취합·Summary 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.w-rank",
+            "label": "순위법/요소평가법 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.sys-register",
+            "label": "시스템 등록 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.w-pair",
+            "label": "쌍대비교법 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.role-csf",
+            "label": "역할책임·CSF 정의 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.holding-plan",
+            "label": "연간 운영계획 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.goal.selfgoal",
+            "label": "자기 목표 수립 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.self-submit",
+            "label": "자기목표 송부 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.sub-brief",
+            "label": "자회사 설명회 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.bal-check",
+            "label": "재무/전략 Balance 점검 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.rf-collect",
+            "label": "중역 수정본 취합 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.exec-strategy",
+            "label": "중역 전략MBO 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.exec-brief",
+            "label": "중역/팀장 설명회 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.member-verify",
+            "label": "팀원 Draft 검증 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.kr-brainstorm",
+            "label": "핵심결과 발산 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.t.kr-priority",
+            "label": "핵심결과 우선순위 맥락",
+            "layer": "L3_context",
+            "phase": "u.goal",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.t.core-review",
+            "label": "Core OKR 정렬 맥락",
+            "layer": "L3_context",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.align.vs-mbo",
+            "label": "OKR vs MBO Alignment",
+            "layer": "L3_context",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.t.support-review",
+            "label": "Support OKR 정렬 맥락",
+            "layer": "L3_context",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.align.vertical",
+            "label": "수직 정렬 맥락",
+            "layer": "L3_context",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.align.horizontal",
+            "label": "수평 정렬 맥락",
+            "layer": "L3_context",
+            "phase": "x.align",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.adfit",
+            "label": "AD-FIT 코칭 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.growth",
+            "label": "Growth Mindset 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.mbo-limit",
+            "label": "MBO 성과관리의 한계점",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.new-old-rules",
+            "label": "New Rules vs Old Rules",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.sharing",
+            "label": "OKR 공유 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.practice-align",
+            "label": "Transparency 미팅 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.change.strategy",
+            "label": "변화관리 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.history",
+            "label": "성과관리 History",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.r.goodq",
+            "label": "좋은 질문 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.example.job-type",
+            "label": "직무 특성 구분별 OKR 수립",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "okr.concept.true-objective",
+            "label": "진정한 의미의 목표(Build/Improve/Innovate)",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          },
+          {
+            "id": "ctx.t.cadence",
+            "label": "책임 주기 설정 맥락",
+            "layer": "L3_context",
+            "phase": "x.change",
+            "origin": "OKR"
+          }
+        ]
+      },
+      {
+        "id": "d.feedback",
+        "label": "면담·피드백 가이드",
+        "retrieval_mode": "rag",
+        "backing_system": "KB / RAG",
+        "count": 19,
+        "by_layer": {
+          "data": 2,
+          "context": 14,
+          "principle": 3
+        },
+        "members": [
+          {
+            "id": "pm.concept.intervention",
+            "label": "Intervention (개입)",
+            "layer": "L3_principle",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.myr-record",
+            "label": "면담 결과 정리 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.myr-consol",
+            "label": "면담 결과 취합 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.myr-precheck",
+            "label": "면담 사전점검 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.myr-monitor",
+            "label": "면담 참관 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.check.midyear",
+            "label": "중간 점검 면담 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.myr-conduct",
+            "label": "중간점검 면담 실시 맥락",
+            "layer": "L3_context",
+            "phase": "u.check",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.fb-meeting",
+            "label": "Feedback Meeting 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.fb-monitor",
+            "label": "Feedback Monitoring 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.t.fb-note",
+            "label": "Feedback Note 작성 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.fb-record",
+            "label": "Feedback 결과 정리 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.fb.conduct",
+            "label": "Feedback 면담 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.fb-plan",
+            "label": "Feedback 면담계획 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.fb-notify",
+            "label": "Feedback 안내 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "ctx.r.fb-consol",
+            "label": "Feedback 취합·보고 맥락",
+            "layer": "L3_context",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "okr.cfr.feedback",
+            "label": "Feedback(결과·과정 피드백)",
+            "layer": "L3_principle",
+            "phase": "u.fb",
+            "origin": "OKR"
+          },
+          {
+            "id": "pm.out.feedback_point.negative",
+            "label": "Negative Feedback (성과 강화 방안 모색 中心)",
+            "layer": "L3_data",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.out.feedback_point.positive",
+            "label": "Positive Feedback (동기부여 中心)",
+            "layer": "L3_data",
+            "phase": "u.fb",
+            "origin": "MBO"
+          },
+          {
+            "id": "pm.tips.goal.review.stages",
+            "label": "목표검토 회의 단계별 면담 포인트",
+            "layer": "L3_principle",
+            "phase": "u.goal",
+            "origin": "MBO"
+          }
+        ]
+      },
+      {
+        "id": "d.template",
+        "label": "산출물 템플릿",
+        "retrieval_mode": "template_store",
+        "backing_system": "Document Store",
+        "count": 1,
+        "by_layer": {
+          "data": 1,
+          "context": 0,
+          "principle": 0
+        },
+        "members": [
+          {
+            "id": "pm.template.eval.qualitative",
+            "label": "정성평가 근거 기술 양식(중역用)",
+            "layer": "L3_data",
+            "phase": "u.eval",
+            "origin": "MBO"
+          }
+        ]
+      }
+    ],
+    "backing_systems": [
+      "Context Store / RAG",
+      "Document Store",
+      "HRIS / 직무체계 DB",
+      "KB / RAG",
+      "Knowledge Base (rule+RAG)",
+      "Performance Plus (OKR/MBO)",
+      "Rule Engine",
+      "Rule Engine / Monitoring Tool",
+      "성과 Data Warehouse"
+    ],
+    "governance": {
+      "read_scope_by_actor": {
+        "user": "열람 — 판단 근거(Data·맥락·원칙) 확인, 정책/마스터데이터 등록(Admin)",
+        "ai_agent": "간접 질의 — Assistant에 지식 요청, 결과 사용자에 요약",
+        "ai_manager": "단계 관련 지식·정책 참조 — 검증 기준/원칙 적용",
+        "ai_subagent": "직접 조회·적용 — 활동별 Data·맥락·원칙을 호출하여 실행에 반영",
+        "ai_assistant": "소유 — Data·맥락·원칙 저장·검색·제공(read API)"
+      },
+      "audit": "전 지식 접근·산출물 변경 감사 로그",
+      "sensitive": "평가 점수·등급·성과급(보상) 데이터는 PII·기밀 — 주체 권한(Admin/평가자/피평가자)에 따라 분리 접근"
+    },
+    "knowledge_catalog": {
+      "data_sources": [
+        {
+          "id": "pm.out.midyear_checkpoint.checkA",
+          "label": "Check A: 역할/책임 변화 확인 (R&R Changes)",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.midyear_checkpoint.checkB",
+          "label": "Check B: 목표 진척도 확인 (Progress)",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.interview_checklist.process",
+          "label": "면담 진행 Check-list (Process 측면)",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.interview_checklist.contents",
+          "label": "목표 달성도 확인 Checklist (Contents 측면)",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.eval.360-feedback",
+          "label": "360 피드백",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "pm.out.calibration.purpose",
+          "label": "Calibration의 목적",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.mbo_category_analysis.influence",
+          "label": "Category별 총점 영향도",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.dist_analysis.dimension",
+          "label": "Dimension 구분 (직책 × MBO Category)",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.tf_eval_process.score",
+          "label": "TF/PRJ 평가점수 산출 (세부항목 × 가중치)",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.eval.badge",
+          "label": "배지(인정과 피드백)",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "pm.out.backup_data.desc",
+          "label": "설명 항목",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.backup_data.example",
+          "label": "예시 항목",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.template.eval.qualitative",
+          "label": "정성평가 근거 기술 양식(중역用)",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.calibration.checkpoint",
+          "label": "주요 검토 포인트",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.tf_eval_process.roles",
+          "label": "주체별 역할 (피평가자/TF PRJ Mgr/소속팀장/BG HR)",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.dist_analysis.stats",
+          "label": "통계 지표 (평균/표준편차/첨도/편도)",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.org_analysis.gap",
+          "label": "평균과의 Gap",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.feedback_point.negative",
+          "label": "Negative Feedback (성과 강화 방안 모색 中心)",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.feedback_point.positive",
+          "label": "Positive Feedback (동기부여 中心)",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.weight.target.capthreshold",
+          "label": "Cap/Target/Threshold 설정 Guideline",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.weight_check.kpicount",
+          "label": "KPI 개수 적정성 (10개 이하)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.criteria",
+          "label": "KPI 선정 기준(Strategic/Measurable/Controllable)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.define.measurement",
+          "label": "OKR 측정 방법(Measurement)",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "pm.out.target_check.toohigh",
+          "label": "Target Level 과다 (Too Stretched)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.target_check.formula",
+          "label": "Target Level 산출식",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.target_check.negative",
+          "label": "Target Level 음수 여부",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.weight_check.upper",
+          "label": "가중치 상한 (25%)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.weight_check.lower",
+          "label": "가중치 하한 (5%)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.define.visibility",
+          "label": "공개 범위(Visibility)",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "pm.tips.goal.weight.target.dataanalysis",
+          "label": "과거 Data 분포 유형별 분석방법",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.weight_check.samevalue",
+          "label": "동일 가중치 다수 부여 여부",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.define.target-date",
+          "label": "목표 주기(Target Date)",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "pm.data.exec-weight-table",
+          "label": "중역 목표 수립 결과(가중치) 집계표",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.out.weight_check.axis",
+          "label": "축 구성 (가로=개인 단위, 세로=KPI 가중치)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        }
+      ],
+      "context_providers": [
+        {
+          "id": "ctx.r.myr-plan",
+          "label": "Mid-year Review 계획 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.next-okr",
+          "label": "Next OKR 개선 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.meeting-prep",
+          "label": "Scrum 사전준비 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.self-review",
+          "label": "개인 종합 리뷰 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.myr-record",
+          "label": "면담 결과 정리 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.myr-consol",
+          "label": "면담 결과 취합 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.myr-precheck",
+          "label": "면담 사전점검 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.myr-monitor",
+          "label": "면담 참관 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.review-agenda",
+          "label": "목표점검 Agenda 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.myr-self",
+          "label": "본인 중간점검 작성 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.manager-review",
+          "label": "상위관리자 리뷰 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.check.weekly",
+          "label": "주간 점검·회고 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.check.midyear",
+          "label": "중간 점검 면담 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.myr-conduct",
+          "label": "중간점검 면담 실시 맥락",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.retro-q",
+          "label": "회고 문항 맥락",
+          "phase": "u.check",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.cal-meeting",
+          "label": "Calibration Meeting 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cal-review",
+          "label": "Calibration Review 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.eval.calibration",
+          "label": "Calibration 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cal-prep",
+          "label": "Calibration 준비 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.confirm-grade",
+          "label": "등급 부여 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.ev-evaluate",
+          "label": "상사 평가 실시 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.eval.interpret",
+          "label": "성과 해석 맥락",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.ev-collect",
+          "label": "실적자료 집계 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.eval.talent",
+          "label": "인재 논의 맥락",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.eval.self",
+          "label": "자기·상사 평가 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.supervisor-review",
+          "label": "자기평가 검토 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.ev-self-submit",
+          "label": "자기평가서 송부 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.eval-write",
+          "label": "자기평가서 작성 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.comprehensive",
+          "label": "종합 리뷰 맥락",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.ev-brief",
+          "label": "평가 Guide 배포 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.ev-report",
+          "label": "평가 결과 보고 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.ev-plan",
+          "label": "평가 운영계획 맥락",
+          "phase": "u.eval",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.self-diagnosis",
+          "label": "평가 자가진단 맥락",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.fb-meeting",
+          "label": "Feedback Meeting 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.fb-monitor",
+          "label": "Feedback Monitoring 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.fb-note",
+          "label": "Feedback Note 작성 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.fb-record",
+          "label": "Feedback 결과 정리 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.fb.conduct",
+          "label": "Feedback 면담 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.fb-plan",
+          "label": "Feedback 면담계획 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.fb-notify",
+          "label": "Feedback 안내 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.fb-consol",
+          "label": "Feedback 취합·보고 맥락",
+          "phase": "u.fb",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cf-sign1",
+          "label": "1차 평가자 서명 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cf-sign2",
+          "label": "2차 평가자 Confirm 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.cascade-pooling",
+          "label": "Cascading KPI Pooling 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cas-steps",
+          "label": "Cascading Method 단계 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cust-steps",
+          "label": "Customer Mapping 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.dc-check",
+          "label": "Direct Cascading 점검 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.gg-check",
+          "label": "Goal Grid 점검 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.initiative",
+          "label": "Initiative 설정 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.t.kpi-validation",
+          "label": "KPI 검증 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.goal.kpipool",
+          "label": "KPI 도출 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.kpi-target",
+          "label": "KPI·목표수준 설정 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.okr-checklist",
+          "label": "OKR 점검 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.okr-confirm",
+          "label": "OKR 확정 결정 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.proc-steps",
+          "label": "Process/Function Charting 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.goal.weight",
+          "label": "가중치·Target 설정 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.goal.personal",
+          "label": "개인 목표 설정 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.rm-arrange",
+          "label": "검토회의 Arrange 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.rm-conduct",
+          "label": "검토회의 실시 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.hrreview-review",
+          "label": "기능별 HR 검토 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.local-plan",
+          "label": "내부 운영계획 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.obj-brainstorm",
+          "label": "목표 Brainstorming 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.goal.review",
+          "label": "목표 검토 회의 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.rm-revise",
+          "label": "목표 수정·정리 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.obj-priority",
+          "label": "목표 우선순위화 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.cf-finalize",
+          "label": "목표 최종 수정·서명 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.cf-summary",
+          "label": "목표 취합·Summary 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.w-rank",
+          "label": "순위법/요소평가법 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.sys-register",
+          "label": "시스템 등록 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.w-pair",
+          "label": "쌍대비교법 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.role-csf",
+          "label": "역할책임·CSF 정의 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.holding-plan",
+          "label": "연간 운영계획 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.goal.selfgoal",
+          "label": "자기 목표 수립 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.self-submit",
+          "label": "자기목표 송부 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.sub-brief",
+          "label": "자회사 설명회 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.bal-check",
+          "label": "재무/전략 Balance 점검 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.rf-collect",
+          "label": "중역 수정본 취합 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.exec-strategy",
+          "label": "중역 전략MBO 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.r.exec-brief",
+          "label": "중역/팀장 설명회 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.member-verify",
+          "label": "팀원 Draft 검증 맥락",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "ctx.t.kr-brainstorm",
+          "label": "핵심결과 발산 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.t.kr-priority",
+          "label": "핵심결과 우선순위 맥락",
+          "phase": "u.goal",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.t.core-review",
+          "label": "Core OKR 정렬 맥락",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.align.vs-mbo",
+          "label": "OKR vs MBO Alignment",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.t.support-review",
+          "label": "Support OKR 정렬 맥락",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.align.vertical",
+          "label": "수직 정렬 맥락",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.align.horizontal",
+          "label": "수평 정렬 맥락",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.adfit",
+          "label": "AD-FIT 코칭 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.growth",
+          "label": "Growth Mindset 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.mbo-limit",
+          "label": "MBO 성과관리의 한계점",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.new-old-rules",
+          "label": "New Rules vs Old Rules",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.sharing",
+          "label": "OKR 공유 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.practice-align",
+          "label": "Transparency 미팅 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.change.strategy",
+          "label": "변화관리 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.history",
+          "label": "성과관리 History",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.r.goodq",
+          "label": "좋은 질문 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.example.job-type",
+          "label": "직무 특성 구분별 OKR 수립",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.true-objective",
+          "label": "진정한 의미의 목표(Build/Improve/Innovate)",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "ctx.t.cadence",
+          "label": "책임 주기 설정 맥락",
+          "phase": "x.change",
+          "origin": "OKR"
+        }
+      ],
+      "principle_rule_bases": [
+        {
+          "id": "pm.concept.function",
+          "label": "Function 구분(Front/Back/Staff)",
+          "phase": "core",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.timing",
+          "label": "Process 운영 시기",
+          "phase": "core",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.process",
+          "label": "성과관리 Process",
+          "phase": "core",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.concept.intervention",
+          "label": "Intervention (개입)",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.concept.star",
+          "label": "STAR 기법",
+          "phase": "u.check",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.eval.change",
+          "label": "성과 평가의 변화",
+          "phase": "u.eval",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.cfr",
+          "label": "CFR(Conversation·Feedback·Recognition)",
+          "phase": "u.fb",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.cfr.conversation",
+          "label": "Conversation(구성원 간 대화)",
+          "phase": "u.fb",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.cfr.feedback",
+          "label": "Feedback(결과·과정 피드백)",
+          "phase": "u.fb",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.cfr.recognition",
+          "label": "Recognition(성취에 대한 인정)",
+          "phase": "u.fb",
+          "origin": "OKR"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.goalgrid",
+          "label": "A. Goal Grid",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.directcascading",
+          "label": "B-1. 상위 KPI의 Direct Cascading 비중",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.cascade.bgteam",
+          "label": "BG 직속팀장 KPI Cascading",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.hrreview.balance",
+          "label": "C-1. 재무/전략 KPI Balance Check(Function별)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.method.cascading",
+          "label": "Cascading Method",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.method.customer",
+          "label": "Customer Mapping Diagram",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.method",
+          "label": "Goal Setting Method 3가지",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.approach",
+          "label": "KPI 도출 2-Step Approach",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.method.process",
+          "label": "Process/Function Charting",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.smart",
+          "label": "SMART 목표 요건 / KPI 선정 시 고려사항",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.weight.target.factors",
+          "label": "Target 설정 고려요인",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.kpipool.vdt",
+          "label": "Value Driver Tree(VDT)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.weight.weight.factors",
+          "label": "가중치 설정 Process 및 고려요인",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.weight.weight.method",
+          "label": "가중치 설정 방법(순위법/요소평가법/쌍대비교법)",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.weight.target.method",
+          "label": "기준별 Targeting 방법",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.review.stages",
+          "label": "목표검토 회의 단계별 면담 포인트",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.cascade.member",
+          "label": "팀원 KPI Cascading 5유형",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.cascade.leader",
+          "label": "팀장 KPI Cascading 5유형",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "pm.tips.goal.review.response",
+          "label": "피평가자 우려 유형별 대응 방법",
+          "phase": "u.goal",
+          "origin": "MBO"
+        },
+        {
+          "id": "okr.principle.align",
+          "label": "Align(정렬과 연결)",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.align.option",
+          "label": "Alignment Option(직접/간접)",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.align.guideline",
+          "label": "Alignment 유의사항",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.align.core-support",
+          "label": "Core OKR / Support OKR 구분",
+          "phase": "x.align",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.principle.focus",
+          "label": "Focus(집중과 전념)",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.initiative",
+          "label": "Initiative",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.keyresult",
+          "label": "Key Result(핵심결과)",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.definition",
+          "label": "OKR 정의",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.principle.fast",
+          "label": "OKR 핵심원칙 FAST",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.objective",
+          "label": "Objective(목표)",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.principle.stretch",
+          "label": "Stretch(도전적 목표)",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.principle.track",
+          "label": "Track & Update(추적과 변용)",
+          "phase": "x.change",
+          "origin": "OKR"
+        },
+        {
+          "id": "okr.concept.kr-type",
+          "label": "핵심결과 Type",
+          "phase": "x.change",
+          "origin": "OKR"
+        }
+      ]
+    },
+    "counts": {
+      "data": 34,
+      "context": 99,
+      "principle": 42,
+      "domains": 9
+    }
+  }
+}
