@@ -49,6 +49,32 @@ function applyColors(colors) {
   if (colors) Object.keys(colors).forEach(function (k) { if (GROUPS[k]) GROUPS[k].color = colors[k]; });
 }
 
+/* 브랜치(layer) 색상 — 노드/연결선/칩/범례 공통. 색상 picker가 이걸 수정 */
+var HAS_LAYER_COLORS = (typeof LAYER_COLORS !== "undefined");
+var LAYER_BASE_COLOR = {};
+if (HAS_LAYER_COLORS) Object.keys(LAYER_COLORS).forEach(function (k) { LAYER_BASE_COLOR[k] = LAYER_COLORS[k]; });
+
+function syncLayerDefs() {
+  // 모든 템플릿의 layers[k].color 를 LAYER_COLORS 와 동기화 (범례·칩·패널 fallback)
+  if (!HAS_LAYER_COLORS) return;
+  Object.keys(PROCESS_TEMPLATES).forEach(function (t) {
+    var L = PROCESS_TEMPLATES[t].layers || {};
+    Object.keys(L).forEach(function (k) { if (LAYER_COLORS[k]) L[k].color = LAYER_COLORS[k]; });
+  });
+}
+function applyLayerColors(lc) {
+  if (!HAS_LAYER_COLORS) return;
+  Object.keys(LAYER_BASE_COLOR).forEach(function (k) { LAYER_COLORS[k] = LAYER_BASE_COLOR[k]; });
+  if (lc) Object.keys(lc).forEach(function (k) { if (k in LAYER_COLORS) LAYER_COLORS[k] = lc[k]; });
+  syncLayerDefs();
+}
+function currentLayerColors() {
+  var c = {};
+  if (HAS_LAYER_COLORS) Object.keys(LAYER_COLORS).forEach(function (k) { c[k] = LAYER_COLORS[k]; });
+  return c;
+}
+syncLayerDefs();
+
 function loadTemplateData(id) {
   var t = PROCESS_TEMPLATES[id];
   var work = lsGet(LS_WORK + id);
@@ -56,10 +82,12 @@ function loadTemplateData(id) {
     rawNodes = clone(work.nodes);
     rawEdges = clone(work.edges);
     applyColors(work.colors);
+    applyLayerColors(work.layerColors);
   } else {
     rawNodes = clone(t.nodes);
     rawEdges = clone(t.edges);
     applyColors(null);
+    applyLayerColors(null);
   }
   var seq = 0;
   rawEdges.forEach(function (e) { if (!e.id) e.id = "e" + (seq++); });
@@ -74,7 +102,7 @@ function currentColors() {
 }
 
 function saveWork() {
-  lsSet(LS_WORK + tid, { nodes: rawNodes, edges: rawEdges, colors: currentColors() });
+  lsSet(LS_WORK + tid, { nodes: rawNodes, edges: rawEdges, colors: currentColors(), layerColors: currentLayerColors() });
   lsSet(LS_STATE, { tid: tid });
 }
 
@@ -124,11 +152,16 @@ function animOpt(d) { return REDUCE_MOTION ? false : { duration: d, easingFuncti
 var UNIFORM_BOX_WIDTH = 190;
 var UNIFORM_BOX_HEIGHT = 64;
 
+/* 노드 색 = 소속 브랜치(layer) 색. 배경은 밝은 tint, 테두리는 원색. */
+function layerColor(n) {
+  var lc = (typeof LAYER_COLORS !== "undefined") && LAYER_COLORS[nodeLayer(n)];
+  return lc || (GROUPS[n.group] || {}).color || "#64748b";
+}
 function makeVisNode(n) {
-  var grp = GROUPS[n.group] || { color: "#dee3e9" };
-  var c = grp.color;
+  var base = layerColor(n);          // 브랜치 원색 (테두리·연결선·필터칩과 동일)
   var isRoot = n.id === "root";
-  var textColor = idealText(c); // Use idealText to set white or dark text based on background color brightness
+  var bg = isRoot ? shade(base, 70) : shade(base, 87); // 배경 = 밝은 tint
+  var textColor = "#0a1317";         // 글자색 모두 검은색(잉크)
 
   var nodeObj = {
     id: n.id,
@@ -138,23 +171,22 @@ function makeVisNode(n) {
     opacity: 1,
     hidden: false,
     color: {
-      background: c,
-      border: shade(c, -15),
-      highlight: { background: c, border: "#000000" },
-      hover: { background: shade(c, 10), border: shade(c, -20) }
+      background: bg,
+      border: base,
+      highlight: { background: shade(base, 78), border: "#000000" },
+      hover: { background: shade(base, 80), border: shade(base, -15) }
     },
     font: {
       color: textColor,
       size: isRoot ? fontSize(22) : fontSize(16),
       face: "Pretendard, -apple-system, sans-serif",
-      // 색 무관 또렷함: 흰 글자엔 어두운 후광, 짙은 글자엔 밝은 후광
       strokeWidth: 2,
-      strokeColor: textColor === "#ffffff" ? "rgba(0,0,0,0.55)" : "rgba(255,255,255,0.9)",
+      strokeColor: "rgba(255,255,255,0.92)", // 검은 글자 밝은 후광
       multi: false,
       bold: { color: textColor }
     },
     shapeProperties: { borderRadius: 12 },
-    borderWidth: 1.5,
+    borderWidth: 2.5,
     margin: 18,
     shadow: { enabled: true, color: 'rgba(0,0,0,0.1)', size: 5, x: 2, y: 2 },
     widthConstraint: { minimum: UNIFORM_BOX_WIDTH, maximum: UNIFORM_BOX_WIDTH },
@@ -166,7 +198,10 @@ function makeVisNode(n) {
 }
 
 function edgeBaseColor(e) {
-  return e.dashes ? { color: "#8595a4", opacity: 0.7 } : { color: "#ced0d4", opacity: 1 };
+  // 연결선 = 자식 노드가 속한 브랜치(layer) 색 → 가지별 관계가 한눈에
+  var child = nodeMap[e.to];
+  var lc = child ? layerColor(child) : "#ced0d4";
+  return e.dashes ? { color: shade(lc, 35), opacity: 0.6 } : { color: lc, opacity: 0.9 };
 }
 
 var REL_STYLE = {
@@ -223,7 +258,7 @@ var container = document.getElementById("network");
 var freePhysics = {
   enabled: true,
   solver: "forceAtlas2Based",
-  forceAtlas2Based: { gravitationalConstant: -85, centralGravity: 0.012, springLength: 210, springConstant: 0.08, avoidOverlap: 1.0 },
+  forceAtlas2Based: { gravitationalConstant: -120, centralGravity: 0.008, springLength: 320, springConstant: 0.06, avoidOverlap: 1.0 },
   stabilization: { iterations: 220 },
   minVelocity: 0.6
 };
@@ -407,10 +442,13 @@ function openPanel(id) {
   var n = nodeMap[id]; if (!n) return;
   currentId = id;
   var g = GROUPS[n.group] || { label: "기타", color: "#64748b" };
+  var lay = (TPL.layers && TPL.layers[nodeLayer(n)]) || null;
+  var tagColor = (lay && lay.color) || layerColor(n);
+  var tagLabel = (lay && lay.label) || g.label;
 
   var tag = document.getElementById("panelTag");
-  tag.textContent = g.label; tag.style.background = g.color;
-  tag.style.color = idealText(g.color); 
+  tag.textContent = tagLabel; tag.style.background = tagColor;
+  tag.style.color = idealText(tagColor);
 
   document.getElementById("panelTitle").textContent = n.label.replace(/\n/g, " ");
   document.getElementById("panelSummary").textContent = n.summary || "";
@@ -581,6 +619,7 @@ function buildChips() {
     var L = TPL.layers[k];
     layerWrap.appendChild(makeChip({
       label: L.label, count: lCounts[k] || 0, cls: "layer-chip", active: activeLayers[k],
+      dotColor: L.color || (typeof LAYER_COLORS !== "undefined" ? LAYER_COLORS[k] : null),
       toggle: function () { activeLayers[k] = !activeLayers[k]; return activeLayers[k]; },
       isolate: function () { isolateBy(function (n) { return nodeLayer(n) === k; }, "Layer 단독: " + L.label); }
     }));
@@ -796,9 +835,9 @@ function layoutProcessCentric() {
   var map = buildProcessActivityMap();
   var procNodes = map.processNodes.sort(function(a, b) { return a.id.localeCompare(b.id); });
   
-  var colStep = 225, rowStep = 135, cellCols = 3;
-  var colSpacing = 800;
-  var vGap = 200;
+  var colStep = 270, rowStep = 175, cellCols = 3;
+  var colSpacing = 1500;
+  var vGap = 480;
   var startX = -((procNodes.length - 1) * colSpacing) / 2;
   
   var updates = [];
@@ -884,19 +923,19 @@ function layoutFree() {
 }
 function layoutVertical() {
   clearLevels(); setActiveLayout("btnVert");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 180, nodeSpacing: 230, treeSpacing: 260, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "UD", sortMethod: "directed", levelSeparation: 320, nodeSpacing: 300, treeSpacing: 420, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
   setTimeout(fitAll, 80); toast("계층형 · 수직 (Top-Down)");
 }
 function layoutHorizontal() {
   clearLevels(); setActiveLayout("btnHorz");
-  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "LR", sortMethod: "directed", levelSeparation: 280, nodeSpacing: 130, treeSpacing: 220, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
+  network.setOptions({ physics: false, layout: { hierarchical: { enabled: true, direction: "LR", sortMethod: "directed", levelSeparation: 480, nodeSpacing: 175, treeSpacing: 340, blockShifting: true, edgeMinimization: true, parentCentralization: true } } });
   setTimeout(fitAll, 80); toast("계층형 · 수평 (Left-Right)");
 }
 function layoutByLayer() {
   clearLevels(); setActiveLayout("btnLayer");
   network.setOptions({ physics: false, layout: { hierarchical: { enabled: false } } });
   var lays = layersInTemplate(); if (lays.length === 0) lays = ["_"];
-  var colGap = 360, rowGap = 90, buckets = {};
+  var colGap = 560, rowGap = 110, buckets = {};
   lays.forEach(function (k) { buckets[k] = []; }); buckets["_"] = buckets["_"] || [];
   rawNodes.forEach(function (n) { var L = nodeLayer(n); if (!buckets[L]) buckets[L] = []; buckets[L].push(n.id); });
   Object.keys(buckets).forEach(function (L, ci) {
@@ -1002,7 +1041,7 @@ function tsLabel(d) {
 }
 function saveSnapshot() {
   saveWork(); var hist = lsGet(LS_HISTORY) || [], now = new Date();
-  hist.unshift({ ts: now.getTime(), label: tsLabel(now), tid: tid, tname: PROCESS_TEMPLATES[tid].name, nodes: clone(rawNodes), edges: clone(rawEdges), colors: currentColors(), count: rawNodes.length });
+  hist.unshift({ ts: now.getTime(), label: tsLabel(now), tid: tid, tname: PROCESS_TEMPLATES[tid].name, nodes: clone(rawNodes), edges: clone(rawEdges), colors: currentColors(), layerColors: currentLayerColors(), count: rawNodes.length });
   if (hist.length > HISTORY_MAX) hist = hist.slice(0, HISTORY_MAX);
   lsSet(LS_HISTORY, hist); toast("💾 저장됨 — " + tsLabel(now)); renderHistory();
 }
@@ -1023,7 +1062,7 @@ function restoreSnapshot(i) {
   if (!confirm("이 시점(" + h.label + ")으로 맵을 복원할까요?\n현재 작업은 덮어쓰여집니다.")) return;
   if (h.tid && PROCESS_TEMPLATES[h.tid]) { tid = h.tid; TPL = PROCESS_TEMPLATES[tid]; var sel = document.getElementById("tplSelect"); if (sel) sel.value = tid; }
   rawNodes = clone(h.nodes); rawEdges = clone(h.edges); var seq = 0; rawEdges.forEach(function (e) { if (!e.id) e.id = "e" + (seq++); });
-  applyColors(h.colors); reloadNetwork(); toast("복원됨 — " + h.label);
+  applyColors(h.colors); applyLayerColors(h.layerColors); reloadNetwork(); toast("복원됨 — " + h.label);
 }
 document.getElementById("btnSave").onclick = saveSnapshot; document.getElementById("tab-history").onclick = function () { openPanelTab("history"); }; document.getElementById("btnHistory").onclick = function () { openPanelTab("history"); };
 
@@ -1032,11 +1071,14 @@ document.getElementById("btnSave").onclick = saveSnapshot; document.getElementBy
    ============================================================ */
 function renderColorPicker() {
   var box = document.getElementById("colorList"); if (!box) return; box.innerHTML = "";
-  groupsInTemplate().forEach(function (k) {
-    var g = GROUPS[k], row = document.createElement("div"); row.className = "color-row";
-    row.innerHTML = '<span class="color-name"><span class="dot" style="background:' + escapeHtml(g.color) + '"></span>' + escapeHtml(g.label) + '</span>';
-    var inp = document.createElement("input"); inp.type = "color"; inp.value = toHex(g.color);
-    inp.oninput = function () { setGroupColor(k, inp.value); row.querySelector(".dot").style.background = inp.value; };
+  var lays = TPL.layers || {};
+  layersInTemplate().forEach(function (k) {
+    var col = (HAS_LAYER_COLORS && LAYER_COLORS[k]) || (lays[k] && lays[k].color) || "#64748b";
+    var label = (lays[k] && lays[k].label) || k;
+    var row = document.createElement("div"); row.className = "color-row";
+    row.innerHTML = '<span class="color-name"><span class="dot" style="background:' + escapeHtml(col) + '"></span>' + escapeHtml(label) + '</span>';
+    var inp = document.createElement("input"); inp.type = "color"; inp.value = toHex(col);
+    inp.oninput = function () { setLayerColor(k, inp.value); row.querySelector(".dot").style.background = inp.value; };
     row.appendChild(inp); box.appendChild(row);
   });
 }
@@ -1044,17 +1086,22 @@ function toHex(c) {
   if (/^#([0-9a-f]{6})$/i.test(c)) return c;
   if (/^#([0-9a-f]{3})$/i.test(c)) { return "#" + c.slice(1).split("").map(function (x) { return x + x; }).join(""); } return "#356cb5";
 }
-function setGroupColor(group, color) {
-  GROUPS[group].color = color;
-  visNodes.update(rawNodes.filter(function (n) { return n.group === group; }).map(makeVisNode));
+function setLayerColor(layer, color) {
+  if (HAS_LAYER_COLORS) LAYER_COLORS[layer] = color;
+  if (TPL.layers && TPL.layers[layer]) TPL.layers[layer].color = color;
+  // 해당 브랜치 노드(배경·테두리) + 연결선(자식 브랜치색) 전체 재계산
+  visNodes.update(rawNodes.map(makeVisNode));
+  visEdges.update(rawEdges.map(makeVisEdge));
   buildChips();
-  if (currentId && nodeMap[currentId] && nodeMap[currentId].group === group) { var tag = document.getElementById("panelTag"); tag.style.background = color; tag.style.color = idealText(color); }
+  if (currentId && nodeMap[currentId] && nodeLayer(nodeMap[currentId]) === layer) {
+    var tag = document.getElementById("panelTag"); tag.style.background = color; tag.style.color = idealText(color);
+  }
   saveWork();
 }
 document.getElementById("tab-color").onclick = function () { openPanelTab("color"); }; document.getElementById("btnColor").onclick = function () { openPanelTab("color"); }; document.getElementById("tab-info").onclick = function () { setTab("info"); };
 document.getElementById("btnColorReset").onclick = function () {
   if (!confirm("색상을 기본값으로 되돌릴까요?")) return;
-  applyColors(null); visNodes.update(rawNodes.map(makeVisNode)); buildChips(); renderColorPicker(); saveWork(); toast("색상 초기화");
+  applyColors(null); applyLayerColors(null); visNodes.update(rawNodes.map(makeVisNode)); visEdges.update(rawEdges.map(makeVisEdge)); buildChips(); renderColorPicker(); saveWork(); toast("색상 초기화");
 };
 
 /* ============================================================
@@ -1111,7 +1158,7 @@ function downloadText(name, text, mime) {
   a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
 }
 document.getElementById("btnExportJson").onclick = function () {
-  var payload = { tid: tid, name: TPL.name, colors: currentColors(), nodes: rawNodes.map(exportNode), edges: rawEdges.map(exportEdge) };
+  var payload = { tid: tid, name: TPL.name, colors: currentColors(), layerColors: currentLayerColors(), nodes: rawNodes.map(exportNode), edges: rawEdges.map(exportEdge) };
   downloadText("mindmap." + tid + ".json", JSON.stringify(payload, null, 2), "application/json"); toast("JSON 내보냄 — mindmap." + tid + ".json");
 };
 
@@ -1132,7 +1179,7 @@ importFileEl.onchange = function () {
     if (!confirm("현재 템플릿(" + TPL.name + ")의 노드/엣지/색상을 가져온 데이터로 교체할까요?")) return;
     rawNodes = clone(data.nodes); rawEdges = clone(data.edges);
     var seq = 0; rawEdges.forEach(function (ed) { if (!ed.id) ed.id = "e" + (seq++); });
-    applyColors(data.colors || null); reloadNetwork(); toast("가져오기 완료 — " + rawNodes.length + "개 노드");
+    applyColors(data.colors || null); applyLayerColors(data.layerColors || null); reloadNetwork(); toast("가져오기 완료 — " + rawNodes.length + "개 노드");
   }; reader.readAsText(f, "utf-8");
 };
 

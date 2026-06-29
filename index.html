@@ -144,7 +144,7 @@
     <!-- 색상 범례 (Miro 스타일 플로팅 카드) -->
     <div id="legend" class="legend" aria-label="노드 색상 범례">
       <div class="legend-head">
-        <span>범례 · 노드 유형</span>
+        <span>범례 · 대분류(브랜치)</span>
         <button id="legendToggle" class="legend-toggle" aria-label="범례 접기/펼치기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-chevron-down"/></svg></button>
       </div>
       <div id="legendList" class="legend-list"></div>
@@ -197,7 +197,7 @@
 
       <section id="pane-color" style="display:none">
         <h2 class="pane-h">색상 커스터마이징</h2>
-        <p class="pane-sub">그룹별 색상을 바꾸면 노드와 상단 필터·범례에 즉시 반영됩니다.</p>
+        <p class="pane-sub">대분류(브랜치)별 색상을 바꾸면 노드·연결선·상단 필터·범례에 즉시 반영됩니다.</p>
         <div id="colorList" class="color-list"></div>
         <button id="btnColorReset" class="btn ghost-dark small" style="margin-top:8px">색상 기본값으로</button>
       </section>
@@ -301,9 +301,24 @@
         }, reduce ? 200 : 1100);
       }
 
-      /* ---- 색상 범례 (GROUPS 기반, 표시 전용) ---- */
+      /* ---- 색상 범례 (브랜치=layer 기준, 노드색과 동일) ---- */
       var list = document.getElementById("legendList");
-      if (list && groups) {
+      var lcolors = (typeof LAYER_COLORS !== "undefined") ? LAYER_COLORS : null;
+      var lays = (typeof TPL !== "undefined" && TPL && TPL.layers) ? TPL.layers : null;
+      if (list && lcolors && lays) {
+        Object.keys(lays).forEach(function (k) {
+          var col = (lays[k] && lays[k].color) || lcolors[k];
+          if (!col) return;
+          var row = document.createElement("div");
+          row.className = "legend-item";
+          var dot = document.createElement("span");
+          dot.className = "legend-dot"; dot.style.background = col;
+          var lab = document.createElement("span");
+          lab.className = "legend-name"; lab.textContent = (lays[k] && lays[k].label) || k;
+          row.appendChild(dot); row.appendChild(lab);
+          list.appendChild(row);
+        });
+      } else if (list && groups) {
         Object.keys(groups).forEach(function (k) {
           var g = groups[k];
           var row = document.createElement("div");

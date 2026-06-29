@@ -19,18 +19,19 @@ GROUPS = [
 ]
 DEPTH_GROUP = {0: 'core', 1: 'process', 2: 'phase', 3: 'concept', 4: 'activity', 5: 'task'}
 
-# ----- 필터축(대분류 브랜치) -----
+# ----- 필터축(대분류 브랜치) + 브랜치별 색상 -----
+# color = 노드(테두리·연결선)·Layer 필터칩 공통색. 노드 배경은 JS에서 밝은 tint 처리.
 LAYERS = [
-    ('core',  '중심'),
-    ('okr',   'OKR 핵심개념'),
-    ('mbo',   'MBO 핵심개념'),
-    ('align', 'X1 정렬·연계'),
-    ('change','X2 변화관리·문화'),
-    ('link',  '성과평가 연계'),
-    ('u1',    'U1 목표수립'),
-    ('u2',    'U2 실행·점검'),
-    ('u3',    'U3 평가'),
-    ('u4',    'U4 피드백'),
+    ('core',  '중심',             '#334155'),
+    ('okr',   'OKR 핵심개념',     '#2563EB'),
+    ('mbo',   'MBO 핵심개념',     '#7C3AED'),
+    ('align', 'X1 정렬·연계',     '#E11D48'),
+    ('change','X2 변화관리·문화', '#EA580C'),
+    ('link',  '성과평가 연계',    '#0D9488'),
+    ('u1',    'U1 목표수립',      '#16A34A'),
+    ('u2',    'U2 실행·점검',     '#0EA5E9'),
+    ('u3',    'U3 평가',          '#CA8A04'),
+    ('u4',    'U4 피드백',        '#DB2777'),
 ]
 
 # 트리: (label, layer, [children...])  — 자식은 (label, [children]) 또는 "label"
@@ -230,97 +231,160 @@ T = (
    ]),
  ]),
 
- # ===== U2 실행·점검 (Execute & Measure) =====
+ # ===== U2 실행·점검 (Execute & Measure) — unified_process.json u.check 상세 =====
  ("U2 실행·점검 (Execute & Measure)", "u2", [
-   ("상시 측정 OKR 진행률 기록", [
-     "OKR 진행 팀원 팀장 상시 주간 개인 OKR 기록",
-     "분기 진행률 측정 및 기록",
+   ("측정 Measuring", [
+     "OKR 진행 과정 기록·측정",
+     "각 KR로 목표 진행 수준 산출",
+     "자기 점검 및 승인",
    ]),
-   ("주간 브리핑", [
-     "Start Meeting 월요일 업무 점검",
-     "Review Briefing 금요일 회고",
-     "진척도·핵심결과·지원요청 다각도 리뷰",
+   ("리뷰 Reviewing", [
+     ("주간 브리핑 (목표 점검·회고)", [
+       "미팅 사전 준비 Scrum",
+       "목표점검 Agenda (진척도·핵심결과·지원요청)",
+       "회고 문항 Follow Up (보완·중단·지속 결정)",
+     ]),
+     "KPTA 검토법 (Keep·Try·Problem·Action)",
+     "Kanban 운영 (To Do·Doing·Done)",
+   ]),
+   ("추적·개선 Track & Update", [
+     ("OKR 달성도 종합리뷰", [
+       "개인 종합 리뷰 (FAST 원칙별 검증)",
+       "상위관리자 리뷰 (CFR 종합)",
+       "OKR 지향노트 (차기 OKR 정교화)",
+     ]),
+     "Next OKR 개선방안 (지속·보완·중단 결정)",
    ]),
    ("Mid-year Review 중간점검", [
-     "중간점검 면담 실시",
-     "Next OKR 팀원 팀장 부기 진행률 검토",
-     "말/상리뷰 결과 반영 목표 보완",
-   ]),
-   ("실행 도구 활용", [
-     "KPTA 도구 활용 회고",
-     "Kanban 도구 활용 업무 관리",
+     ("Mid-year Review 준비", [
+       "Review 일정·Guide 수립",
+       "본인 중간점검 양식 작성",
+       "달성도 사전 점검·면담 일정 Arrange",
+       "본인 중간 점검 Template",
+     ]),
+     ("중간 점검 면담", [
+       "1:1 중간 점검 면담 실시",
+       "면담 참관·진행 현황 Monitoring",
+     ]),
+     ("결과 정리·취합", [
+       "면담 결과 정리·송부",
+       "결과 취합·보고 (BG장/CEO)",
+       "Mid-year Review 결과 정리 Template",
+     ]),
+     ("Check Point 점검", [
+       "Check A: 역할·책임 변화 (R&R)",
+       "Check B: 목표 진척도 (Progress)",
+       "Intervention 개입",
+     ]),
+     ("면담 진행 Checklist", [
+       "Process 측면 점검",
+       "Contents 측면 (목표 달성도) 점검",
+     ]),
+     "STAR 기법 (Situation·Task·Action·Result)",
    ]),
  ]),
 
- # ===== U3 평가 (Review) =====
+ # ===== U3 평가 (Review) — unified_process.json u.eval 상세 =====
  ("U3 평가 (Review)", "u3", [
-   ("평가 프로세스", [
-     "자기평가 시작",
-     "1차 상사평가 실시",
-     "Calibration 차상위자 Review·조정",
-     "2차 평가자 등급 확정",
+   ("OKR 활용 (성과 평가)", [
+     "성과 평가의 변화 (개선·발전 리뷰)",
+     ("OKR 활용 프로세스", [
+       ("종합 리뷰", [
+         "360 피드백",
+         "배지 (인정·피드백)",
+       ]),
+       "성과의 해석 (난이도·환경·내부 이슈)",
+       "인재 스냅샷",
+       "인재 스냅샷 자가진단 (평가 오류 점검)",
+       "인재 논의 Talent Session",
+     ]),
    ]),
-   ("인재 스냅샷 작성", [
-     "성과·역량·승진가능성 기록",
-     "이직위험·보상·저성과 이슈 기록",
-     "블록·종합등급 구성원 종합 기록",
-   ]),
-   ("인재 논의 Talent Session", [
-     "성과·보상·육성 논의",
-     "인재관리 역량 논의",
-     "평가 결과 객관성·공정성 제고",
-   ]),
-   ("성과 해석", [
-     "목표 난이도 고려",
-     "환경·내부 이슈 종합 고려",
-     "다각적 논의로 평가·보상 연계",
+   ("평가 (KPI 점수·등급 산출)", [
+     ("평가 지침 수립·안내", [
+       "평가 운영 계획 수립·보고",
+       "중역/팀장 평가 Guide 배포·Training",
+     ]),
+     ("자기 평가", [
+       "평가항목별 실적 자료 집계",
+       "자기 평가서 작성",
+       "자기평가서 송부",
+       "평가 Template",
+     ]),
+     ("상사 평가", [
+       "자기 평가 결과 검토",
+       "상사 평가 실시",
+       "정성평가 근거 Template",
+     ]),
+     ("Calibration", [
+       "Calibration 준비",
+       "차상위자 평가 결과 Review",
+       "Calibration Meeting 실시",
+       "BG HR Review Report",
+     ]),
+     ("평가 결과 확정·보고", [
+       "평가 점수 확정·등급 부여",
+       "평가 결과 정리·보고",
+       "최종 평가 등급 확정 정리 양식",
+     ]),
+     ("신규·이동·TF 평가 Guide", [
+       ("TF/Project 성과 반영 Process", [
+         "주체별 역할 (피평가자·TF Mgr·팀장·HR)",
+         "TF/PRJ 평가점수 산출 (세부항목×가중치)",
+       ]),
+     ]),
+     ("성과 Back-up Data 수집", [
+       "설명 항목",
+       "예시 항목",
+     ]),
+     ("Calibration Point", [
+       "Calibration의 목적",
+       "주요 검토 포인트 (관대화·중심화·가혹화)",
+     ]),
+     ("HR 평가결과 분석", [
+       ("전체 점수 분포 분석", [
+         "Dimension 구분 (직책×Category)",
+         "통계 지표 (평균·표준편차·첨도·편도)",
+       ]),
+       ("조직별 비교 분석", [
+         "평균과의 Gap",
+       ]),
+       ("MBO Category별 비교 분석", [
+         "Category별 총점 영향도",
+       ]),
+     ]),
    ]),
  ]),
 
- # ===== U4 피드백 (Feedback) =====
+ # ===== U4 피드백 (Feedback) — unified_process.json u.fb 상세 =====
  ("U4 피드백 (Feedback)", "u4", [
-   ("Feedback Note 작성", [
-     "점수·등급·성과급 기록",
-     "종합 Comment 작성",
+   ("CFR (Conversation·Feedback·Recognition)", [
+     "Conversation (구성원 간 대화)",
+     "Feedback (결과·과정 피드백)",
+     "Recognition (성취에 대한 인정)",
    ]),
-   ("1:1 Feedback Meeting", [
-     "평가결과 설명",
-     "Gap 논의 및 차년도 협의",
-     "평가결과·성과급 지급률 설명",
-   ]),
-   ("차년도 목표 고려사항 협의", [
-     "구성원 상황별 맞춤형 Feedback",
-     "OKR 지향노트 차기 방향성 수립",
-   ]),
-   ("CFR 운영", [
-     ("Conversation 목표 공감 위한 소통", [
-       "팀원과 리더 공유·정렬",
-       "구성원 간 대화 목표 공감",
+   ("Feedback (평가 결과 Feedback)", [
+     ("Feedback 준비", [
+       "평가자 대상 Feedback 안내",
+       "Feedback 면담 계획 수립",
+       ("Feedback Note 작성", [
+         "Feedback Note (점수·등급·성과급·Comment)",
+       ]),
      ]),
-     ("Feedback 양방향 피드백", [
-       "결과·과정 피드백 병행",
-       "네트워크 형태 양방향 운영",
+     ("Feedback 실시", [
+       "1:1 Feedback Meeting 실시",
+       "진행 현황 Monitoring",
      ]),
-     ("Recognition 성취 인정", [
-       "작은 성취 공유·북돋움",
-       "정례화 반복 운영",
+     ("Feedback 결과 정리", [
+       "결과 정리·송부",
+       "결과 취합·보고 (BG장/CEO)",
+       "Feedback Meeting 결과 정리 양식",
      ]),
-   ]),
-   ("주간 브리핑 체계", [
-     "Start Meeting 월요일 업무 점검",
-     "Review Briefing 금요일 회고",
-     "진척도·핵심결과·지원요청 다각도 리뷰",
-     "회고 문항으로 목표 보완·중단·지속 결정",
-   ]),
-   ("연말 종합리뷰", [
-     "개인 종합 리뷰 FAST 원칙별 검증",
-     "상위관리자 리뷰 CFR 종합 퍼포먼스",
-     "OKR 지향노트 차기 OKR 방향성",
-   ]),
-   ("MBO Feedback", [
-     "Feedback Note 점수·등급·성과급·종합 Comment",
-     "1:1 Meeting 평가결과 설명·Gap 논의·차년도 협의",
-     "구성원 상황별 맞춤형 Feedback 제공",
+     "Feedback Template",
+     "효과적 Communication Tips (경청·질문·긍정언어)",
+     ("구성원 상황별 Feedback Point", [
+       "Positive Feedback (동기부여)",
+       "Negative Feedback (성과 강화)",
+     ]),
    ]),
  ]),
  ]
@@ -394,6 +458,13 @@ for k, lab, col in GROUPS:
     w('  %-10s { label: "%s", color: "%s" },\n' % (k + ':', lab, col))
 w('};\n\n')
 
+# 브랜치(대분류=layer)별 색상 — 노드 테두리·연결선·필터칩·범례 공통색
+w('/* 브랜치(대분류) 색상 = 노드 테두리·연결선·Layer 필터칩·범례 공통 (노드 배경은 밝은 tint) */\n')
+w('const LAYER_COLORS = {\n')
+for k, lab, col in LAYERS:
+    w('  %-10s "%s",\n' % (k + ':', col))
+w('};\n\n')
+
 w('const TPL_UNIFIED_NODES = [\n')
 for n in nodes:
     w('  { id: "%s", group: "%s", layer: "%s", label: "%s",\n'
@@ -412,9 +483,8 @@ w('  unified: {\n')
 w('    name: "성과평가 프로세스 (MBO+OKR 통합)",\n')
 w('    desc: "OKR/MBO 핵심개념 + 정렬·연계 + 변화관리 + 성과평가 연계 + 통합 4단계(목표수립→실행·점검→평가→피드백).",\n')
 w('    layers: {\n')
-for i, (k, lab) in enumerate(LAYERS):
-    comma = '' if i == len(LAYERS) - 1 else ''
-    w('      %-8s { label: "%s" },\n' % (k + ':', lab))
+for k, lab, col in LAYERS:
+    w('      %-8s { label: "%s", color: "%s" },\n' % (k + ':', lab, col))
 w('    },\n')
 w('    groupLayer: { core: "core" },\n')
 w('    nodes: TPL_UNIFIED_NODES, edges: TPL_UNIFIED_EDGES\n')
