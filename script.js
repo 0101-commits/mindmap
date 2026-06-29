@@ -334,7 +334,7 @@ network.on("beforeDrawing", function (ctx) {
 document.getElementById("btnToggleTopbar").onclick = function () {
   var tb = document.getElementById("topbar");
   var isCollapsed = tb.classList.toggle("collapsed");
-  this.textContent = isCollapsed ? "펼치기 ▼" : "접기 ▲";
+  this.textContent = isCollapsed ? "필터 ▼" : "필터 ▲";
   // 메뉴가 접히면서 캔버스 사이즈가 달라지므로 0.3초 후 리드로우
   setTimeout(function() {
     refreshDprAndRedraw();
@@ -1240,12 +1240,12 @@ window.addEventListener("load", function () {
   /* ---- 버튼 동적 생성 ---- */
   var btnTour = document.createElement("button");
   btnTour.id = "btnTour"; btnTour.className = "tool";
-  btnTour.textContent = "▶ 가이드 투어";
+  btnTour.textContent = "가이드 투어";
   btnTour.title = "핵심 노드를 순서대로 안내합니다 (← → 이동, Esc 종료)";
 
   var btnNF = document.createElement("button");
   btnNF.id = "btnNeighborFocus"; btnNF.className = "tool";
-  btnNF.textContent = "🔦 이웃 포커스";
+  btnNF.textContent = "이웃 포커스";
   btnNF.title = "켜면 선택 노드의 1-hop 이웃만 강하게 강조하고 포커스를 유지합니다";
 
   toolbar.appendChild(btnNF);
@@ -1364,7 +1364,7 @@ window.addEventListener("load", function () {
     if (!tourSeq.length) { toast("투어할 노드가 없습니다 (필터 확인)"); return; }
     tourActive = true;
     btnTour.classList.add("active");
-    btnTour.textContent = "■ 투어 종료";
+    btnTour.textContent = "투어 종료";
     if (isolateSet) exitIsolate(true);
     ensureOverlay();
     overlay.style.display = "flex";
@@ -1377,7 +1377,7 @@ window.addEventListener("load", function () {
     if (!tourActive) return;
     tourActive = false;
     btnTour.classList.remove("active");
-    btnTour.textContent = "▶ 가이드 투어";
+    btnTour.textContent = "가이드 투어";
     if (overlay) overlay.style.display = "none";
     document.removeEventListener("keydown", onTourKey);
     if (!neighborFocusMode) clearDim();

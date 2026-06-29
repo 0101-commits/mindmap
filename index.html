@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>개인 E2E 성과관리 · HR 아키텍처 마인드맵</title>
+  <title>통합 성과관리 프로세스 마인드맵</title>
 
-  <meta name="description" content="개인 단위 End-to-End 성과관리(목표수립·체크인·평가·피드백)와 CSF→KPI, HR AI 4-Layer 아키텍처를 4개 프로세스 템플릿(E2E·OKR·MBO·역량)으로 탐색하는 인터랙티브 HR 마인드맵." />
+  <meta name="description" content="HCG OKR Manual + PM Manual(MBO)을 결합한 통합 성과관리 프로세스(목표수립·실행점검·평가·피드백·정렬연계·변화문화)를 노드 268개·관계 389개로 탐색하는 인터랙티브 마인드맵." />
   <meta name="theme-color" content="#ffffff" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="개인 E2E 성과관리 · HR 아키텍처 마인드맵" />
-  <meta property="og:description" content="목표수립→체크인→평가→피드백 + CSF/KPI + HR AI 4-Layer를 한 화면에서 필터·탐색하는 HR 컨설팅 데모 마인드맵." />
+  <meta property="og:title" content="통합 성과관리 프로세스 마인드맵" />
+  <meta property="og:description" content="OKR + MBO 통합 성과관리 프로세스를 한 화면에서 필터·검색·탐색하는 HR 마인드맵." />
   <meta property="og:url" content="https://0101-commits.github.io/mindmap/" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMiAzMic+PHJlY3Qgd2lkdGg9JzMyJyBoZWlnaHQ9JzMyJyByeD0nNycgZmlsbD0nIzM1NkNCNScvPjxjaXJjbGUgY3g9JzE2JyBjeT0nOScgcj0nMy40JyBmaWxsPScjZmZmJy8+PGNpcmNsZSBjeD0nOScgY3k9JzIzJyByPSczLjQnIGZpbGw9JyNmZmYnLz48Y2lyY2xlIGN4PScyMycgY3k9JzIzJyByPSczLjQnIGZpbGw9JyNmZmYnLz48cGF0aCBkPSdNMTYgOSBMOSAyMyBNMTYgOSBMMjMgMjMgTTkgMjMgTDIzIDIzJyBzdHJva2U9JyNmZmYnIHN0cm9rZS13aWR0aD0nMS43JyBmaWxsPSdub25lJy8+PC9zdmc+" />
 
@@ -23,39 +23,78 @@
           crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="style.css" />
+
+  <!-- ===== Inline SVG icon sprite (Lucide-style, stroke=currentColor) ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <g id="ic-plus"><path d="M12 5v14M5 12h14"/></g>
+      <g id="ic-save"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></g>
+      <g id="ic-history"><path d="M3 12a9 9 0 1 0 2.6-6.36L3 8"/><path d="M3 3v5h5"/><path d="M12 8v4l3 1.5"/></g>
+      <g id="ic-palette"><circle cx="13.5" cy="6.5" r=".9"/><circle cx="17" cy="10.5" r=".9"/><circle cx="8.5" cy="7.5" r=".9"/><circle cx="6.5" cy="12" r=".9"/><path d="M12 2a10 10 0 1 0 0 20 2 2 0 0 0 2-2v-1a2 2 0 0 1 2-2h1a4 4 0 0 0 4-4 10 10 0 0 0-11-9z"/></g>
+      <g id="ic-fit"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></g>
+      <g id="ic-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></g>
+      <g id="ic-json"><path d="M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1"/></g>
+      <g id="ic-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></g>
+      <g id="ic-image"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="m21 15-5-5L5 21"/></g>
+      <g id="ic-reset"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></g>
+      <g id="ic-x"><path d="M18 6 6 18M6 6l12 12"/></g>
+      <g id="ic-search"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></g>
+      <g id="ic-target"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></g>
+      <g id="ic-edit"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></g>
+      <g id="ic-trash"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></g>
+      <g id="ic-minus"><path d="M5 12h14"/></g>
+      <!-- layout rail -->
+      <g id="ic-hier"><circle cx="12" cy="5" r="2.2"/><circle cx="5.5" cy="19" r="2.2"/><circle cx="18.5" cy="19" r="2.2"/><path d="M12 7.2v3.3M12 10.5 5.8 16.9M12 10.5l6.2 6.4"/></g>
+      <g id="ic-free"><circle cx="12" cy="12" r="2"/><path d="M12 4a8 8 0 0 1 0 16M12 4a8 8 0 0 0 0 16" opacity=".55"/><circle cx="12" cy="4" r="1.4"/><circle cx="12" cy="20" r="1.4"/></g>
+      <g id="ic-vert"><rect x="9" y="3" width="6" height="5.5" rx="1"/><rect x="9" y="15.5" width="6" height="5.5" rx="1"/><path d="M12 8.5v7"/></g>
+      <g id="ic-horz"><rect x="3" y="9" width="5.5" height="6" rx="1"/><rect x="15.5" y="9" width="5.5" height="6" rx="1"/><path d="M8.5 12h7"/></g>
+      <g id="ic-layers"><path d="m12 3 9 5-9 5-9-5 9-5z"/><path d="m3 13 9 5 9-5M3 17.5l9 5 9-5" opacity=".55"/></g>
+      <g id="ic-cluster"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><circle cx="12" cy="12" r="2"/></g>
+      <g id="ic-chevron-down"><path d="m6 9 6 6 6-6"/></g>
+    </defs>
+  </svg>
 </head>
 <body>
   <header id="topbar">
     <div class="topbar-header">
       <div class="brand">
-        <h1>E2E 성과관리 · HR 아키텍처 <span>마인드맵</span></h1>
-        <p class="subtitle">목표수립 · 체크인 · 평가 · 피드백 &nbsp;|&nbsp; CSF→KPI &nbsp;|&nbsp; HR AI 4-Layer</p>
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="8" fill="#356CB5"/><circle cx="16" cy="9" r="3.4" fill="#fff"/><circle cx="9" cy="23" r="3.4" fill="#fff"/><circle cx="23" cy="23" r="3.4" fill="#fff"/><path d="M16 9 9 23M16 9 23 23M9 23 23 23" stroke="#fff" stroke-width="1.7" fill="none"/></svg>
+        </span>
+        <span class="brand-text">
+          <h1>통합 성과관리 프로세스 <span>마인드맵</span></h1>
+          <p class="subtitle">목표수립 · 실행점검 · 평가 · 피드백 · 정렬연계 · 변화문화 &nbsp;|&nbsp; OKR + MBO 통합</p>
+        </span>
 
         <div class="tpl-row">
-          <label for="tplSelect">프로세스 종류</label>
+          <label for="tplSelect">프로세스</label>
           <select id="tplSelect"></select>
           <span id="tplDesc" class="tpl-desc"></span>
         </div>
       </div>
-      <button id="btnToggleTopbar" class="btn ghost small" aria-label="메뉴 확장/축소">접기 ▲</button>
+
+      <div class="topbar-right">
+        <span class="search-wrap">
+          <svg class="search-ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-search"/></svg>
+          <input type="text" id="searchBox" placeholder="노드 검색 후 Enter" aria-label="노드 검색" aria-describedby="searchResults" />
+          <div id="searchResults" class="search-results hidden" role="listbox" aria-label="검색 결과"></div>
+        </span>
+        <button id="btnToggleTopbar" class="btn ghost small" aria-label="필터 메뉴 접기/펼치기">필터 ▲</button>
+      </div>
     </div>
 
     <div class="filters collapsible-menu">
       <div class="filter-block">
-        <div class="filter-label">그룹(기능) 필터 — 클릭=표시/숨김 · 더블클릭=단독</div>
+        <div class="filter-label">그룹(유형) 필터 <em>클릭 = 표시/숨김 · 더블클릭 = 단독</em></div>
         <div id="filterChips" class="chips"></div>
       </div>
       <div class="filter-block">
-        <div class="filter-label">Layer 필터 (그룹과 AND 교집합 적용)</div>
+        <div class="filter-label">단계(Layer) 필터 <em>그룹과 AND 교집합</em></div>
         <div id="layerChips" class="chips"></div>
       </div>
       <div class="filter-actions">
-        <span class="search-wrap">
-          <input type="text" id="searchBox" placeholder="🔍 노드 검색 후 Enter" aria-label="노드 검색" aria-describedby="searchResults" />
-          <div id="searchResults" class="search-results hidden" role="listbox" aria-label="검색 결과"></div>
-        </span>
-        <button id="btnAll" class="btn">전체</button>
-        <button id="btnNone" class="btn ghost">모두 끄기</button>
+        <button id="btnAll" class="btn secondary small">전체 표시</button>
+        <button id="btnNone" class="btn ghost small">모두 끄기</button>
       </div>
     </div>
   </header>
@@ -63,44 +102,65 @@
   <main id="stage">
     <div class="toolbar-wrapper">
       <div class="floating-toolbar">
-        <button id="btnAdd"        class="tool primary">＋ 노드 추가</button>
-        <button id="btnSave"       class="tool">💾 저장</button>
-        <button id="btnHistory"    class="tool">🕘 History</button>
-        <button id="btnColor"      class="tool">🎨 색상</button>
-        <button id="btnFit"        class="tool">⤢ 전체 보기</button>
-        <button id="btnExport"     class="tool">⭳ 내보내기</button>
-        <button id="btnExportJson" class="tool">⬇ JSON</button>
-        <button id="btnImport"     class="tool">⬆ 가져오기</button>
-        <button id="btnPng"        class="tool">🖼 PNG</button>
-        <button id="btnRestore"    class="tool ghost2">↺ 기본값</button>
-        <button id="btnIsolateOff" class="tool danger-tool" style="display:none">✕ 단독 해제</button>
+        <button id="btnAdd" class="tool primary" title="노드 추가" aria-label="노드 추가"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-plus"/></svg><span>노드 추가</span></button>
+        <span class="tb-sep" aria-hidden="true"></span>
+        <button id="btnSave" class="tool" title="현재 상태 저장" aria-label="저장"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-save"/></svg><span>저장</span></button>
+        <button id="btnHistory" class="tool" title="저장 내역" aria-label="History"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-history"/></svg><span>History</span></button>
+        <button id="btnColor" class="tool" title="그룹 색상 변경" aria-label="색상"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-palette"/></svg><span>색상</span></button>
+        <span class="tb-sep" aria-hidden="true"></span>
+        <button id="btnExport" class="tool icon-only" title="JS 데이터 내보내기" aria-label="내보내기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-download"/></svg></button>
+        <button id="btnExportJson" class="tool icon-only" title="JSON 내보내기" aria-label="JSON 내보내기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-json"/></svg></button>
+        <button id="btnImport" class="tool icon-only" title="JSON 가져오기" aria-label="가져오기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-upload"/></svg></button>
+        <button id="btnPng" class="tool icon-only" title="PNG 이미지 저장" aria-label="PNG 저장"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-image"/></svg></button>
+        <span class="tb-sep" aria-hidden="true"></span>
+        <button id="btnRestore" class="tool ghost2 icon-only" title="기본값 복원" aria-label="기본값 복원"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-reset"/></svg></button>
+        <button id="btnIsolateOff" class="tool danger-tool" style="display:none" title="단독 보기 해제" aria-label="단독 보기 해제"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-x"/></svg><span>단독 해제</span></button>
       </div>
 
-      <div class="layout-toolbar">
+      <!-- 좌측 세로 레이아웃 레일 (Miro 스타일) -->
+      <div class="layout-toolbar" role="toolbar" aria-label="정렬 레이아웃">
         <span class="lt-label">정렬</span>
-        <button id="btnProcessHier" class="tool active">🏢 프로세스 중심</button>
-        <button id="btnFree"    class="tool">⟳ 자유</button>
-        <button id="btnVert"    class="tool">⌗ 수직계층</button>
-        <button id="btnHorz"    class="tool">⌗ 수평계층</button>
-        <button id="btnLayer"   class="tool">▥ Layer그룹</button>
-        <button id="btnCluster" class="tool">❉ 기능군집</button>
+        <button id="btnProcessHier" class="tool active icon-only" title="프로세스 중심" aria-label="프로세스 중심 정렬"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-hier"/></svg></button>
+        <button id="btnFree" class="tool icon-only" title="자유 (물리)" aria-label="자유 배치"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-free"/></svg></button>
+        <button id="btnVert" class="tool icon-only" title="수직 계층" aria-label="수직 계층"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-vert"/></svg></button>
+        <button id="btnHorz" class="tool icon-only" title="수평 계층" aria-label="수평 계층"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-horz"/></svg></button>
+        <button id="btnLayer" class="tool icon-only" title="Layer 그룹화" aria-label="Layer 그룹화"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-layers"/></svg></button>
+        <button id="btnCluster" class="tool icon-only" title="기능 군집" aria-label="기능 군집"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-cluster"/></svg></button>
       </div>
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
 
-    <aside id="sectionPanel" class="section-panel">
+    <aside id="sectionPanel" class="section-panel collapsed">
       <div class="sp-header">
         <span>섹션 관리</span>
-        <button id="btnToggleSection" aria-label="접기/펼치기" style="background:none;border:none;cursor:pointer;color:inherit;font-size:16px;">▼</button>
+        <button id="btnToggleSection" class="sp-toggle" aria-label="섹션 접기/펼치기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-chevron-down"/></svg></button>
       </div>
       <div id="sectionList" class="sp-list"></div>
     </aside>
 
-    <div id="network" role="application" aria-label="성과관리 마인드맵 시각화. 캔버스 탐색이 어려우면 상단의 그룹·Layer 필터와 검색으로 노드를 찾으세요."></div>
-    <p class="sr-only">마인드맵은 캔버스로 렌더링됩니다. 키보드 사용자는 상단 그룹 필터·Layer 필터(Tab 이동, Enter/Space 토글, Shift+Enter 단독 보기)와 검색창을 이용해 탐색할 수 있습니다.</p>
+    <div id="network" role="application" aria-label="성과관리 마인드맵 시각화. 캔버스 탐색이 어려우면 상단의 그룹·단계 필터와 검색으로 노드를 찾으세요."></div>
+    <p class="sr-only">마인드맵은 캔버스로 렌더링됩니다. 키보드 사용자는 상단 그룹 필터·단계 필터(Tab 이동, Enter/Space 토글, Shift+Enter 단독 보기)와 검색창을 이용해 탐색할 수 있습니다.</p>
+
+    <!-- 색상 범례 (Miro 스타일 플로팅 카드) -->
+    <div id="legend" class="legend" aria-label="노드 색상 범례">
+      <div class="legend-head">
+        <span>범례 · 노드 유형</span>
+        <button id="legendToggle" class="legend-toggle" aria-label="범례 접기/펼치기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-chevron-down"/></svg></button>
+      </div>
+      <div id="legendList" class="legend-list"></div>
+    </div>
+
+    <!-- 줌 컨트롤 (Miro 스타일 우하단) -->
+    <div class="zoom-ctl" role="group" aria-label="확대/축소">
+      <button id="zoomOut" class="zoom-btn" title="축소" aria-label="축소"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-minus"/></svg></button>
+      <button id="zoomLevel" class="zoom-level" title="100%로 맞춤" aria-label="확대 비율, 클릭 시 100%">100%</button>
+      <button id="zoomIn" class="zoom-btn" title="확대" aria-label="확대"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-plus"/></svg></button>
+      <span class="zoom-sep" aria-hidden="true"></span>
+      <button id="btnFit" class="zoom-btn" title="전체 보기" aria-label="전체 보기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-fit"/></svg></button>
+    </div>
 
     <aside id="sidepanel" class="closed">
-      <button id="panelClose" aria-label="닫기">×</button>
+      <button id="panelClose" aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-x"/></svg></button>
 
       <div class="panel-tabs">
         <button id="tab-info"    class="ptab active">정보</button>
@@ -110,16 +170,16 @@
 
       <section id="pane-info">
         <div class="panel-tag" id="panelTag">그룹</div>
-        <h2 id="panelTitle">노드를 클릭하세요</h2>
+        <h2 id="panelTitle">노드를 선택하세요</h2>
 
         <div class="panel-actions" id="panelActions" style="display:none">
-          <button id="btnEdit"        class="btn small">✎ 수정</button>
-          <button id="btnIsolateNode" class="btn small">🎯 단독</button>
-          <button id="btnDel"         class="btn small danger">🗑 삭제</button>
+          <button id="btnEdit" class="btn small"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-edit"/></svg>수정</button>
+          <button id="btnIsolateNode" class="btn small"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-target"/></svg>단독</button>
+          <button id="btnDel" class="btn small danger"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-trash"/></svg>삭제</button>
         </div>
 
         <p id="panelSummary" class="panel-summary">
-          노드를 클릭하면 상세 설명과 연결관계가 표시됩니다. 더블클릭 → 수정, 선 더블클릭 → 실선/점선 전환.
+          노드를 클릭하면 상세 설명과 연결관계가 나타납니다. 더블클릭 → 수정, 선 더블클릭 → 실선/점선 전환.
         </p>
         <ul id="panelDetail" class="panel-detail"></ul>
         <div id="panelSrc" class="panel-src" style="display:none"></div>
@@ -137,7 +197,7 @@
 
       <section id="pane-color" style="display:none">
         <h2 class="pane-h">색상 커스터마이징</h2>
-        <p class="pane-sub">그룹별 색상을 바꾸면 노드와 상단 필터 버튼에 즉시 반영됩니다.</p>
+        <p class="pane-sub">그룹별 색상을 바꾸면 노드와 상단 필터·범례에 즉시 반영됩니다.</p>
         <div id="colorList" class="color-list"></div>
         <button id="btnColorReset" class="btn ghost-dark small" style="margin-top:8px">색상 기본값으로</button>
       </section>
@@ -145,12 +205,12 @@
   </main>
 
   <footer id="legendbar">
-    <span class="hint">💡 노드 클릭 → 강조+상세 · 더블클릭 → 수정 · 선 더블클릭 → 실선/점선 · 칩 더블클릭 → 단독 보기 · 휠 확대 / 드래그 이동</span>
+    <span class="hint">노드 클릭 → 강조·상세 &nbsp;·&nbsp; 더블클릭 → 수정 &nbsp;·&nbsp; 선 더블클릭 → 실선/점선 &nbsp;·&nbsp; 칩 더블클릭 → 단독 &nbsp;·&nbsp; 휠 확대 / 드래그 이동</span>
   </footer>
 
   <div id="modal" class="modal-overlay hidden">
     <div class="modal">
-      <button id="modalClose" aria-label="닫기">×</button>
+      <button id="modalClose" aria-label="닫기"><svg class="ic" viewBox="0 0 24 24"><use href="#ic-x"/></svg></button>
       <h3 id="modalTitle">노드 추가</h3>
 
       <label for="fLabel">이름 (라벨) <em>*</em></label>
@@ -189,5 +249,77 @@
 
   <script src="data.js"></script>
   <script src="script.js"></script>
+
+  <!-- ===== Miro-style 부가 UI 배선 (zoom 위젯 · 색상 범례) — script.js 의 전역 network/GROUPS 사용 ===== -->
+  <script>
+  (function () {
+    function ready(fn) { if (document.readyState !== "loading") fn(); else document.addEventListener("DOMContentLoaded", fn); }
+    ready(function () {
+      // data.js/script.js 의 전역은 const(GROUPS)·var(network) — const 는 window 에 안 붙으므로 bare 참조
+      var net = (typeof network !== "undefined") ? network : null;
+      var groups = (typeof GROUPS !== "undefined") ? GROUPS : null;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var anim = reduce ? false : { duration: 250, easingFunction: "easeInOutQuad" };
+
+      /* ---- 줌 위젯 ---- */
+      var lvl = document.getElementById("zoomLevel");
+      function clamp(s) { return Math.max(0.15, Math.min(3.5, s)); }
+      function syncLevel() {
+        if (!net || !lvl) return;
+        try { lvl.textContent = Math.round(net.getScale() * 100) + "%"; } catch (e) {}
+      }
+      function zoomBy(f) {
+        if (!net) return;
+        var s = clamp(net.getScale() * f);
+        var c = net.getViewPosition();
+        net.moveTo({ scale: s, position: c, animation: anim });
+        setTimeout(syncLevel, reduce ? 0 : 280);
+      }
+      var zi = document.getElementById("zoomIn"), zo = document.getElementById("zoomOut"),
+          zf = document.getElementById("btnFit");
+      if (zi) zi.onclick = function () { zoomBy(1.25); };
+      if (zo) zo.onclick = function () { zoomBy(0.8); };
+      // btnFit 의 onclick(fitAll)은 script.js 가 소유 — 클로버하지 않고 줌 레벨만 동기화
+      if (zf) zf.addEventListener("click", function () { setTimeout(syncLevel, reduce ? 0 : 650); });
+      if (lvl) lvl.onclick = function () {
+        if (!net) return;
+        net.moveTo({ scale: 1, position: net.getViewPosition(), animation: anim });
+        setTimeout(syncLevel, reduce ? 0 : 280);
+      };
+      if (net && net.on) net.on("zoom", syncLevel);
+      syncLevel();
+
+      /* ---- 초기 진입: 딥링크가 없으면 전체 2% 핏 대신 root 중심의 읽기 좋은 뷰로 ---- */
+      if (net && net.focus && !location.search) {
+        setTimeout(function () {
+          try {
+            if (net.getScale() < 0.18) {
+              net.focus("root", { scale: 0.5, animation: anim });
+              setTimeout(syncLevel, reduce ? 0 : 900);
+            }
+          } catch (e) {}
+        }, reduce ? 200 : 1100);
+      }
+
+      /* ---- 색상 범례 (GROUPS 기반, 표시 전용) ---- */
+      var list = document.getElementById("legendList");
+      if (list && groups) {
+        Object.keys(groups).forEach(function (k) {
+          var g = groups[k];
+          var row = document.createElement("div");
+          row.className = "legend-item";
+          var dot = document.createElement("span");
+          dot.className = "legend-dot"; dot.style.background = g.color;
+          var lab = document.createElement("span");
+          lab.className = "legend-name"; lab.textContent = g.label;
+          row.appendChild(dot); row.appendChild(lab);
+          list.appendChild(row);
+        });
+      }
+      var lt = document.getElementById("legendToggle"), lg = document.getElementById("legend");
+      if (lt && lg) lt.onclick = function () { lg.classList.toggle("collapsed"); };
+    });
+  })();
+  </script>
 </body>
 </html>
