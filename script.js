@@ -173,7 +173,10 @@ var REL_STYLE = {
   contribute: { color: "#34d399", label: "기여" },
   cascade:    { color: "#60a5fa", label: "캐스케이딩" },
   measure:    { color: "#22d3ee", label: "측정" },
-  align:      { color: "#fbbf24", label: "정렬" }
+  align:      { color: "#fbbf24", label: "정렬" },
+  precede:    { color: "#94a3b8", label: "선후" },
+  feedback:   { color: "#fb7185", label: "피드백" },
+  support:    { color: "#4ade80", label: "지원" }
 };
 function edgeColor(e) {
   var rel = e.rel && REL_STYLE[e.rel];
